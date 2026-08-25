@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技術と人間の関係は、どうしたら見えるようになるのか｜七沢智樹</title>
+<style>
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body { overscroll-behavior: none; touch-action: manipulation; }
+
+  :root {
+    --paper: #faf9f5;
+    --ink: #14140f;
+    --ink-soft: #4a4a42;
+    --line: #d9d7cd;
+    --moss: #0ca568;
+    --mint: #1de394;
+    --shu: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #eceae2;
+    color: var(--ink);
+    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- stage ---------- */
+  .deck { position: fixed; inset: 0; overflow: hidden; }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1280px; height: 720px;
+    background: var(--paper);
+    transform-origin: center center;
+    box-shadow: 0 18px 60px rgba(20,20,15,.12);
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 74px 96px 92px;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity .38s ease;
+  }
+  .slide.is-active { opacity: 1; visibility: visible; }
+
+  /* ---------- common type ---------- */
+  .kicker { font-size: 13px; letter-spacing: .3em; color: var(--moss); font-weight: 600; text-transform: uppercase; }
+  .slide h2 { font-size: 42px; font-weight: 700; line-height: 1.5; letter-spacing: .02em; margin-top: 18px; }
+  .slide h2 .thin { font-weight: 400; color: var(--ink-soft); }
+  .lead { font-size: 19px; line-height: 2.1; color: var(--ink-soft); margin-top: 18px; max-width: 900px; }
+  .body { margin-top: 46px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+
+  ul.pts { list-style: none; }
+  ul.pts > li {
+    position: relative;
+    font-size: 24px; line-height: 1.95; letter-spacing: .01em;
+    padding-left: 34px; margin-bottom: 24px; max-width: 1010px;
+  }
+  ul.pts > li::before {
+    content: ""; position: absolute; left: 2px; top: 20px;
+    width: 9px; height: 9px; border-radius: 50%;
+    border: 1.6px solid var(--mint);
+  }
+  ul.pts > li.em::before { background: var(--moss); border-color: var(--moss); }
+  ul.pts > li.em { font-weight: 700; }
+  ul.pts > li small { display: block; font-size: 16px; color: var(--ink-soft); line-height: 1.9; margin-top: 6px; font-weight: 400; }
+  ul.pts.tight > li { margin-bottom: 16px; font-size: 22px; }
+
+  .note {
+    margin-top: auto; padding-top: 22px; border-top: 1px solid var(--line);
+    font-size: 15px; line-height: 1.95; color: var(--ink-soft); max-width: 960px;
+  }
+  .arrow { color: var(--moss); font-weight: 700; }
+  .term { border-bottom: 1.6px solid var(--mint); padding-bottom: 1px; }
+  .shu { color: var(--shu); }
+  .g { color: var(--moss); }
+
+  /* ---------- quote ---------- */
+  .vq { border-left: 2.6px solid var(--moss); padding: 6px 0 6px 28px; margin: 10px 0; }
+  .vq p { font-size: 24px; line-height: 1.9; font-weight: 700; }
+  .vq .src { font-size: 13px; letter-spacing: .12em; color: var(--ink-soft); margin-top: 8px; font-weight: 400; }
+  .vq.shu-q { border-left-color: var(--shu); }
+
+  /* ---------- title slide ---------- */
+  .slide.title { justify-content: center; align-items: flex-end; text-align: right; padding-right: 110px; }
+  .slide.title h1 { font-size: 58px; font-weight: 700; line-height: 1.55; letter-spacing: .04em; }
+  .slide.title h1 .g { color: var(--moss); }
+  .slide.title .sub { font-size: 21px; color: var(--ink-soft); margin-top: 28px; letter-spacing: .06em; line-height: 2; }
+  .slide.title .meta { font-size: 14px; letter-spacing: .2em; color: var(--ink-soft); margin-top: 44px; line-height: 2.2; }
+  .rings { position: absolute; left: -160px; top: 50%; transform: translateY(-50%); width: 560px; height: 560px; pointer-events: none; }
+  .rings circle { fill: none; stroke: var(--mint); stroke-width: 1.6; }
+  .rings .r1 { stroke-dasharray: 4 7; animation: spin 90s linear infinite; transform-origin: 280px 280px; }
+  .rings .r2 { stroke-dasharray: 5 9; animation: spin 150s linear infinite reverse; transform-origin: 280px 280px; }
+  .rings .r3 { stroke-dasharray: 3 6; animation: spin 220s linear infinite; transform-origin: 280px 280px; }
+  .rings .core { fill: var(--mint); stroke: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .rings circle { animation: none !important; } .slide { transition: none; } }
+
+  /* ---------- part divider ---------- */
+  .slide.part { background: var(--ink); color: var(--paper); justify-content: center; }
+  .slide.part .kicker { color: var(--mint); }
+  .slide.part .pnum { font-size: 128px; font-weight: 700; line-height: 1; letter-spacing: .02em; margin: 22px 0 18px; }
+  .slide.part h2 { font-size: 52px; margin-top: 0; }
+  .slide.part .lead { color: #9a9a8e; font-size: 18px; }
+
+  /* ---------- profile ---------- */
+  .prof { display: grid; grid-template-columns: 320px 1fr; gap: 44px; align-items: start; }
+  .prof .who { border-top: 3px solid var(--moss); padding-top: 20px; }
+  .prof .who .nm { font-size: 40px; font-weight: 700; letter-spacing: .06em; }
+  .prof .who .kana { font-size: 13px; letter-spacing: .22em; color: var(--ink-soft); margin-top: 8px; }
+  .prof .who .role { font-size: 16px; line-height: 2; color: var(--ink-soft); margin-top: 20px; }
+  .prof .who .role strong { color: var(--ink); }
+  ul.pts.compact > li { margin-bottom: 12px; font-size: 20px; line-height: 1.75; }
+  ul.pts.compact > li::before { top: 17px; }
+  ul.pts.compact > li small { font-size: 14.5px; line-height: 1.8; margin-top: 3px; }
+
+  /* ---------- column grids ---------- */
+  .cols { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .cols.c2 { grid-template-columns: 1fr 1fr; }
+  .cols.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .col { background: var(--paper); padding: 30px 30px 34px; }
+  .col .h { font-size: 13px; letter-spacing: .2em; color: var(--moss); font-weight: 600; margin-bottom: 16px; }
+  .col h3 { font-size: 25px; font-weight: 700; line-height: 1.6; margin-bottom: 14px; }
+  .col p { font-size: 16.5px; line-height: 2; color: var(--ink-soft); }
+  .col p + p { margin-top: 12px; }
+
+  /* ---------- statement ---------- */
+  .statement { font-size: 40px; font-weight: 700; line-height: 1.85; letter-spacing: .03em; }
+  .statement small { display: block; max-width: 960px; font-size: 17px; font-weight: 400; color: var(--ink-soft); line-height: 2.1; margin-top: 26px; letter-spacing: 0; }
+
+  /* ---------- methods (3つの方法) ---------- */
+  .paths { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .path { border: 1px solid var(--line); padding: 26px 24px 30px; background: var(--paper); }
+  .path .n { font-size: 12.5px; letter-spacing: .18em; color: var(--ink-soft); margin-bottom: 12px; }
+  .path h3 { font-size: 24px; font-weight: 700; line-height: 1.6; margin-bottom: 10px; }
+  .path h3 small { display: block; font-size: 11.5px; letter-spacing: .14em; color: var(--moss); font-weight: 600; margin-top: 5px; }
+  .path p { font-size: 15px; line-height: 1.95; color: var(--ink-soft); }
+
+  /* ---------- agenda (3つの問い) ---------- */
+  .agenda { list-style: none; border-top: 1px solid var(--line); }
+  .agenda li { display: grid; grid-template-columns: 92px 1fr; gap: 28px; align-items: baseline; padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .agenda .n { font-size: 30px; font-weight: 700; color: var(--moss); }
+  .agenda h3 { font-size: 29px; font-weight: 700; letter-spacing: .02em; line-height: 1.6; }
+  .agenda p { font-size: 16px; color: var(--ink-soft); margin-top: 8px; line-height: 1.9; }
+  .agenda .act { display: inline-block; font-size: 12px; letter-spacing: .12em; font-weight: 600;
+                 color: var(--moss); border: 1.3px solid var(--moss); border-radius: 999px;
+                 padding: 3px 13px; margin-left: 16px; vertical-align: 4px; white-space: nowrap; }
+
+  /* ---------- photo placeholder ---------- */
+  .photo { border: 1.6px dashed var(--line); background: #f3f2ea; display: flex; align-items: center; justify-content: center;
+           color: var(--ink-soft); font-size: 14px; letter-spacing: .18em; }
+  .epi { display: grid; grid-template-columns: 1.25fr 1fr; gap: 44px; flex: 1; min-height: 0; align-items: stretch; }
+  .epi .photo { height: 100%; min-height: 0; }
+  .epi .txt { display: flex; flex-direction: column; justify-content: center; }
+  .epi .txt h3 { font-size: 30px; font-weight: 700; line-height: 1.6; }
+  .epi .txt p { font-size: 17px; line-height: 2.05; color: var(--ink-soft); margin-top: 20px; }
+
+  /* ---------- chrome ---------- */
+  .foot {
+    position: absolute; left: 96px; right: 96px; bottom: 34px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .18em; color: var(--ink-soft);
+  }
+  .slide.part .foot { color: rgba(250,249,245,.5); }
+  .bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--mint); transition: width .38s ease; z-index: 5; }
+
+  .ui { position: fixed; right: 20px; bottom: 18px; display: flex; gap: 8px; z-index: 40; transition: opacity .4s; }
+  .ui.idle { opacity: 0; pointer-events: none; }
+  .ui button {
+    font: inherit; font-size: 12px; letter-spacing: .14em;
+    background: var(--paper); color: var(--ink-soft);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; cursor: pointer; transition: background .2s, color .2s;
+  }
+  .ui button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .toc {
+    position: fixed; inset: 0; z-index: 50; background: var(--ink); color: var(--paper);
+    padding: 56px 6vw; overflow-y: auto; display: none;
+  }
+  .toc.open { display: block; }
+  .toc h4 { font-size: 12px; letter-spacing: .3em; color: var(--mint); font-weight: 600; margin-bottom: 26px; }
+  .toc ol { list-style: none; columns: 2; column-gap: 56px; }
+  .toc li { break-inside: avoid; }
+  .toc button {
+    font: inherit; text-align: left; width: 100%;
+    display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: baseline;
+    background: none; border: none; border-bottom: 1px solid #33332c; color: rgba(250,249,245,.72);
+    padding: 11px 0; font-size: 15.5px; cursor: pointer; transition: color .2s;
+  }
+  .toc button:hover, .toc button.here { color: #fff; }
+  .toc button.here .no { color: var(--mint); }
+  .toc .no { font-size: 12px; letter-spacing: .1em; color: #7b7b70; }
+  .toc .pt { font-size: 11px; letter-spacing: .2em; color: var(--mint); display: block; margin-top: 4px; }
+
+  /* ---------- print ---------- */
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    body { overflow: visible; background: #fff; }
+    .deck { position: static; overflow: visible; }
+    .stage { position: static; width: 1280px; height: auto; transform: none !important; box-shadow: none; overflow: visible; }
+    .slide {
+      position: static; opacity: 1 !important; visibility: visible !important;
+      width: 1280px; height: 720px; page-break-after: always; break-after: page;
+    }
+    .ui, .toc, .bar { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+<div class="stage" id="stage">
+
+  <!-- 01 title -->
+  <section class="slide title" data-title="タイトル" data-part="">
+    <svg class="rings" viewBox="0 0 560 560" aria-hidden="true">
+      <circle class="r1" cx="280" cy="280" r="258"/>
+      <circle class="r2" cx="280" cy="280" r="196"/>
+      <circle class="r3" cx="280" cy="280" r="132"/>
+      <circle class="core" cx="280" cy="280" r="5"/>
+    </svg>
+    <div class="kicker">Philosophy of Technology × AI</div>
+    <h1>技術と人間の関係は、<br>どうしたら<span class="g">見える</span>ようになるのか</h1>
+    <p class="sub">野生から考えるAIの技術哲学</p>
+    <p class="meta">七沢智樹<br>2026.08.26 WED 16:00— ／ NTTデータ「AIと倫理」ゼミ ／ 有識者レクチャー 01</p>
+  </section>
+
+  <!-- 02 profile -->
+  <section class="slide" data-title="自己紹介" data-part="">
+    <div class="kicker">Profile</div>
+    <h2>自己紹介</h2>
+    <div class="body">
+      <div class="prof">
+        <div class="who">
+          <div class="nm">七沢智樹</div>
+          <div class="kana">NANASAWA TOMOKI</div>
+          <p class="role"><strong>Technel合同会社 代表</strong><br><strong>山梨県立大学 特任教授</strong><br>技術と人間の関係を、書斎と現場の両方で考えてきた。</p>
+        </div>
+        <ul class="pts compact">
+          <li>『WIRED』で連載「<span class="term">技術哲学入門</span>」（2023年〜）<small>テクノロジーをデザインする人のための技術哲学を、書き続けている。</small></li>
+          <li>訳書：クーケルバーク『<strong>技術哲学講義</strong>』（共訳、丸善出版）</li>
+          <li>国際技術哲学会 SPT2023 の運営に参加。日本の技術哲学者が集まる「技哲研」を主宰</li>
+          <li>西表島の原生自然で <strong>JUNGLE Gathering／Iriomote JUNGLE CLUB</strong><small>インフラや既存技術から距離を置き、道具・身体・自然の関係を捉え直す実践。</small></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 message -->
+  <section class="slide" data-title="このレクチャーで伝えたいこと" data-part="0">
+    <div class="kicker">0 — 01｜Message</div>
+    <h2>AI倫理を「実装」するのは、難しい</h2>
+    <div class="body">
+      <ul class="pts">
+        <li>ガイドラインも、チェックリストも、すでにある。それでも難しいのは——<br>扱う対象、<span class="term">技術と人間の関係</span>そのものが<strong>見えない</strong>から</li>
+        <li>見えないものは、手順では扱えない。必要なのは、手順の前に<strong>態度</strong></li>
+        <li class="em">今日話すのは：技術哲学から考える、<span class="g">AI倫理実装のあるべき態度</span>——関係を見ようとする構え</li>
+      </ul>
+      <div class="note">態度は一日では身につかない。しかし「見る方法」は今日渡せる。<span class="arrow">→</span> ここから、その方法の話。</div>
+    </div>
+  </section>
+
+  <!-- 04 基層1 -->
+  <section class="slide" data-title="単なる道具など、存在しない" data-part="0">
+    <div class="kicker">0 — 02｜技術の基層</div>
+    <h2>単なる道具など、存在しない</h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li>つもり：目的のために技術を使い、頼んだ結果<strong>（B）</strong>を得る。技術は中立な手段</li>
+        <li class="em">実際：技術の本質は<span class="term">ポイエーシス</span>——「こちらへと・前へと・もたらすこと」</li>
+        <li>頼んだBのうしろから、<span class="shu">頼んでいない構造変化（C）</span>がやってくる</li>
+      </ul>
+      <div class="cols c2" style="margin-top:26px">
+        <div class="col">
+          <div class="h">Automobile</div>
+          <h3>自動車</h3>
+          <p>移動手段（B）のはずが——道路網・都市の形・身体感覚（C）まで変えた。</p>
+        </div>
+        <div class="col">
+          <div class="h">AI</div>
+          <h3>AI</h3>
+          <p>効率化（B）を頼んだら——判断の習慣・会議・組織の形（C）が変わりはじめている。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 基層2 -->
+  <section class="slide" data-title="しかも、その働きは見えない" data-part="0">
+    <div class="kicker">0 — 03｜道具のジレンマ</div>
+    <h2>しかも、その働きは<span class="g">見えない</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>うまく働く技術ほど、<span class="term">透明になる</span>。メガネをかけている人は、メガネを見ていない</li>
+        <li>道具は「人間の<strong>外部</strong>にありながら、<strong>内部</strong>でもある」——使う瞬間、手の延長として消え去る</li>
+        <li class="em">AIはその極致。Cが進行しているのに、実感がない</li>
+      </ul>
+      <div class="vq shu-q" style="margin-top:14px">
+        <p>「……で、これ誰が決めたんでしたっけ？」</p>
+        <div class="src">皆さんの Possible Future（F5）より</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 今日の問い -->
+  <section class="slide" data-title="今日の問い" data-part="0">
+    <div class="kicker">0 — 04｜Question</div>
+    <h2>今日の問い</h2>
+    <div class="body">
+      <p class="statement" style="font-size:36px">関係が<span class="g">見えれば</span>、どう設計すべきかが見えてくる。<br>では——どうしたら、見えるようになるのか？<small>このゼミの問い「AIを実装する私たちは、何を基準にして判断するのか？」への、今日の応答。<br>「見える」とは知識ではなく<strong>身体感覚</strong>——考えなくても関係が目に入ってくる状態を、自分の中に育てること。</small></p>
+      <div class="paths" style="margin-top:34px">
+        <div class="path">
+          <div class="n">METHOD 01</div>
+          <h3>離れて見る<small>PRACTICE｜西表島</small></h3>
+          <p>技術から距離を取ると、関係が現れる。</p>
+        </div>
+        <div class="path">
+          <div class="n">METHOD 02</div>
+          <h3>概念で見る<small>THEORY｜3つのレンズ</small></h3>
+          <p>離れられなくても、概念が関係に色をつける。</p>
+        </div>
+        <div class="path">
+          <div class="n">METHOD 03</div>
+          <h3>作って見る<small>PRACTICE｜プロトタイピング</small></h3>
+          <p>まだ無い技術の、まだ無い関係を見る。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 part1 -->
+  <section class="slide part" data-title="PART 1｜離れて見る" data-part="">
+    <div class="kicker">Method One</div>
+    <div class="pnum">1</div>
+    <h2>離れて見る</h2>
+    <p class="lead">技術から距離を取ると、関係が現れる。——そのための実践が、オフグリッドキャンプ。</p>
+  </section>
+
+  <!-- 07 なぜ離れるのか -->
+  <section class="slide" data-title="なぜ、離れるのか" data-part="1">
+    <div class="kicker">1 — 01</div>
+    <h2>なぜ、離れるのか｜<span class="thin">関係は、途切れたときに初めて見える</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>ハンマーは、<strong>壊れたときに</strong>初めて「ハンマーとして」現れる</li>
+        <li>停電したとき、圏外になったとき——透明だった関係が、一瞬だけ姿を見せる</li>
+        <li class="em">ならば、その「途切れ」を<span class="term">意図的に起こせば</span>いい</li>
+      </ul>
+      <div class="note">インフラ・既存技術から距離を置くと、ふだん透明な「道具・身体・自然の関係」が前景化する。<span class="arrow">→</span> だから勧めたいのが、オフグリッドキャンプ。</div>
+    </div>
+  </section>
+
+  <!-- オフグリッドキャンプのすすめ -->
+  <section class="slide" data-title="オフグリッドキャンプのすすめ" data-part="1">
+    <div class="kicker">1 — 02｜Off-grid Camp</div>
+    <h2>オフグリッドキャンプのすすめ</h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li><strong>時計とスマホを、手放す</strong>。時間は太陽と腹時計で</li>
+        <li>電気・水道・通信——<span class="term">インフラから離れる</span></li>
+        <li>数日、<strong>狩猟採集的に</strong>暮らす。獲る、集める、火を起こす、水を汲む</li>
+      </ul>
+      <div class="cols c2" style="margin-top:24px">
+        <div class="col">
+          <div class="h">Iriomote</div>
+          <h3>西表島｜JUNGLE Gathering</h3>
+          <p>原生のジャングルに身を置き、道具・身体・自然の関係を捉え直す。Iriomote JUNGLE CLUB。</p>
+        </div>
+        <div class="col">
+          <div class="h">Yamanashi</div>
+          <h3>山梨｜makers Unlearn（mU）</h3>
+          <p>山梨のフィールドで、技術をいちど手放して学び直す（Unlearn）場。</p>
+        </div>
+      </div>
+      <div class="note">山梨は、都内から来られる距離です。<span class="arrow">→</span> 興味のある方——キャンプ、しませんか？</div>
+    </div>
+  </section>
+
+  <!-- 森で考える -->
+  <section class="slide" data-title="森で考える" data-part="1">
+    <div class="kicker">1 — 03｜Think in the Forest</div>
+    <h2>森で考える｜<span class="thin">考えないで、考える</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>都市では、考える＝画面に向かうこと。情報を入れて、言葉で処理する</li>
+        <li>森では逆。手を動かし、火を眺め、歩いているうちに——<strong>考えていないのに、考えが来る</strong></li>
+        <li class="em">頭を止めたとき、身体が考えはじめる。<span class="term">考えないで、考える</span><small>技術が見える身体感覚は、このモードで育つ。到着した思考は、机の上のものより深いことがある。</small></li>
+      </ul>
+      <div class="note"><span class="arrow">→</span> 実際に、そこで何が見えたか。体験談を2つ。</div>
+    </div>
+  </section>
+
+  <!-- エピソード1 -->
+  <section class="slide" data-title="エピソード①" data-part="1">
+    <div class="kicker">1 — 04</div>
+    <h2>エピソード ①</h2>
+    <div class="body">
+      <div class="epi">
+        <div class="photo">写真：西表島（差し替え）</div>
+        <div class="txt">
+          <h3>★ 実体験に差し替え</h3>
+          <p>「関係が見えた瞬間」の話。<br><br>締めの一言：<br>「このとき、◯◯と私の<span class="term">関係</span>が見えた」</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 エピソード2 -->
+  <section class="slide" data-title="エピソード②" data-part="1">
+    <div class="kicker">1 — 05</div>
+    <h2>エピソード ②</h2>
+    <div class="body">
+      <div class="epi">
+        <div class="photo">写真：西表島（差し替え）</div>
+        <div class="txt">
+          <h3>★ 実体験に差し替え</h3>
+          <p>都市に戻ったとき、テクノロジーの「見え方」が変わっていた——など。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- まとめ1 -->
+  <section class="slide" data-title="METHOD 1｜まとめ" data-part="1">
+    <div class="kicker">1 — 06｜Recap</div>
+    <h2>まとめ｜<span class="thin">離れて見る</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>技術と人間の関係は、<span class="term">途切れたときに</span>初めて見える</li>
+        <li>オフグリッドキャンプ——時計とスマホを手放すと、透明だった関係が次々に現れる</li>
+        <li>森で考える——頭を止めたとき、身体が考えはじめる。<span class="term">考えないで、考える</span></li>
+        <li class="em">態度として：ときどき、技術から<strong>意図的に離れる時間</strong>を作る<small>圏外に出る。手を動かす。AIを閉じて考えてみる——小さな「離れる」でいい。本気でやるなら、西表島と山梨へ。</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ブリッジ -->
+  <section class="slide" data-title="では、離れられないときは？" data-part="1">
+    <div class="kicker">1 — 07</div>
+    <div class="body">
+      <p class="statement">離れて見ると、関係が見える。<br>では——<span class="shu">離れられないときは？</span><small>私たちはAIから離れられない。業務からも離れられない。全員が西表島に行けるわけでもない。<br>離れなくても関係を見る方法がある。それが<strong>概念</strong>——技術哲学のレンズ。</small></p>
+    </div>
+  </section>
+
+  <!-- 11 part2 -->
+  <section class="slide part" data-title="PART 2｜概念で見る" data-part="">
+    <div class="kicker">Method Two</div>
+    <div class="pnum">2</div>
+    <h2>概念で見る</h2>
+    <p class="lead">レンズとは、透明な関係に色をつけて見えるようにする道具。今日は3枚だけ持って帰ってください——技術媒介、サイボーグ、手で考える。</p>
+  </section>
+
+  <!-- 12 レンズ1 -->
+  <section class="slide" data-title="レンズ1｜技術媒介" data-part="2">
+    <div class="kicker">2 — 01｜Lens 1</div>
+    <h2>技術媒介｜<span class="thin">技術は、知覚と行為を形づくる（P-P. フェルベーク）</span></h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li><strong>胎児エコー</strong>——ただ「見る」技術のはずが、胎児を「患者」に、親を「選択する者」に変えた</li>
+        <li>関係が変わり、<span class="shu">存在しなかった倫理的問いが生まれた</span></li>
+        <li>AIも同じ。要約で世界を知る＝<span class="term">要約された形で世界を知覚している</span>。推薦で選ぶ＝選択肢の地平がすでに編集されている</li>
+      </ul>
+      <div class="vq" style="margin-top:10px">
+        <p>この技術は、私の何を見せ、何を隠しているか？</p>
+        <div class="src">レンズ1の問い</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 ミニ実践 -->
+  <section class="slide" data-title="ミニ実践（1分）" data-part="2">
+    <div class="kicker">2 — 02｜Practice 1min</div>
+    <div class="body">
+      <p class="statement">スマホを出して、自分が最後に<br>AIに送ったプロンプトを見てください。<small style="font-size:24px;color:var(--ink);font-weight:700;line-height:1.9;margin-top:34px">それは、あなたの<span class="g">何を</span>AIに委ねた言葉ですか？</small><small>隣の人と、30秒だけ共有してみてください。</small></p>
+    </div>
+  </section>
+
+  <!-- 14 レンズ2 -->
+  <section class="slide" data-title="レンズ2｜私たちはすでにサイボーグ" data-part="2">
+    <div class="kicker">2 — 03｜Lens 2</div>
+    <h2>私たちはすでにサイボーグ<span class="thin">（A. クラーク）</span></h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li>メガネ → 文字 → スマホ → 体内へ。人間はもともと<span class="term">道具で拡張されてきた存在</span></li>
+        <li>だから F1「身体にAIが入ってくる社会」はSFではなく、<strong>程度問題</strong></li>
+        <li>道具のジレンマ——「外部でありながら内部でもある」——が、身体の内側で<span class="shu">誰にでも見える形で噴き出す</span></li>
+      </ul>
+      <div class="vq shu-q">
+        <p>「もう、どこまでが自分の身体なんだろう」</p>
+        <div class="src">F1より——使えるモデルの性能は、支払った料金で決まる</div>
+      </div>
+      <div class="vq">
+        <p>拡張の境界を、<span class="g">誰が</span>決められる設計になっているか？</p>
+        <div class="src">レンズ2の問い</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 レンズ3 -->
+  <section class="slide" data-title="レンズ3｜手で考える" data-part="2">
+    <div class="kicker">2 — 04｜Lens 3</div>
+    <h2>手で考える<span class="thin">（T. インゴルド）</span></h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li>「知る」は頭の中だけの働きではない。<span class="term">歩き、触れ、つくりながら</span>、人は世界を知る</li>
+        <li>考えることをAIが引き受けたとき、人に残るのは<strong>身体を通した経験</strong>。ただし「そこへ行ける時間と場所」が新しい格差になる</li>
+        <li>古代人は技術の危険を身体で知っていた——荘子「<span class="term">機械あれば機心あり</span>」</li>
+      </ul>
+      <div class="vq shu-q">
+        <p>「答えは全部ある。それでも、行って、触らないと分からない」</p>
+        <div class="src">F2より</div>
+      </div>
+      <div class="vq">
+        <p>AIに渡したあと、<span class="g">残したい経験</span>は何か？</p>
+        <div class="src">レンズ3の問い</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- まとめ2 -->
+  <section class="slide" data-title="METHOD 2｜まとめ" data-part="2">
+    <div class="kicker">2 — 05｜Recap</div>
+    <h2>まとめ｜<span class="thin">概念で見る——3枚のレンズと、3つの問い</span></h2>
+    <div class="body">
+      <ol class="agenda">
+        <li>
+          <span class="n">1</span>
+          <div><h3>技術媒介<span class="act">フェルベーク</span></h3><p>この技術は、私の何を見せ、何を隠しているか？</p></div>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <div><h3>サイボーグ<span class="act">クラーク</span></h3><p>拡張の境界を、誰が決められる設計になっているか？</p></div>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <div><h3>手で考える<span class="act">インゴルド</span></h3><p>AIに渡したあと、残したい経験は何か？</p></div>
+        </li>
+      </ol>
+      <div class="note">レンズは知識ではなく道具。<span class="arrow">→</span> 使って初めて、身体感覚になっていく。</div>
+    </div>
+  </section>
+
+  <!-- 整理 -->
+  <section class="slide" data-title="しかし、まだ足りない" data-part="2">
+    <div class="kicker">2 — 06</div>
+    <div class="body">
+      <p class="statement">皆さんが扱うのは、<span class="shu">まだ存在しない技術</span>。<br>まだ無い関係は、離れることも、<br>概念で捉えることもできない。<small>離れて見る＋概念で見る＝いま在る技術との関係は見えてくる。しかし8つのPossible Futureは、まだ無い。<br>まだ無い関係を見る方法——それが「<strong>作ること</strong>」。</small></p>
+    </div>
+  </section>
+
+  <!-- 17 part3 -->
+  <section class="slide part" data-title="PART 3｜作って見る" data-part="">
+    <div class="kicker">Method Three</div>
+    <div class="pnum">3</div>
+    <h2>作って見る</h2>
+    <p class="lead">作りながら、考える——私たちはそうせざるを得ない。ならば、その「作る」の中に、見るためのサイクルを組み込む。——ここからは、皆さんの制作の話。</p>
+  </section>
+
+  <!-- 18 プロトタイピング -->
+  <section class="slide" data-title="皆さんは、すでにやっている" data-part="3">
+    <div class="kicker">3 — 01</div>
+    <h2>皆さんは、すでにやっている</h2>
+    <div class="body">
+      <ul class="pts">
+        <li>先週のLARP——未来の関係を<span class="term">身体で生きてみて</span>、初めて見えたものがあったはず</li>
+        <li>プロトタイピング＝「手で考える」の実践。モノと対話しながら、まだ無い関係を出現させる</li>
+        <li class="em">このプログラムの構造そのものが、「関係を見えるようにする実践」になっている</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 野生のサイバネティクス -->
+  <section class="slide" data-title="野生のサイバネティクス" data-part="3">
+    <div class="kicker">3 — 02｜Wild Cybernetics</div>
+    <h2>野生のサイバネティクス</h2>
+    <div class="body">
+      <div style="display:grid;grid-template-columns:1fr 470px;gap:40px;align-items:center;flex:1;min-height:0">
+        <ul class="pts tight" style="align-self:center">
+          <li>作りながら考える——<strong>そうせざるを得ない</strong>。作らないと見えない関係があるから</li>
+          <li>そもそも技術は<span class="term">再帰的に</span>発展してきた。作る→観察する→修正する、のフィードバック（<strong>サイバネティクス</strong>）</li>
+          <li class="em">そのループに「離れて見る」「概念で見る」を組み込む。<br>ループに<span class="g">野生</span>を入れる</li>
+        </ul>
+        <svg viewBox="0 0 520 380" style="width:100%;height:auto" aria-hidden="true">
+          <circle cx="270" cy="200" r="118" fill="none" stroke="#14140f" stroke-width="2"/>
+          <path d="M0,-7 L15,0 L0,7 Z" fill="#0ca568" transform="translate(270,82) rotate(0)"/>
+          <path d="M0,-7 L15,0 L0,7 Z" fill="#0ca568" transform="translate(372,259) rotate(120)"/>
+          <path d="M0,-7 L15,0 L0,7 Z" fill="#0ca568" transform="translate(168,259) rotate(240)"/>
+          <text x="270" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="#14140f">つくる</text>
+          <text x="398" y="300" text-anchor="start" font-size="22" font-weight="700" fill="#14140f">はなれて見る</text>
+          <text x="142" y="300" text-anchor="end" font-size="22" font-weight="700" fill="#14140f">概念で見る</text>
+          <text x="270" y="192" text-anchor="middle" font-size="19" fill="#4a4a42">再帰的な</text>
+          <text x="270" y="222" text-anchor="middle" font-size="19" fill="#4a4a42">学習サイクル</text>
+          <text x="52" y="86" text-anchor="start" font-size="26" font-weight="700" fill="#0ca568">野生</text>
+          <line x1="82" y1="98" x2="172" y2="152" stroke="#1de394" stroke-width="2.4" stroke-dasharray="6 7"/>
+          <path d="M0,-7 L15,0 L0,7 Z" fill="#1de394" transform="translate(176,154) rotate(31)"/>
+        </svg>
+      </div>
+      <div class="note">つくるだけのループは暴走する。<span class="arrow">→</span> 制作の途中で、意図的に「離れる」「レンズで見る」を差し込む。それが態度の実装。</div>
+    </div>
+  </section>
+
+  <!-- 道徳化 -->
+  <section class="slide" data-title="設計者は、別の手段で倫理をやっている" data-part="3">
+    <div class="kicker">3 — 03</div>
+    <h2>見えたら、どうなるか｜<span class="thin">設計者は、別の手段で倫理をやっている</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>スピードバンプは「減速せよ」と言わずに減速させる。デフォルト設定は「選べ」と言わずに選ばせる</li>
+        <li>関係が見えていないとき——<span class="thin">無自覚に</span>。見えたとき——<strong>意図的に</strong></li>
+        <li class="em">見えれば、どう設計すべきかを<span class="g">問える</span>ようになる。見えなければ、問いすら立たない</li>
+      </ul>
+      <div class="note"><span class="arrow">→</span> 見えた関係を、組織としてどう扱うか。ここはこのあと、安部さんとお話ししたいところです。</div>
+    </div>
+  </section>
+
+  <!-- 20 3つの問い -->
+  <section class="slide" data-title="制作へ持ち帰る、3つの問い" data-part="3">
+    <div class="kicker">3 — 04</div>
+    <h2>制作へ持ち帰る、3つの問い</h2>
+    <div class="body">
+      <ol class="agenda">
+        <li>
+          <span class="n">1</span>
+          <div><h3>この技術は、人の何を増幅し、何を縮減するか？<span class="act">媒介のレンズ</span></h3></div>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <div><h3>人と技術の関係を、誰が決められる設計になっているか？<span class="act">サイボーグのレンズ／F1</span></h3></div>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <div><h3>AIに渡したあと、残したい経験は何か？<span class="act">手で考えるレンズ／F2</span></h3></div>
+        </li>
+      </ol>
+      <div class="note">展示で見せるべきは、作品の完成度より——<strong>この関係が「見える」ようになる体験</strong>。来場者が「見える側」に回る仕掛けを。</div>
+    </div>
+  </section>
+
+  <!-- まとめ3 -->
+  <section class="slide" data-title="METHOD 3｜まとめ" data-part="3">
+    <div class="kicker">3 — 05｜Recap</div>
+    <h2>まとめ｜<span class="thin">作って見る</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>プロトタイピングは、<span class="term">まだ無い関係を先取りして出現させる</span>方法</li>
+        <li>作るループに「離れる」「概念で見る」を組み込む——<strong>野生のサイバネティクス</strong></li>
+        <li class="em">3つの問い（増幅／縮減・誰が決めるか・残したい経験）を、制作のチェックポイントに</li>
+      </ul>
+      <div class="note">見えれば、問える。問えれば、設計は変えられる。<span class="arrow">→</span> それがAI倫理実装の、あるべき態度。</div>
+    </div>
+  </section>
+
+  <!-- 結び -->
+  <section class="slide" data-title="結び｜取り戻す" data-part="3">
+    <div class="kicker">3 — 06｜Closing</div>
+    <div class="body">
+      <p class="statement">技術が見える身体感覚は、<br>新しく身につけるものではなく、<br><span class="g">取り戻す</span>もの。<small>野生から考えるのは、技術を捨てるためではなく、見えなくなった関係をもう一度見えるようにするため。<br>AI倫理の実装は、関係を見ようとする態度から始まる。関係が見えるようになった人から、設計は変わる。<br><br>11/5、皆さんの8つの未来で「関係が見える」のを楽しみにしています。</small></p>
+    </div>
+  </section>
+
+</div><!-- /stage -->
+<div class="bar" id="bar"></div>
+</div><!-- /deck -->
+
+<div class="ui">
+  <button id="btnToc" type="button">目次 ( O )</button>
+  <button id="btnPrev" type="button">←</button>
+  <button id="btnNext" type="button">→</button>
+</div>
+
+<nav class="toc" id="toc" aria-label="スライド目次">
+  <h4>Contents</h4>
+  <ol id="tocList"></ol>
+</nav>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var deck = document.getElementById('deck');
+  var bar = document.getElementById('bar');
+  var toc = document.getElementById('toc');
+  var tocList = document.getElementById('tocList');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+  var total = slides.length;
+  var i = 0;
+
+  var PART_NAME = {
+    '0': '技術の基層',
+    '1': 'METHOD 1 ／ 離れて見る',
+    '2': 'METHOD 2 ／ 概念で見る',
+    '3': 'METHOD 3 ／ 作って見る'
+  };
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  slides.forEach(function (s, n) {
+    var part = s.getAttribute('data-part') || '';
+
+    var foot = document.createElement('div');
+    foot.className = 'foot';
+    foot.innerHTML = '<span>' + (PART_NAME[part] || '') + '</span><span>' +
+      pad(n + 1) + ' / ' + pad(total) + '</span>';
+    s.appendChild(foot);
+
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span class="no">' + pad(n + 1) + '</span><span>' +
+      s.getAttribute('data-title') +
+      (part ? '<span class="pt">' + (PART_NAME[part] || '') + '</span>' : '') + '</span>';
+    b.addEventListener('click', function () { go(n); closeToc(); });
+    li.appendChild(b);
+    tocList.appendChild(li);
+  });
+  var tocBtns = Array.prototype.slice.call(tocList.querySelectorAll('button'));
+
+  function go(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); });
+    tocBtns.forEach(function (b, k) { b.classList.toggle('here', k === i); });
+    bar.style.width = ((i + 1) / total * 100) + '%';
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+
+  function fit() {
+    var w = document.documentElement.clientWidth || window.innerWidth;
+    var h = document.documentElement.clientHeight || window.innerHeight;
+    if (h > w && w < 820) {
+      var s = Math.min(h / 1280, w / 720);
+      stage.style.transform = 'translate(-50%, -50%) rotate(90deg) scale(' + s + ')';
+    } else {
+      var s2 = Math.min(w / 1280, h / 720);
+      stage.style.transform = 'translate(-50%, -50%) scale(' + s2 + ')';
+    }
+  }
+
+  function closeToc() { toc.classList.remove('open'); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(total - 1); }
+    else if (e.key === 'o' || e.key === 'O') { toc.classList.toggle('open'); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else { document.documentElement.requestFullscreen(); }
+    }
+    else if (e.key === 'Escape') { closeToc(); }
+  });
+
+  document.getElementById('btnNext').addEventListener('click', function () { go(i + 1); });
+  document.getElementById('btnPrev').addEventListener('click', function () { go(i - 1); });
+  document.getElementById('btnToc').addEventListener('click', function () { toc.classList.toggle('open'); });
+  toc.addEventListener('click', function (e) { if (e.target === toc) closeToc(); });
+
+  var x0 = null;
+  deck.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  deck.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1);
+    x0 = null;
+  }, { passive: true });
+
+  var ui = document.querySelector('.ui');
+  var idleTimer;
+  function wake() {
+    ui.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { ui.classList.add('idle'); }, 2600);
+  }
+  ['mousemove', 'touchstart', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, wake, { passive: true });
+  });
+  wake();
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  window.addEventListener('pageshow', fit);
+  window.addEventListener('load', fit);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.documentElement);
+  fit();
+  setTimeout(fit, 120);
+  setTimeout(fit, 600);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  go(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+
+</body>
+</html>
