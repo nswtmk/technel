@@ -158,6 +158,9 @@
   .epi .txt { display: flex; flex-direction: column; justify-content: center; }
   .epi .txt h3 { font-size: 30px; font-weight: 700; line-height: 1.6; }
   .epi .txt p { font-size: 17px; line-height: 2.05; color: var(--ink-soft); margin-top: 20px; }
+  .epi .fig { border: 1.6px solid var(--line); background: #f3f2ea; display: flex; align-items: center;
+              justify-content: center; padding: 24px 20px; height: 100%; min-height: 0; }
+  .epi .fig svg { width: 100%; height: 100%; max-height: 100%; }
 
   /* ---------- day: 一日の媒介 ---------- */
   .day { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -678,7 +681,58 @@
     <h2>エピソード ①</h2>
     <div class="body">
       <div class="epi">
-        <div class="photo">写真：西表島（差し替え）</div>
+        <div class="fig">
+          <svg viewBox="0 0 420 520" preserveAspectRatio="xMidYMid meet" aria-label="都市では道具の層が透明で見えないが、ジャングルではつくらないと無いため道具の層が見えるようになる図">
+            <!-- 都市 -->
+            <text x="24" y="44" font-size="19" font-weight="700" fill="#14140f">都市</text>
+            <g opacity="0.5">
+              <rect x="150" y="88" width="110" height="30" fill="#faf9f5" stroke="#d9d7cd" stroke-width="1.6" stroke-dasharray="4 5"/>
+              <text x="205" y="108" text-anchor="middle" font-size="13" fill="#8b897f">箸・器</text>
+              <rect x="150" y="126" width="110" height="30" fill="#faf9f5" stroke="#d9d7cd" stroke-width="1.6" stroke-dasharray="4 5"/>
+              <text x="205" y="146" text-anchor="middle" font-size="13" fill="#8b897f">フィン</text>
+              <rect x="150" y="164" width="110" height="30" fill="#faf9f5" stroke="#d9d7cd" stroke-width="1.6" stroke-dasharray="4 5"/>
+              <text x="205" y="184" text-anchor="middle" font-size="13" fill="#8b897f">火</text>
+            </g>
+            <circle cx="64" cy="141" r="16" fill="none" stroke="#14140f" stroke-width="2"/>
+            <text x="64" y="178" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f">私</text>
+            <line x1="82" y1="141" x2="294" y2="141" stroke="#14140f" stroke-width="2.2"/>
+            <path d="M0,-6 L12,0 L0,6 Z" fill="#14140f" transform="translate(296,141)"/>
+            <rect x="308" y="118" width="88" height="46" fill="#14140f"/>
+            <text x="352" y="147" text-anchor="middle" font-size="16" font-weight="700" fill="#faf9f5">行為</text>
+            <text x="150" y="222" font-size="14" font-weight="600" fill="#8b897f">道具の層は、透明</text>
+
+            <line x1="24" y1="252" x2="396" y2="252" stroke="#d9d7cd" stroke-width="1.4"/>
+
+            <!-- ジャングル -->
+            <text x="24" y="314" font-size="19" font-weight="700" fill="#14140f">ジャングル</text>
+            <rect x="150" y="358" width="110" height="30" fill="#faf9f5" stroke="#0ca568" stroke-width="2"/>
+            <text x="205" y="378" text-anchor="middle" font-size="13" font-weight="600" fill="#14140f">箸・器</text>
+            <rect x="150" y="396" width="110" height="30" fill="#faf9f5" stroke="#0ca568" stroke-width="2"/>
+            <text x="205" y="416" text-anchor="middle" font-size="13" font-weight="600" fill="#14140f">フィン</text>
+            <rect x="150" y="434" width="110" height="30" fill="#faf9f5" stroke="#0ca568" stroke-width="2"/>
+            <text x="205" y="454" text-anchor="middle" font-size="13" font-weight="600" fill="#14140f">火</text>
+            <g stroke="#0ca568" stroke-width="1.8" fill="none">
+              <path d="M84 402 C 108 380, 120 372, 142 372"/>
+              <path d="M84 411 H 142"/>
+              <path d="M84 420 C 108 442, 120 450, 142 450"/>
+            </g>
+            <path d="M0,-5 L10,0 L0,5 Z" fill="#0ca568" transform="translate(144,372)"/>
+            <path d="M0,-5 L10,0 L0,5 Z" fill="#0ca568" transform="translate(144,411)"/>
+            <path d="M0,-5 L10,0 L0,5 Z" fill="#0ca568" transform="translate(144,450)"/>
+            <text x="98" y="352" text-anchor="middle" font-size="13" font-weight="700" fill="#0ca568">つくる</text>
+            <circle cx="64" cy="411" r="16" fill="none" stroke="#14140f" stroke-width="2"/>
+            <text x="64" y="448" text-anchor="middle" font-size="13" font-weight="700" fill="#14140f">私</text>
+            <g stroke="#14140f" stroke-width="2.2" fill="none">
+              <path d="M262 373 C 288 378, 296 396, 300 408"/>
+              <path d="M262 411 H 296"/>
+              <path d="M262 449 C 288 444, 296 426, 300 414"/>
+            </g>
+            <path d="M0,-6 L12,0 L0,6 Z" fill="#14140f" transform="translate(300,411) rotate(-90) rotate(90)"/>
+            <rect x="308" y="388" width="88" height="46" fill="#14140f"/>
+            <text x="352" y="417" text-anchor="middle" font-size="16" font-weight="700" fill="#faf9f5">行為</text>
+            <text x="150" y="494" font-size="14" font-weight="700" fill="#0ca568">つくらないと、無い</text>
+          </svg>
+        </div>
         <div class="txt">
           <h3>「身ひとつじゃ、<br>何もできない」</h3>
           <p>本で読んで、知ってはいた——人間は、道具がなければ何もできない生き物だと。<br><br>だがジャングルでは、箸もコップも、作らなければ無い。フィンとシュノーケルがなければ、海にも入れない。<br><br>知識が、体感に変わった。<br><br><strong>このとき、<span class="term">道具と私の関係</span>が見えた。</strong><br><span class="thin">——2026年6月・参加者の言葉より</span></p>
@@ -693,7 +747,44 @@
     <h2>エピソード ②</h2>
     <div class="body">
       <div class="epi">
-        <div class="photo">写真：西表島（差し替え）</div>
+        <div class="fig">
+          <svg viewBox="0 0 420 520" preserveAspectRatio="xMidYMid meet" aria-label="ジャングルでは一歩ずつ自分で坂を登るのに対し、都市ではエスカレーターに立ったまま運ばれていく図">
+            <!-- ジャングル -->
+            <text x="24" y="44" font-size="19" font-weight="700" fill="#14140f">ジャングル</text>
+            <path d="M44 208 L 300 96" fill="none" stroke="#14140f" stroke-width="2.4"/>
+            <g fill="#0ca568">
+              <ellipse cx="92" cy="178" rx="6" ry="4" transform="rotate(-24 92 178)"/>
+              <ellipse cx="128" cy="171" rx="6" ry="4" transform="rotate(-24 128 171)"/>
+              <ellipse cx="164" cy="150" rx="6" ry="4" transform="rotate(-24 164 150)"/>
+              <ellipse cx="200" cy="143" rx="6" ry="4" transform="rotate(-24 200 143)"/>
+              <ellipse cx="236" cy="122" rx="6" ry="4" transform="rotate(-24 236 122)"/>
+              <ellipse cx="272" cy="115" rx="6" ry="4" transform="rotate(-24 272 115)"/>
+            </g>
+            <circle cx="52" cy="186" r="14" fill="#faf9f5" stroke="#14140f" stroke-width="2"/>
+            <text x="396" y="72" text-anchor="end" font-size="15" font-weight="700" fill="#14140f">一歩ずつ、自分で</text>
+            <text x="396" y="98" text-anchor="end" font-size="13" fill="#4a4a42">全部、自分が当事者だった</text>
+
+            <line x1="24" y1="252" x2="396" y2="252" stroke="#d9d7cd" stroke-width="1.4"/>
+
+            <!-- 都市 -->
+            <text x="24" y="314" font-size="19" font-weight="700" fill="#14140f">戻ってきた都市</text>
+            <polygon points="40,460 320,352 320,382 40,490" fill="#e8e6dc" stroke="#d9d7cd" stroke-width="1.6"/>
+            <g>
+              <circle cx="92" cy="427" r="11" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+              <text x="92" y="431" text-anchor="middle" font-size="10" fill="#8b897f">1</text>
+              <circle cx="150" cy="405" r="11" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+              <text x="150" y="409" text-anchor="middle" font-size="10" fill="#8b897f">2</text>
+              <circle cx="208" cy="382" r="11" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+              <text x="208" y="386" text-anchor="middle" font-size="10" fill="#8b897f">3</text>
+              <circle cx="266" cy="360" r="11" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+              <text x="266" y="364" text-anchor="middle" font-size="10" fill="#8b897f">4</text>
+            </g>
+            <line x1="330" y1="348" x2="374" y2="331" stroke="#c0392b" stroke-width="2.2"/>
+            <path d="M0,-6 L12,0 L0,6 Z" fill="#c0392b" transform="translate(376,330) rotate(-21)"/>
+            <text x="396" y="316" text-anchor="end" font-size="15" font-weight="700" fill="#c0392b">運ばれていく</text>
+            <text x="40" y="510" font-size="13" fill="#4a4a42">立っているだけで、進んでしまう</text>
+          </svg>
+        </div>
         <div class="txt">
           <h3>戻った都市のほうが、<br>異様に見えた</h3>
           <p>帰京後の健康診断。番号で呼ばれ、入れ替わり立ち替わり検査されていく人々が、<strong>ロボットの機器チェックのよう</strong>に見えた。大手町の地下鉄の廊下は、蟻の行列だった。<br><br>「すべてが当事者だった<span class="term">『生きる』</span>が、気づいたら<strong>エスカレーターに乗って運ばれている感覚</strong>になっていた」<br><span class="thin">——2026年6月・参加者の言葉より</span></p>
@@ -745,19 +836,19 @@
             </marker>
           </defs>
           <!-- rings -->
-          <circle cx="310" cy="235" r="186" fill="none" stroke="#14140f" stroke-width="1.8"/>
-          <circle cx="310" cy="235" r="124" fill="none" stroke="#14140f" stroke-width="1.8"/>
-          <circle cx="310" cy="235" r="62" fill="none" stroke="#14140f" stroke-width="1.8"/>
-          <circle cx="310" cy="235" r="6" fill="#0ca568"/>
-          <text x="310" y="268" text-anchor="middle" font-size="16" fill="#4a4a42">手（わたし）</text>
+          <circle cx="340" cy="235" r="186" fill="none" stroke="#14140f" stroke-width="1.8"/>
+          <circle cx="340" cy="235" r="124" fill="none" stroke="#14140f" stroke-width="1.8"/>
+          <circle cx="340" cy="235" r="62" fill="none" stroke="#14140f" stroke-width="1.8"/>
+          <circle cx="340" cy="235" r="6" fill="#0ca568"/>
+          <text x="340" y="268" text-anchor="middle" font-size="16" fill="#4a4a42">手（わたし）</text>
           <!-- ring names inside -->
-          <text x="310" y="187" text-anchor="middle" font-size="15" fill="#4a4a42">身体</text>
-          <text x="310" y="125" text-anchor="middle" font-size="15" fill="#4a4a42">知覚と行為</text>
-          <text x="310" y="63" text-anchor="middle" font-size="15" fill="#4a4a42">世界</text>
+          <text x="340" y="187" text-anchor="middle" font-size="15" fill="#4a4a42">身体</text>
+          <text x="340" y="125" text-anchor="middle" font-size="15" fill="#4a4a42">知覚と行為</text>
+          <text x="340" y="63" text-anchor="middle" font-size="15" fill="#4a4a42">世界</text>
           <!-- leaders -->
-          <line x1="404" y1="74" x2="560" y2="56" stroke="#d9d7cd" stroke-width="1.4"/>
-          <line x1="422" y1="167" x2="560" y2="180" stroke="#d9d7cd" stroke-width="1.4"/>
-          <line x1="370" y1="257" x2="560" y2="300" stroke="#d9d7cd" stroke-width="1.4"/>
+          <line x1="434" y1="74" x2="560" y2="56" stroke="#d9d7cd" stroke-width="1.4"/>
+          <line x1="452" y1="167" x2="560" y2="180" stroke="#d9d7cd" stroke-width="1.4"/>
+          <line x1="400" y1="257" x2="560" y2="300" stroke="#d9d7cd" stroke-width="1.4"/>
           <!-- labels -->
           <text x="572" y="48" font-size="22" font-weight="700" fill="#14140f"><tspan fill="#0ca568">③</tspan> 技術の世界構成</text>
           <text x="572" y="76" font-size="15" fill="#4a4a42">この技術のもとで、世界は何として現れるか（ハイデガー）</text>
@@ -767,10 +858,11 @@
           <text x="572" y="292" font-size="22" font-weight="700" fill="#14140f"><tspan fill="#0ca568">①</tspan> 生まれながらのサイボーグ</text>
           <text x="572" y="320" font-size="15" fill="#4a4a42">拡張の境界を、誰が決められるか（クラーク）</text>
           <!-- lens4 return arrow -->
-          <path d="M 92 108 Q 44 230 138 268 Q 226 300 296 244" fill="none" stroke="#0ca568" stroke-width="2.6" stroke-dasharray="7 8" marker-end="url(#lz)"/>
+          <path d="M 88 140 Q 30 260 160 288 Q 242 302 268 244" fill="none" stroke="#0ca568" stroke-width="2.6" stroke-dasharray="7 8" marker-end="url(#lz)"/>
           <text x="30" y="46" font-size="22" font-weight="700" fill="#14140f"><tspan fill="#0ca568">④</tspan> 手で考える</text>
-          <text x="30" y="72" font-size="15" fill="#4a4a42">それでも技術は、主観的な世界</text>
-          <text x="30" y="94" font-size="15" fill="#4a4a42">——手の中に立ち現れる（インゴルド）</text>
+          <text x="30" y="74" font-size="15" fill="#4a4a42">それでも技術は、</text>
+          <text x="30" y="96" font-size="15" fill="#4a4a42">主観的な世界——手の中に</text>
+          <text x="30" y="118" font-size="15" fill="#4a4a42">立ち現れる</text>
         </svg>
       </div>
       <div class="note" style="padding-top:12px">①→③で、人間と技術の関係を<strong>身体から世界へズームアウト</strong>して見る。<span class="arrow">→</span> そして④で、<strong>手の中に戻ってくる</strong>。</div>
