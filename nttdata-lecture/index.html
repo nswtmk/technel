@@ -271,20 +271,20 @@
     <h2>単なる道具など、存在しない</h2>
     <div class="body">
       <ul class="pts tight">
-        <li>つもり：目的のために技術を使い、頼んだ結果<strong>（B）</strong>を得る。技術は中立な手段</li>
-        <li class="em">実際：技術の本質は<span class="term">ポイエーシス</span>——「こちらへと・前へと・もたらすこと」</li>
-        <li>頼んだBのうしろから、<span class="shu">頼んでいない構造変化（C）</span>がやってくる</li>
+        <li>つもり：技術は道具。<strong>頼んだこと</strong>を、やってくれるだけ</li>
+        <li class="em">実際：技術は、<span class="shu">頼んでいないこと</span>まで起こす</li>
+        <li>技術の本質は「<span class="term">もたらすこと</span>」（ポイエーシス）——頼んだ結果のうしろから、新しい世界がついてくる</li>
       </ul>
       <div class="cols c2" style="margin-top:26px">
         <div class="col">
           <div class="h">Automobile</div>
           <h3>自動車</h3>
-          <p>移動手段（B）のはずが——道路網・都市の形・身体感覚（C）まで変えた。</p>
+          <p>頼んだのは「速い移動」。<br>ついてきたのは——道路網、都市の形、身体感覚の変化。</p>
         </div>
         <div class="col">
           <div class="h">AI</div>
           <h3>AI</h3>
-          <p>効率化（B）を頼んだら——判断の習慣・会議・組織の形（C）が変わりはじめている。</p>
+          <p>頼んだのは「効率化」。<br>ついてきているのは——判断の習慣、会議、組織の形の変化。</p>
         </div>
       </div>
     </div>
@@ -298,7 +298,7 @@
       <ul class="pts">
         <li>うまく働く技術ほど、<span class="term">透明になる</span>。メガネをかけている人は、メガネを見ていない</li>
         <li>道具は「人間の<strong>外部</strong>にありながら、<strong>内部</strong>でもある」——使う瞬間、手の延長として消え去る</li>
-        <li class="em">AIはその極致。Cが進行しているのに、実感がない</li>
+        <li class="em">AIはその極致。頼んでいない変化が進んでいるのに、実感がない</li>
       </ul>
       <div class="vq shu-q" style="margin-top:14px">
         <p>「……で、これ誰が決めたんでしたっけ？」</p>
@@ -307,9 +307,78 @@
     </div>
   </section>
 
-  <!-- 05 今日の問い -->
+  <!-- 設計からは見えない -->
+  <section class="slide" data-title="関係は、設計からは見えない" data-part="0">
+    <div class="kicker">0 — 04｜Design Blind Spot</div>
+    <h2>関係は、<span class="thin">設計からは</span>見えない</h2>
+    <div class="body">
+      <div style="display:grid;grid-template-columns:1fr 470px;gap:40px;align-items:center;flex:1;min-height:0">
+        <ul class="pts tight" style="align-self:center">
+          <li>設計できるのは、<span class="term">テクノロジーの側</span>だけ</li>
+          <li>その影響は、無数のアクター——人・制度・環境・他の技術——との関係の中で決まる。<span class="shu">常に、予測不可能</span></li>
+          <li class="em">設計の席から、アクターの全体を見通すことはできない</li>
+        </ul>
+        <svg viewBox="0 0 480 340" style="width:100%;height:auto" aria-hidden="true">
+          <!-- designer -->
+          <circle cx="46" cy="170" r="15" fill="none" stroke="#14140f" stroke-width="2"/>
+          <text x="46" y="205" text-anchor="middle" font-size="15" font-weight="700" fill="#14140f">設計者</text>
+          <!-- sight cone -->
+          <line x1="60" y1="162" x2="128" y2="140" stroke="#0ca568" stroke-width="1.6" stroke-dasharray="4 5"/>
+          <line x1="60" y1="178" x2="128" y2="200" stroke="#0ca568" stroke-width="1.6" stroke-dasharray="4 5"/>
+          <!-- arrow to tech -->
+          <line x1="64" y1="170" x2="120" y2="170" stroke="#14140f" stroke-width="2.2"/>
+          <path d="M0,-6 L12,0 L0,6 Z" fill="#14140f" transform="translate(122,170)"/>
+          <!-- tech box -->
+          <rect x="126" y="142" width="76" height="56" fill="#14140f"/>
+          <text x="164" y="176" text-anchor="middle" font-size="17" font-weight="700" fill="#faf9f5">技術</text>
+          <text x="122" y="232" text-anchor="start" font-size="13.5" font-weight="600" fill="#0ca568">設計できる範囲</text>
+          <!-- network links (grey) -->
+          <g stroke="#d9d7cd" stroke-width="1.4">
+            <line x1="300" y1="72" x2="382" y2="112"/>
+            <line x1="382" y1="112" x2="428" y2="190"/>
+            <line x1="428" y1="190" x2="386" y2="262"/>
+            <line x1="386" y1="262" x2="300" y2="286"/>
+            <line x1="300" y1="72" x2="330" y2="180"/>
+            <line x1="330" y1="180" x2="386" y2="262"/>
+            <line x1="330" y1="180" x2="428" y2="190"/>
+            <line x1="300" y1="286" x2="330" y2="180"/>
+          </g>
+          <!-- unpredictable influence (dashed red arrows) -->
+          <g stroke="#c0392b" stroke-width="1.8" stroke-dasharray="5 6" fill="none">
+            <path d="M202 152 C 240 110, 262 92, 288 76"/>
+            <path d="M202 170 C 250 172, 290 176, 316 179"/>
+            <path d="M202 188 C 240 230, 262 262, 288 280"/>
+          </g>
+          <path d="M0,-5 L10,0 L0,5 Z" fill="#c0392b" transform="translate(290,75) rotate(-30)"/>
+          <path d="M0,-5 L10,0 L0,5 Z" fill="#c0392b" transform="translate(318,179) rotate(2)"/>
+          <path d="M0,-5 L10,0 L0,5 Z" fill="#c0392b" transform="translate(290,281) rotate(32)"/>
+          <!-- actors -->
+          <g>
+            <circle cx="300" cy="72" r="16" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="300" y="77" text-anchor="middle" font-size="12.5" fill="#14140f">人</text>
+            <circle cx="382" cy="112" r="16" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="382" y="117" text-anchor="middle" font-size="11" fill="#14140f">制度</text>
+            <circle cx="428" cy="190" r="16" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="428" y="195" text-anchor="middle" font-size="11" fill="#14140f">環境</text>
+            <circle cx="386" cy="262" r="16" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="386" y="267" text-anchor="middle" font-size="11" fill="#14140f">慣習</text>
+            <circle cx="300" cy="286" r="16" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="300" y="291" text-anchor="middle" font-size="12.5" fill="#14140f">人</text>
+            <circle cx="330" cy="180" r="17" fill="#faf9f5" stroke="#4a4a42" stroke-width="1.6"/>
+            <text x="330" y="177" text-anchor="middle" font-size="9.5" fill="#14140f">他の</text>
+            <text x="330" y="189" text-anchor="middle" font-size="9.5" fill="#14140f">技術</text>
+          </g>
+          <text x="366" y="34" text-anchor="middle" font-size="14" font-weight="700" fill="#4a4a42">アクターの全体（見通せない）</text>
+          <text x="248" y="322" text-anchor="start" font-size="13.5" font-weight="600" fill="#c0392b">予測不可能な影響</text>
+        </svg>
+      </div>
+      <div class="note">では——アクターの<strong>全体を見通す</strong>には、どうしたらいいのか？<span class="arrow">→</span> それが今日の問い。</div>
+    </div>
+  </section>
+
+  <!-- 今日の問い -->
   <section class="slide" data-title="今日の問い" data-part="0">
-    <div class="kicker">0 — 04｜Question</div>
+    <div class="kicker">0 — 05｜Question</div>
     <h2>今日の問い</h2>
     <div class="body">
       <p class="statement" style="font-size:36px">関係が<span class="g">見えれば</span>、どう設計すべきかが見えてくる。<br>では——どうしたら、見えるようになるのか？<small>このゼミの問い「AIを実装する私たちは、何を基準にして判断するのか？」への、今日の応答。<br>「見える」とは知識ではなく<strong>身体感覚</strong>——考えなくても関係が目に入ってくる状態を、自分の中に育てること。</small></p>
