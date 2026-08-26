@@ -184,6 +184,14 @@
   .det .ln { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linejoin: round; stroke-linecap: round; }
   .det .up { stroke: var(--moss); stroke-width: 7; stroke-linecap: round; }
   .det .lbl { font-size: 21px; font-weight: 700; fill: var(--ink); }
+  .det .sub2 { font-size: 15px; fill: var(--ink-soft); }
+  .det .br { fill: none; stroke: var(--moss); stroke-width: 2; stroke-dasharray: 5 7; }
+  .det .fossil { fill: var(--paper); stroke: var(--moss); stroke-width: 2; }
+  .det-sm { flex: none; }
+  .det-sm svg { height: 205px; width: auto; }
+  .cols.tight3 .col { padding: 22px 24px 24px; }
+  .cols.tight3 .col h3 { font-size: 22px; margin-bottom: 10px; }
+  .cols.tight3 .col p { font-size: 15px; line-height: 1.9; }
   .ship-lead { font-size: 17px; margin-top: 12px; }
 
   /* ---------- chrome ---------- */
@@ -384,7 +392,7 @@
 
   <!-- G1-04 実質的な技術決定論 -->
   <section class="slide" data-title="実質的な技術決定論" data-part="g1">
-    <div class="kicker">G1 — 04</div>
+    <div class="kicker">G1 — 05</div>
     <h2>実質的な技術決定論</h2>
     <p class="lead ship-lead">「技術決定論」は間違った考えの典型とされている。しかし現実は、そのように動いてしまっているのでは？</p>
     <div class="body det-body">
@@ -584,9 +592,49 @@
     </div>
   </section>
 
+  <!-- 過去へさかのぼる（技術史） -->
+  <section class="slide" data-title="過去へさかのぼる——技術史の重要性" data-part="1">
+    <div class="kicker">1 — 02｜History</div>
+    <h2 style="font-size:34px">過去へさかのぼる｜<span class="thin">技術史が、いまの技術を相対化する</span></h2>
+    <div class="body" style="margin-top:16px">
+      <div class="det det-sm">
+        <svg viewBox="0 0 980 400" aria-label="単線に見える技術史から、掘り起こされていない枝が分かれている図">
+          <defs>
+            <marker id="ai2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#14140f"/>
+            </marker>
+          </defs>
+          <line class="ln" x1="40" y1="300" x2="700" y2="235" marker-end="url(#ai2)"/>
+          <path class="br" d="M170 287 Q 205 210 250 160"/><circle class="fossil" cx="254" cy="155" r="6"/>
+          <path class="br" d="M300 274 Q 340 330 405 352"/><circle class="fossil" cx="411" cy="353" r="6"/>
+          <path class="br" d="M420 262 Q 470 190 545 128"/><circle class="fossil" cx="550" cy="124" r="6"/>
+          <path class="br" d="M470 257 Q 520 300 596 316"/><circle class="fossil" cx="602" cy="317" r="6"/>
+          <path class="br" d="M575 247 Q 620 200 672 176"/><circle class="fossil" cx="677" cy="173" r="6"/>
+          <text class="lbl" x="716" y="240">単線の進歩史</text>
+          <text class="sub2" x="716" y="266">——「書かれた歴史」</text>
+          <text class="sub2" x="560" y="80">掘り起こされていない枝</text>
+          <text class="sub2" x="560" y="102">＝別の世界観の化石</text>
+        </svg>
+      </div>
+      <div class="cols c2 tight3" style="margin-top:14px">
+        <div class="col">
+          <div class="h">頭で掘る</div>
+          <h3>単線の進歩史は、「書き方」の産物</h3>
+          <p>実際の技術史は、枝分かれと傍流と絶滅に満ちている。失われた枝は失敗作ではなく<strong>別の世界観の化石</strong>である。</p>
+        </div>
+        <div class="col">
+          <div class="h">相対化</div>
+          <h3>いまの技術は、「唯一の道」ではない</h3>
+          <p>過去にさかのぼると、AIも<strong>数ある技術のあり方の一つ</strong>として見えてくる。距離は、空間だけでなく<strong>時間にも</strong>取れる。</p>
+        </div>
+      </div>
+      <div class="note">技術史は、未来の選択肢が埋まっている鉱脈である。<span class="arrow">→</span> <strong>技術史によって、人間は自分たちの別の可能性を知る。</strong></div>
+    </div>
+  </section>
+
   <!-- オフグリッドキャンプのすすめ -->
   <section class="slide" data-title="オフグリッドキャンプのすすめ" data-part="1">
-    <div class="kicker">1 — 02｜Off-grid Camp</div>
+    <div class="kicker">1 — 03｜Off-grid Camp</div>
     <h2>オフグリッドキャンプのすすめ</h2>
     <div class="body">
       <ul class="pts tight">
@@ -612,7 +660,7 @@
 
   <!-- 森で考える -->
   <section class="slide" data-title="森で考える" data-part="1">
-    <div class="kicker">1 — 03｜Think in the Forest</div>
+    <div class="kicker">1 — 04｜Think in the Forest</div>
     <h2>森で考える｜<span class="thin">考えないで、考える</span></h2>
     <div class="body">
       <ul class="pts">
@@ -626,7 +674,7 @@
 
   <!-- エピソード1 -->
   <section class="slide" data-title="エピソード①" data-part="1">
-    <div class="kicker">1 — 04</div>
+    <div class="kicker">1 — 05</div>
     <h2>エピソード ①</h2>
     <div class="body">
       <div class="epi">
@@ -641,7 +689,7 @@
 
   <!-- 09 エピソード2 -->
   <section class="slide" data-title="エピソード②" data-part="1">
-    <div class="kicker">1 — 05</div>
+    <div class="kicker">1 — 06</div>
     <h2>エピソード ②</h2>
     <div class="body">
       <div class="epi">
@@ -656,7 +704,7 @@
 
   <!-- まとめ1 -->
   <section class="slide" data-title="METHOD 1｜まとめ" data-part="1">
-    <div class="kicker">1 — 06｜Recap</div>
+    <div class="kicker">1 — 07｜Recap</div>
     <h2>まとめ｜<span class="thin">離れて見る</span></h2>
     <div class="body">
       <ul class="pts">
@@ -670,7 +718,7 @@
 
   <!-- ブリッジ -->
   <section class="slide" data-title="では、離れられないときは？" data-part="1">
-    <div class="kicker">1 — 07</div>
+    <div class="kicker">1 — 08</div>
     <div class="body">
       <p class="statement">離れて見ると、関係が見える。<br>では——<span class="shu">離れられないときは？</span><small>私たちはAIから離れられない。業務からも離れられない。全員が西表島に行けるわけでもない。<br>離れなくても関係を見る方法がある。それが<strong>概念</strong>——技術哲学のレンズ。</small></p>
     </div>
@@ -681,30 +729,12 @@
     <div class="kicker">Method Two</div>
     <div class="pnum">2</div>
     <h2>概念で見る</h2>
-    <p class="lead">レンズとは、透明な関係に色をつけて見えるようにする道具。今日は3枚だけ持って帰ってください——技術媒介、サイボーグ、手で考える。</p>
+    <p class="lead">レンズとは、透明な関係に色をつけて見えるようにする道具。今日は3枚だけ持って帰ってください——サイボーグ、媒介理論、手で考える。</p>
   </section>
 
-  <!-- 12 レンズ1 -->
-  <section class="slide" data-title="レンズ1｜技術媒介" data-part="2">
+  <!-- レンズ1 サイボーグ -->
+  <section class="slide" data-title="レンズ1｜私たちはすでにサイボーグ" data-part="2">
     <div class="kicker">2 — 01｜Lens 1</div>
-    <h2>技術媒介｜<span class="thin">技術は、知覚と行為を形づくる（P-P. フェルベーク）</span></h2>
-    <div class="body">
-      <ul class="pts tight">
-        <li><strong>胎児エコー</strong>——ただ「見る」技術のはずが、胎児を「患者」に、親を「選択する者」に変えた</li>
-        <li>関係が変わり、<span class="shu">存在しなかった倫理的問いが生まれた</span></li>
-        <li>AIも同じ。要約で世界を知る＝<span class="term">要約された形で世界を知覚している</span>。推薦で選ぶ＝選択肢の地平がすでに編集されている</li>
-      </ul>
-      <div class="vq" style="margin-top:10px">
-        <p>この技術は、私の何を見せ、何を隠しているか？</p>
-        <div class="src">レンズ1の問い</div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- 14 レンズ2 -->
-  <section class="slide" data-title="レンズ2｜私たちはすでにサイボーグ" data-part="2">
-    <div class="kicker">2 — 02｜Lens 2</div>
     <h2>私たちはすでにサイボーグ<span class="thin">（A. クラーク）</span></h2>
     <div class="body">
       <ul class="pts tight">
@@ -718,25 +748,39 @@
       </div>
       <div class="vq">
         <p>拡張の境界を、<span class="g">誰が</span>決められる設計になっているか？</p>
+        <div class="src">レンズ1の問い</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- レンズ2 媒介理論 -->
+  <section class="slide" data-title="レンズ2｜媒介理論" data-part="2">
+    <div class="kicker">2 — 02｜Lens 2</div>
+    <h2>媒介理論｜<span class="thin">技術は、知覚と行為を形づくる（P-P. フェルベーク）</span></h2>
+    <div class="body">
+      <ul class="pts tight">
+        <li><strong>胎児エコー</strong>——ただ「見る」技術のはずが、胎児を「患者」に、親を「選択する者」に変えた</li>
+        <li>関係が変わり、<span class="shu">存在しなかった倫理的問いが生まれた</span></li>
+        <li>AIも同じ。要約で世界を知る＝<span class="term">要約された形で世界を知覚している</span>。推薦で選ぶ＝選択肢の地平がすでに編集されている</li>
+      </ul>
+      <div class="vq" style="margin-top:10px">
+        <p>この技術は、私の何を見せ、何を隠しているか？</p>
         <div class="src">レンズ2の問い</div>
       </div>
     </div>
   </section>
 
-  <!-- 15 レンズ3 -->
+  <!-- レンズ3 手で考える -->
   <section class="slide" data-title="レンズ3｜手で考える" data-part="2">
     <div class="kicker">2 — 03｜Lens 3</div>
-    <h2>手で考える<span class="thin">（T. インゴルド）</span></h2>
+    <h2>手で考える<span class="thin">（T. インゴルド／ハイデガー）</span></h2>
     <div class="body">
       <ul class="pts tight">
         <li>「知る」は頭の中だけの働きではない。<span class="term">歩き、触れ、つくりながら</span>、人は世界を知る</li>
-        <li>考えることをAIが引き受けたとき、人に残るのは<strong>身体を通した経験</strong>。ただし「そこへ行ける時間と場所」が新しい格差になる</li>
-        <li>古代人は技術の危険を身体で知っていた——荘子「<span class="term">機械あれば機心あり</span>」</li>
+        <li>技術は、<strong>設計図から作られるのではない</strong>——素材の抵抗と対話しながら、形は「生成する」<small>頭の中の形を材料に押しつけるのではなく、素材と、手と、環境の応答のなかで形になっていく。</small></li>
+        <li>技術は、<strong>科学に先行する</strong>。作ることが先で、説明は後から追いつく<small>火も、舟も、発酵も、なぜそうなるかが分かる何千年も前から作られていた。</small></li>
+        <li class="em">考えることをAIが引き受けたとき、人に残るのは<strong>身体を通した経験</strong><small>F2「答えは全部ある。それでも、行って、触らないと分からない」</small></li>
       </ul>
-      <div class="vq shu-q">
-        <p>「答えは全部ある。それでも、行って、触らないと分からない」</p>
-        <div class="src">F2より</div>
-      </div>
       <div class="vq">
         <p>AIに渡したあと、<span class="g">残したい経験</span>は何か？</p>
         <div class="src">レンズ3の問い</div>
@@ -752,11 +796,11 @@
       <ol class="agenda">
         <li>
           <span class="n">1</span>
-          <div><h3>技術媒介<span class="act">フェルベーク</span></h3><p>この技術は、私の何を見せ、何を隠しているか？</p></div>
+          <div><h3>サイボーグ<span class="act">クラーク</span></h3><p>拡張の境界を、誰が決められる設計になっているか？</p></div>
         </li>
         <li>
           <span class="n">2</span>
-          <div><h3>サイボーグ<span class="act">クラーク</span></h3><p>拡張の境界を、誰が決められる設計になっているか？</p></div>
+          <div><h3>媒介理論<span class="act">フェルベーク</span></h3><p>この技術は、私の何を見せ、何を隠しているか？</p></div>
         </li>
         <li>
           <span class="n">3</span>
@@ -848,11 +892,11 @@
       <ol class="agenda">
         <li>
           <span class="n">1</span>
-          <div><h3>この技術は、人の何を増幅し、何を縮減するか？<span class="act">媒介のレンズ</span></h3></div>
+          <div><h3>人と技術の関係を、誰が決められる設計になっているか？<span class="act">サイボーグのレンズ／F1</span></h3></div>
         </li>
         <li>
           <span class="n">2</span>
-          <div><h3>人と技術の関係を、誰が決められる設計になっているか？<span class="act">サイボーグのレンズ／F1</span></h3></div>
+          <div><h3>この技術は、人の何を増幅し、何を縮減するか？<span class="act">媒介理論のレンズ</span></h3></div>
         </li>
         <li>
           <span class="n">3</span>
@@ -871,7 +915,7 @@
       <ul class="pts">
         <li>プロトタイピングは、<span class="term">まだ無い関係を先取りして出現させる</span>方法</li>
         <li>作るループに「離れる」「概念で見る」を組み込む——<strong>野生のサイバネティクス</strong></li>
-        <li class="em">3つの問い（増幅／縮減・誰が決めるか・残したい経験）を、制作のチェックポイントに</li>
+        <li class="em">3つの問い（誰が決めるか・増幅／縮減・残したい経験）を、制作のチェックポイントに</li>
       </ul>
       <div class="note">見えれば、問える。問えれば、設計は変えられる。<span class="arrow">→</span> それがAI倫理実装の、あるべき態度。</div>
     </div>
