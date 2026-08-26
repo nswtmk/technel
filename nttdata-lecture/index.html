@@ -159,6 +159,33 @@
   .epi .txt h3 { font-size: 30px; font-weight: 700; line-height: 1.6; }
   .epi .txt p { font-size: 17px; line-height: 2.05; color: var(--ink-soft); margin-top: 20px; }
 
+  /* ---------- day: 一日の媒介 ---------- */
+  .day { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .day-cell { background: var(--paper); padding: 22px 20px 26px; }
+  .day-cell .t { font-size: 12px; letter-spacing: .16em; color: var(--moss); font-weight: 600; margin-bottom: 12px; }
+  .day-cell h3 { font-size: 18px; font-weight: 700; line-height: 1.6; margin-bottom: 10px; }
+  .day-cell p { font-size: 13.5px; line-height: 1.8; color: var(--ink-soft); }
+
+  /* ---------- one: 一撃の事例 ---------- */
+  .one { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: center; }
+  .one-q { font-size: 34px; font-weight: 700; line-height: 1.8; letter-spacing: .02em; }
+  .one-q .shu { color: var(--shu); }
+  .one-list { list-style: none; border-left: 2px solid var(--shu); padding-left: 26px; }
+  .one-list li { font-size: 16px; line-height: 1.9; color: var(--ink-soft); margin-bottom: 14px; }
+  .one-list li strong { color: var(--ink); }
+  .conv-goal { border: 1.8px solid var(--moss); background: #f4faf6; padding: 18px 26px; text-align: center; font-size: 23px; font-weight: 700; }
+
+  /* ---------- det: 技術決定論の階段図 ---------- */
+  .det { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .det-body { margin-top: 18px; }
+  .det-body .det { flex: none; height: 280px; margin-bottom: 8px; }
+  .det-body .det svg { height: 100%; width: auto; max-width: 100%; }
+  .det svg { width: 100%; max-width: 950px; height: auto; }
+  .det .ln { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linejoin: round; stroke-linecap: round; }
+  .det .up { stroke: var(--moss); stroke-width: 7; stroke-linecap: round; }
+  .det .lbl { font-size: 21px; font-weight: 700; fill: var(--ink); }
+  .ship-lead { font-size: 17px; margin-top: 12px; }
+
   /* ---------- chrome ---------- */
   .foot {
     position: absolute; left: 96px; right: 96px; bottom: 34px;
@@ -251,9 +278,111 @@
     </div>
   </section>
 
-  <!-- 03 message -->
-  <section class="slide" data-title="このレクチャーで伝えたいこと" data-part="0">
-    <div class="kicker">0 — 01｜Message</div>
+  <!-- G1-01 あなたの今日一日 -->
+  <section class="slide" data-title="あなたの今日一日" data-part="g1">
+    <div class="kicker">G1 — 01</div>
+    <h2>あなたの今日一日｜<span class="thin">テクノロジーはどこにあるのか？</span></h2>
+    <div class="body">
+      <div class="day">
+        <div class="day-cell">
+          <div class="t">朝</div>
+          <h3>目が覚める</h3>
+          <p>起きる時刻を決めたのは、あなたか、通知か。そもそも時計も、作られたもの。</p>
+        </div>
+        <div class="day-cell">
+          <div class="t">通勤</div>
+          <h3>世界を知る</h3>
+          <p>今日の「世の中」は、フィードが選んだ順番で届く。</p>
+        </div>
+        <div class="day-cell">
+          <div class="t">仕事</div>
+          <h3>考える・書く</h3>
+          <p>AIに下書きさせる。考えの筋も、言い回しも、少しずつ寄っていく。</p>
+        </div>
+        <div class="day-cell">
+          <div class="t">選ぶ</div>
+          <h3>欲しいと思う</h3>
+          <p>買うもの、観るもの、会う人。候補はレコメンドが並べたもの。</p>
+        </div>
+        <div class="day-cell">
+          <div class="t">夜</div>
+          <h3>迷いを相談する</h3>
+          <p>仕事を辞めるか、別れるか。人ではなく、AIに聞く人が現れている。</p>
+        </div>
+      </div>
+      <div class="note">ほとんどの「テクノロジー」は<span class="term">気づかれない</span>。そして、次々に「便利な道具」を追加していく。現代、もはや<strong>何を欲しいと思うか</strong>まで、すでに技術に方向づけられている。<br><span class="arrow">→</span> その一日は、本当にあなたが選んだのか。</div>
+    </div>
+  </section>
+
+  <!-- G1-02 出発点 -->
+  <section class="slide" data-title="出発点：技術に囲まれて生きている" data-part="g1">
+    <div class="kicker">G1 — 02</div>
+    <h2>出発点｜私たちは、テクノロジーに囲まれて生きている</h2>
+    <div class="body">
+      <ul class="pts">
+        <li>人類はその誕生以来、<strong>技術によって生存を確保</strong>してきた</li>
+        <li>産業革命以後に誕生した技術——<span class="term">テクノロジー</span>——は、生活のインフラとなり、<strong>巨大な機構</strong>となった</li>
+        <li>そしてAIが出てきて、私たちの<strong>思考や感性</strong>にまで、ますます入り込むようになってきた</li>
+        <li class="em">「人間とは何か」「AIとは何か」は、いましきりに問われている。ならば——<strong>そもそも「テクノロジーとは何か」を問うべきでは？</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- G1-03 技術問題＝倫理問題 -->
+  <section class="slide" data-title="技術問題は、そのまま倫理問題になる" data-part="g1">
+    <div class="kicker">G1 — 03</div>
+    <h2>技術問題は、そのまま倫理問題になる</h2>
+    <div class="body" style="margin-top:30px">
+      <div class="one" style="align-items:start">
+        <div>
+          <p class="one-q">「誰を撃つか」を、<br><span class="shu">先に絞り込むのは</span><br>アルゴリズムである。</p>
+          <p class="one-q" style="font-size:22px;margin-top:22px;color:var(--ink-soft)">誰を生かし、誰を採用し、<br>誰を信用するかを決めるのは——<br><span class="shu">テクノロジー</span>である。</p>
+        </div>
+        <ul class="one-list">
+          <li><strong>これは技術の話か、倫理の話か。</strong>もう分けられない。</li>
+          <li>閾値をどこに置くか。誤検出をどこまで許すか。<strong>設計上のパラメータが、そのまま生死の判断になる</strong></li>
+          <li>医療のトリアージにも、採用の選別にも、与信にも、司法の量刑支援にも当てはまる</li>
+        </ul>
+      </div>
+      <div class="conv-goal" style="margin-top:20px;font-size:20px;padding:14px 20px">
+        その判断は、法廷でも議会でもなく——<span style="color:var(--shu)">開発の現場で、先に決まってしまっている。</span>
+      </div>
+      <div class="note"><span class="arrow">→</span> だから「作ってから考える」は、もう成り立たない。<strong>技術問題＝倫理問題</strong>。これが、いま起きていること。</div>
+    </div>
+  </section>
+
+  <!-- G1-04 実質的な技術決定論 -->
+  <section class="slide" data-title="実質的な技術決定論" data-part="g1">
+    <div class="kicker">G1 — 04</div>
+    <h2>実質的な技術決定論</h2>
+    <p class="lead ship-lead">「技術決定論」は間違った考えの典型とされている。しかし現実は、そのように動いてしまっているのでは？</p>
+    <div class="body det-body">
+      <div class="det">
+        <svg viewBox="0 0 980 430" aria-label="技術の直線的進歩が、社会の技術決定を段階的に押し上げていく図">
+          <defs>
+            <marker id="ai" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#14140f"/>
+            </marker>
+            <marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4.6" markerHeight="4.6" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#0ca568"/>
+            </marker>
+          </defs>
+          <path class="ln" d="M40 270 H165 V225 H290 V180 H415 V135 H540 V90 H690" marker-end="url(#ai)"/>
+          <line class="ln" x1="40" y1="400" x2="690" y2="335" marker-end="url(#ai)" stroke-width="2"/>
+          <line class="up" x1="180" y1="372" x2="180" y2="262" marker-end="url(#am)"/>
+          <line class="up" x1="390" y1="352" x2="390" y2="218" marker-end="url(#am)"/>
+          <line class="up" x1="590" y1="332" x2="590" y2="128" marker-end="url(#am)"/>
+          <text class="lbl" x="712" y="96">社会の技術決定</text>
+          <text class="lbl" x="712" y="340">技術の直線的進歩</text>
+        </svg>
+      </div>
+      <div class="note">技術が先に進歩し、社会があとから作り替えられる。蒸気機関 <span class="arrow">→</span> 産業社会。インターネット <span class="arrow">→</span> 情報社会。<strong>では、AI <span class="arrow">→</span> ？</strong><br>世界は<strong>実質的な技術決定論に陥っている</strong>。誰かが信じているからではなく、事実としてそう動いている。</div>
+    </div>
+  </section>
+
+  <!-- G2-01 message -->
+  <section class="slide" data-title="このレクチャーで伝えたいこと" data-part="g2">
+    <div class="kicker">G2 — 01｜Message</div>
     <h2>AI倫理を「実装」するのは、難しい</h2>
     <div class="body">
       <ul class="pts">
@@ -266,8 +395,8 @@
   </section>
 
   <!-- 04 基層1 -->
-  <section class="slide" data-title="単なる道具など、存在しない" data-part="0">
-    <div class="kicker">0 — 02｜技術の基層</div>
+  <section class="slide" data-title="単なる道具など、存在しない" data-part="g2">
+    <div class="kicker">G2 — 02｜技術の基層</div>
     <h2>単なる道具など、存在しない</h2>
     <div class="body">
       <ul class="pts tight">
@@ -291,8 +420,8 @@
   </section>
 
   <!-- 04 基層2 -->
-  <section class="slide" data-title="しかも、その働きは見えない" data-part="0">
-    <div class="kicker">0 — 03｜道具のジレンマ</div>
+  <section class="slide" data-title="しかも、その働きは見えない" data-part="g2">
+    <div class="kicker">G2 — 03｜道具のジレンマ</div>
     <h2>しかも、その働きは<span class="g">見えない</span></h2>
     <div class="body">
       <ul class="pts">
@@ -308,8 +437,8 @@
   </section>
 
   <!-- 設計からは見えない -->
-  <section class="slide" data-title="関係は、設計からは見えない" data-part="0">
-    <div class="kicker">0 — 04｜Design Blind Spot</div>
+  <section class="slide" data-title="関係は、設計からは見えない" data-part="g2">
+    <div class="kicker">G2 — 04｜Design Blind Spot</div>
     <h2>関係は、<span class="thin">設計からは</span>見えない</h2>
     <div class="body">
       <div style="display:grid;grid-template-columns:1fr 470px;gap:40px;align-items:center;flex:1;min-height:0">
@@ -377,8 +506,8 @@
   </section>
 
   <!-- 今日の問い -->
-  <section class="slide" data-title="今日の問い" data-part="0">
-    <div class="kicker">0 — 05｜Question</div>
+  <section class="slide" data-title="今日の問い" data-part="g2">
+    <div class="kicker">G2 — 05｜Question</div>
     <h2>今日の問い</h2>
     <div class="body">
       <p class="statement" style="font-size:36px">関係が<span class="g">見えれば</span>、どう設計すべきかが見えてくる。<br>では——どうしたら、見えるようになるのか？<small>このゼミの問い「AIを実装する私たちは、何を基準にして判断するのか？」への、今日の応答。<br>「見える」とは知識ではなく<strong>身体感覚</strong>——考えなくても関係が目に入ってくる状態を、自分の中に育てること。</small></p>
@@ -759,7 +888,8 @@
   var i = 0;
 
   var PART_NAME = {
-    '0': '技術の基層',
+    'g1': 'GUIDANCE 1 ／ 現在のテクノロジー環境',
+    'g2': 'GUIDANCE 2 ／ AI倫理実装の困難さ',
     '1': 'METHOD 1 ／ 離れて見る',
     '2': 'METHOD 2 ／ 概念で見る',
     '3': 'METHOD 3 ／ 作って見る'
