@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="音読">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#faf8f3">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<title>音読装置</title>
+<style>
+  :root {
+    --sumi:      #1c1b18;   /* 墨 */
+    --sumi-soft: #55534c;
+    --sumi-thin: #8c8981;
+    --ai:        #22384e;   /* 藍 */
+    --asagi:     #4f9ba6;   /* 浅葱 */
+    --asagi-pale:#e6f1f2;
+    --shu:       #c0392b;   /* 朱 */
+    --shu-pale:  #f6e4e1;
+    --paper:     #faf8f3;
+    --paper-2:   #f2efe6;
+    --line:      #ddd9cd;
+    --sheet-max: 34em;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --sumi: #ece9e1; --sumi-soft: #b3afa5; --sumi-thin: #7c7970;
+      --ai: #a9c3d8; --asagi: #6fb6c1; --asagi-pale: #1b2b30;
+      --shu: #e2705f; --shu-pale: #3a2320;
+      --paper: #17171a; --paper-2: #202024; --line: #34343a;
+    }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height:100%; }
+  body {
+    background: var(--paper); color: var(--sumi);
+    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { background: none; border: none; cursor: pointer; }
+
+  /* ---------- 骨格 ---------- */
+  .mr-app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+
+  .mr-head {
+    flex: none; display: flex; align-items: center; gap: 10px;
+    padding: max(8px, env(safe-area-inset-top)) 14px 8px;
+    border-bottom: 1px solid var(--line); background: var(--paper);
+    position: relative; z-index: 30;
+  }
+  .mr-title {
+    font-size: 13px; letter-spacing: .22em; font-weight: 600; color: var(--ai);
+    white-space: nowrap;
+  }
+  .mr-title small { display:block; font-size: 9px; letter-spacing:.12em; color: var(--sumi-thin); font-weight:400; letter-spacing:.1em; }
+  .mr-head-spacer { flex: 1 1 auto; min-width: 0; }
+  .mr-now-ch {
+    font-size: 12px; color: var(--sumi-soft); overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; max-width: 46vw; text-align: right;
+  }
+
+  .mr-btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px;
+    font-size: 12.5px; letter-spacing: .04em; color: var(--sumi-soft);
+    background: var(--paper); white-space: nowrap; overflow: hidden;
+  }
+  .mr-btn:active { background: var(--paper-2); }
+  .mr-btn.is-on { border-color: var(--asagi); color: var(--asagi); }
+  .mr-btn.is-shu { border-color: var(--shu); color: var(--shu); }
+  .mr-btn[disabled] { opacity: .38; }
+  /* ファイル入力は display:none にしない（モバイルWebViewでタップが届かないため） */
+  .mr-btn input[type=file] {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    opacity: 0; cursor: pointer; font-size: 100px;
+  }
+
+  /* ---------- 本体 ---------- */
+  .mr-body { flex: 1 1 auto; display: flex; min-height: 0; position: relative; }
+
+  /* 左の柱：章内の位置と朱の分布を同時に示す */
+  .mr-spine {
+    flex: none; width: 34px; position: relative; border-right: 1px solid var(--line);
+    background: var(--paper); touch-action: none;
+  }
+  .mr-spine-track {
+    position: absolute; left: 50%; top: 16px; bottom: 16px; width: 1px;
+    background: var(--line); transform: translateX(-.5px);
+  }
+  .mr-spine-fill {
+    position: absolute; left: 50%; top: 16px; width: 1px; background: var(--asagi);
+    transform: translateX(-.5px); height: 0;
+  }
+  .mr-spine-now {
+    position: absolute; left: 50%; width: 9px; height: 9px; margin-left: -4.5px; margin-top: -4.5px;
+    border-radius: 50%; background: var(--paper); border: 1.5px solid var(--asagi);
+    transition: top .18s linear;
+  }
+  .mr-mark-dot {
+    position: absolute; left: 50%; width: 7px; height: 7px; margin-left: -3.5px; margin-top: -3.5px;
+    border-radius: 50%; background: var(--shu); cursor: pointer; border: 0;
+  }
+  .mr-mark-dot::after { content:''; position:absolute; inset:-9px; }
+
+  .mr-scroll { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+  .mr-sheet {
+    max-width: var(--sheet-max); margin: 0 auto;
+    padding: 30px 22px calc(40px + env(safe-area-inset-bottom));
+    font-family: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "YuMincho", "Noto Serif JP", "Times New Roman", serif;
+  }
+  .mr-ch-title { font-size: 25px; line-height: 1.6; margin: 8px 0 6px; letter-spacing: .04em; }
+  .mr-ch-no { display:block; font-family: inherit; font-size: 12px; letter-spacing: .3em; color: var(--asagi); margin-bottom: 10px; }
+  .mr-ch-rule { height:1px; background: var(--line); margin: 18px 0 26px; }
+
+  .mr-h { margin: 34px 0 12px; line-height: 1.7; letter-spacing: .03em; color: var(--ai); }
+  .mr-h[data-level="2"] { font-size: 20px; }
+  .mr-h[data-level="3"] { font-size: 17px; }
+  .mr-h[data-level="4"], .mr-h[data-level="5"], .mr-h[data-level="6"] { font-size: 15.5px; }
+  .mr-p { margin: 0 0 1.1em; }
+
+  /* 文 */
+  .mr-s {
+    display: inline; cursor: pointer; font-size: 19px; line-height: 2.15;
+    border-left: 2px solid transparent; padding: 1px 0 1px 4px; margin-left: -6px;
+    border-radius: 2px; transition: background-color .16s ease;
+  }
+  .mr-h .mr-s { font-size: inherit; line-height: inherit; }
+  .mr-s.is-now { background: var(--asagi-pale); border-left-color: var(--asagi); }
+  .mr-s.is-marked { text-decoration: underline; text-decoration-color: var(--shu);
+    text-decoration-thickness: 1.5px; text-underline-offset: 5px; }
+
+  /* ---------- 下の操作帯 ---------- */
+  .mr-foot {
+    flex: none; border-top: 1px solid var(--line); background: var(--paper);
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; gap: 8px; z-index: 30;
+  }
+  .mr-row { display: flex; align-items: center; gap: 8px; width: 100%; max-width: 46em; margin: 0 auto; }
+  .mr-row.mr-transport { justify-content: center; }
+  .mr-ico {
+    width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line);
+    display: inline-flex; align-items: center; justify-content: center; color: var(--sumi-soft);
+  }
+  .mr-ico:active { background: var(--paper-2); }
+  .mr-ico.mr-play { width: 52px; height: 52px; border-color: var(--ai); color: var(--ai); }
+  .mr-ico.is-shu { border-color: var(--shu); color: var(--shu); }
+  .mr-ico svg { width: 17px; height: 17px; fill: currentColor; }
+  .mr-ico.mr-rate { width: auto; min-width: 46px; border-radius: 999px; padding: 0 11px;
+    font-size: 13px; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+  .mr-ico.mr-rate.is-fast { border-color: var(--ai); color: var(--ai); }
+
+  .mr-rate-steps { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .mr-rate-steps .mr-btn { font-variant-numeric: tabular-nums; }
+  .mr-ico.mr-play svg { width: 21px; height: 21px; }
+
+  .mr-cmd { flex: 1 1 auto; display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 4px 4px 14px; background: var(--paper); }
+  .mr-cmd input { flex: 1 1 auto; min-width: 0; border: none; outline: none; background: none;
+    font-size: 15px; padding: 6px 0; }
+  .mr-cmd input::placeholder { color: var(--sumi-thin); }
+
+  .mr-status { font-size: 11.5px; color: var(--sumi-thin); min-height: 15px; letter-spacing: .02em;
+    text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mr-status.is-warn { color: var(--shu); }
+
+  /* ---------- 画面（目次・設定・朱一覧・貼り付け） ---------- */
+  .mr-screen {
+    position: absolute; inset: 0; background: var(--paper); z-index: 40;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .mr-screen[hidden] { display: none; }
+  .mr-screen-head {
+    flex: none; display: flex; align-items: center; gap: 10px; padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .mr-screen-title { font-size: 14px; letter-spacing: .18em; color: var(--ai); font-weight: 600; }
+  .mr-screen-body { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 14px 16px calc(30px + env(safe-area-inset-bottom)); }
+  .mr-screen-inner { max-width: 40em; margin: 0 auto; }
+
+  .mr-chapter {
+    display: flex; align-items: baseline; gap: 12px; width: 100%; text-align: left;
+    padding: 13px 6px; border-bottom: 1px solid var(--line);
+  }
+  .mr-chapter:active { background: var(--paper-2); }
+  .mr-chapter-no { flex: none; width: 4.6em; font-size: 11px; letter-spacing: .16em; color: var(--asagi); }
+  .mr-chapter-no.is-front { color: var(--sumi-thin); }
+  .mr-chapter-name {
+    flex: 1 1 auto; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 17px; line-height: 1.6;
+  }
+  .mr-chapter-meta { flex: none; font-size: 11px; color: var(--sumi-thin); }
+  .mr-chapter.is-now .mr-chapter-name { color: var(--asagi); }
+  .mr-chapter-tools { display: flex; gap: 6px; flex: none; }
+  .mr-sec-toggle {
+    flex: none; width: 30px; height: 30px; margin: -6px 0; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--paper); color: var(--sumi-thin);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 10px;
+  }
+  .mr-sec-toggle:active { background: var(--paper-2); }
+  .mr-sec-toggle.is-open { border-color: var(--asagi); color: var(--asagi); }
+  .mr-sec-toggle span { display: block; transition: transform .12s; }
+  .mr-sec-toggle.is-open span { transform: rotate(90deg); }
+
+  .mr-sec {
+    display: flex; align-items: baseline; gap: 10px; width: 100%; text-align: left;
+    padding: 10px 6px; border: none; border-bottom: 1px solid var(--line);
+    background: none; color: var(--sumi-soft);
+  }
+  .mr-sec:active { background: var(--paper-2); }
+  .mr-sec-tick { flex: none; color: var(--sumi-thin); font-size: 10px; letter-spacing: 0; }
+  .mr-sec-name {
+    flex: 1 1 auto; font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+    font-size: 15px; line-height: 1.55;
+  }
+  .mr-sec-meta { flex: none; font-size: 11px; color: var(--sumi-thin); font-variant-numeric: tabular-nums; }
+  .mr-chapter-meta { font-variant-numeric: tabular-nums; }
+  .mr-toc-sum {
+    padding: 4px 6px 12px; font-size: 11px; letter-spacing: .1em; color: var(--sumi-thin);
+    border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums;
+  }
+  .mr-sec.is-lead .mr-sec-name { font-family: inherit; font-size: 13px; color: var(--sumi-thin); }
+  .mr-sec.is-now { color: var(--asagi); }
+  .mr-sec.is-now .mr-sec-tick { color: var(--asagi); }
+
+  .mr-mark-item {
+    display: block; width: 100%; text-align: left; padding: 12px 6px 12px 14px;
+    border-bottom: 1px solid var(--line); border-left: 2px solid var(--shu);
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 15.5px; line-height: 1.85;
+  }
+  .mr-mark-item span { display: block; font-family: "Helvetica Neue", sans-serif;
+    font-size: 10.5px; letter-spacing: .1em; color: var(--sumi-thin); margin-bottom: 4px; }
+
+  .mr-note { font-size: 13px; line-height: 1.95; color: var(--sumi-soft); }
+  .mr-note strong { color: var(--sumi); font-weight: 600; }
+  .mr-field { margin: 16px 0; }
+  .mr-field label { display: block; font-size: 11.5px; letter-spacing: .12em; color: var(--sumi-thin); margin-bottom: 6px; }
+  .mr-field select, .mr-field textarea, .mr-field input[type=range] {
+    width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--paper);
+    padding: 9px 10px; font-size: 14px; outline: none;
+  }
+  .mr-field input[type=range] { padding: 0; border: none; accent-color: var(--asagi); }
+  .mr-field textarea { min-height: 34vh; resize: vertical; line-height: 1.8;
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; }
+
+  /* ---------- 初期画面 ---------- */
+  .mr-start { max-width: 30em; margin: 0 auto; padding: 8vh 6px 40px; text-align: center; }
+  .mr-start h1 { font-family: "Hiragino Mincho ProN", "Yu Mincho", serif; font-size: 27px;
+    letter-spacing: .14em; font-weight: 400; margin-bottom: 10px; }
+  .mr-start p { font-size: 13.5px; line-height: 2; color: var(--sumi-soft); margin-bottom: 26px; }
+  .mr-drop {
+    border: 1px dashed var(--line); border-radius: 14px; padding: 30px 18px; margin-bottom: 16px;
+    transition: border-color .15s, background-color .15s;
+  }
+  .mr-drop.is-over { border-color: var(--asagi); background: var(--asagi-pale); }
+  .mr-drop .mr-btn { padding: 11px 22px; font-size: 14px; border-color: var(--ai); color: var(--ai); }
+  .mr-drop-hint { font-size: 11.5px; color: var(--sumi-thin); margin-top: 12px; line-height: 1.8; }
+  .mr-or { font-size: 11px; letter-spacing: .2em; color: var(--sumi-thin); margin: 16px 0 10px; }
+
+  @media (max-height: 780px) {
+    .mr-start { padding-top: 3vh; }
+    .mr-start h1 { font-size: 24px; }
+    .mr-start p { font-size: 12.5px; line-height: 1.9; margin-bottom: 18px; }
+    .mr-drop { padding: 20px 14px; }
+  }
+  .mr-install { margin-top: 22px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 12px;
+    font-size: 12px; line-height: 1.95; color: var(--sumi-soft); text-align: left; }
+  .mr-install[hidden] { display: none; }
+  .mr-install b { color: var(--ai); font-weight: 600; }
+  .mr-install .mr-btn { margin-top: 8px; }
+  .mr-keyhelp { font-size: 11.5px; color: var(--sumi-thin); line-height: 2; margin-top: 26px; }
+  .mr-keyhelp code { font-family: ui-monospace, Menlo, monospace; border: 1px solid var(--line);
+    border-radius: 4px; padding: 0 5px; font-size: 11px; }
+  @media (max-width: 480px) { .mr-keyhelp { display: none; } }
+
+  .mr-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div class="mr-app" id="app">
+
+  <header class="mr-head">
+    <div class="mr-title">音読装置<small>ONDOKU</small></div>
+    <div class="mr-head-spacer"></div>
+    <div class="mr-now-ch" id="nowCh"></div>
+    <button class="mr-btn" id="btnToc">目次</button>
+    <label class="mr-btn" id="btnLoad">原稿を読み込む
+      <input type="file" id="fileInput">
+    </label>
+  </header>
+
+  <div class="mr-body" id="bodyArea">
+    <div class="mr-spine" id="spine" hidden>
+      <div class="mr-spine-track"></div>
+      <div class="mr-spine-fill" id="spineFill"></div>
+      <div class="mr-spine-now" id="spineNow" style="top:16px"></div>
+    </div>
+
+    <div class="mr-scroll" id="scroll">
+      <!-- 初期画面 -->
+      <div class="mr-start" id="startView">
+        <h1>音読装置</h1>
+        <p>原稿を声に出して聞き、引っかかった文に朱を入れるための道具です。<br>「第一章を読み上げて」と伝えると、その章が読まれます。</p>
+        <div class="mr-drop" id="dropZone">
+          <label class="mr-btn">原稿を読み込む
+            <input type="file" id="fileInput2">
+          </label>
+          <div class="mr-drop-hint">
+            .md / .txt / .docx<br>
+            パソコンならこの枠にファイルを落としても読み込めます
+          </div>
+        </div>
+        <div class="mr-or">または</div>
+        <button class="mr-btn" id="btnPasteOpen" style="padding:10px 20px;font-size:14px;">本文を貼り付ける</button>
+        <div class="mr-drop-hint" style="margin-top:10px">ファイルを選べない端末では、こちらから本文を直接貼れます</div>
+        <div class="mr-install" id="installHint" hidden></div>
+        <div class="mr-keyhelp">
+          <code>Space</code> 再生と停止　<code>←</code> <code>→</code> 一文ずつ　<code>M</code> 朱を入れる
+        </div>
+      </div>
+
+      <!-- 本文 -->
+      <div class="mr-sheet" id="sheet" hidden></div>
+    </div>
+
+    <!-- 目次 -->
+    <section class="mr-screen" id="scrToc" hidden>
+      <div class="mr-screen-head">
+        <div class="mr-screen-title">目次</div>
+        <div class="mr-head-spacer"></div>
+        <button class="mr-btn" id="btnArrange">整える</button>
+        <button class="mr-btn" id="btnTocClose">閉じる</button>
+      </div>
+      <div class="mr-screen-body"><div class="mr-screen-inner" id="tocList"></div></div>
+    </section>
+
+    <!-- 朱入れ一覧 -->
+    <section class="mr-screen" id="scrMarks" hidden>
+      <div class="mr-screen-head">
+        <div class="mr-screen-title">朱入れ</div>
+        <div class="mr-head-spacer"></div>
+        <button class="mr-btn" id="btnExport">テキストで書き出す</button>
+        <button class="mr-btn" id="btnMarksClose">閉じる</button>
+      </div>
+      <div class="mr-screen-body"><div class="mr-screen-inner" id="markList"></div></div>
+    </section>
+
+    <!-- 声と速さ -->
+    <section class="mr-screen" id="scrVoice" hidden>
+      <div class="mr-screen-head">
+        <div class="mr-screen-title">声と速さ</div>
+        <div class="mr-head-spacer"></div>
+        <button class="mr-btn" id="btnVoiceClose">閉じる</button>
+      </div>
+      <div class="mr-screen-body"><div class="mr-screen-inner">
+        <div class="mr-field">
+          <label>声</label>
+          <select id="voiceSel"></select>
+          <div class="mr-note" id="voiceNote" style="margin-top:8px"></div>
+        </div>
+        <div class="mr-field">
+          <label>速さ　<span id="rateVal">1.00</span></label>
+          <input type="range" id="rateInput" min="0.5" max="3" step="0.05" value="1">
+          <div class="mr-rate-steps" id="rateSteps"></div>
+          <div class="mr-note" style="margin-top:8px">
+            下の <code>×</code> ボタンを押しても速さが上がります（押すたびに一段ずつ、上限まで行くと最初に戻る）。
+            声によっては 2 倍を超えると端末側で頭打ちになることがあります。そのときは別の声を選んでください。
+          </div>
+        </div>
+        <div class="mr-field">
+          <label>高さ　<span id="pitchVal">1.00</span></label>
+          <input type="range" id="pitchInput" min="0.5" max="1.6" step="0.05" value="1">
+        </div>
+        <div class="mr-field">
+          <label>章の終わりで次の章へ進む</label>
+          <button class="mr-btn" id="btnAuto">自動送り　入</button>
+        </div>
+        <div class="mr-field">
+          <label>見出しも読み上げる</label>
+          <button class="mr-btn" id="btnReadHead">見出し　読む</button>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--line);margin:22px 0">
+        <div class="mr-note">
+          <strong>原稿の保存</strong><br>
+          読み込んだ原稿と朱入れは、この端末の中（IndexedDB）に章ごとに分けて保存されます。ブラウザを閉じても残ります。
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="mr-btn" id="btnPasteOpen2">本文を貼り付ける</button>
+            <button class="mr-btn is-shu" id="btnClear">保存を消す</button>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- 貼り付け -->
+    <section class="mr-screen" id="scrPaste" hidden>
+      <div class="mr-screen-head">
+        <div class="mr-screen-title">本文を貼り付ける</div>
+        <div class="mr-head-spacer"></div>
+        <button class="mr-btn" id="btnPasteRun">読み込む</button>
+        <button class="mr-btn" id="btnPasteClose">閉じる</button>
+      </div>
+      <div class="mr-screen-body"><div class="mr-screen-inner">
+        <div class="mr-note"><code>#</code> の数が見出しの深さになります。「第一章」で始まる短い行も見出しとみなします。</div>
+        <div class="mr-field">
+          <label>本文</label>
+          <textarea id="pasteArea" placeholder="# はじめに&#10;&#10;本文……"></textarea>
+        </div>
+      </div></div>
+    </section>
+  </div>
+
+  <footer class="mr-foot">
+    <div class="mr-row mr-transport">
+      <button class="mr-ico" id="btnPrevCh" title="前の章"><svg viewBox="0 0 24 24"><path d="M18 5v14l-9-7 9-7zM7 5h2v14H7z"/></svg></button>
+      <button class="mr-ico" id="btnPrevS" title="前の文"><svg viewBox="0 0 24 24"><path d="M15 5v14l-9-7 9-7z"/></svg></button>
+      <button class="mr-ico mr-play" id="btnPlay" title="再生／停止"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <button class="mr-ico" id="btnNextS" title="次の文"><svg viewBox="0 0 24 24"><path d="M9 5v14l9-7-9-7z"/></svg></button>
+      <button class="mr-ico" id="btnNextCh" title="次の章"><svg viewBox="0 0 24 24"><path d="M6 5v14l9-7-9-7zM15 5h2v14h-2z"/></svg></button>
+      <button class="mr-ico is-shu" id="btnMark" title="朱を入れる（M）"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 6.1 6.4.5-4.9 4.2 1.5 6.2L12 16.7 6.4 20l1.5-6.2L3 9.6l6.4-.5z"/></svg></button>
+    </div>
+    <div class="mr-row">
+      <button class="mr-ico mr-rate" id="btnRate" title="速さを上げる。上限まで行くと最初に戻る（右クリック／長押しで一段戻す）">×1.0</button>
+      <button class="mr-ico" id="btnVoice" title="声と速さ"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3c0-1.5-.8-2.8-2-3.4v6.8c1.2-.6 2-1.9 2-3.4zM14.5 3.2v2.1c2.9.9 5 3.5 5 6.7s-2.1 5.8-5 6.7v2.1c4-.9 7-4.5 7-8.8s-3-7.9-7-8.8z"/></svg></button>
+      <div class="mr-cmd">
+        <input id="cmdInput" type="text" placeholder="第一章を読み上げて" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="mr-ico" id="btnMic" title="声で指示する"><svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 003-3V6a3 3 0 10-6 0v5a3 3 0 003 3zm5-3a5 5 0 01-10 0H5a7 7 0 006 6.9V21h2v-3.1A7 7 0 0019 11h-2z"/></svg></button>
+      </div>
+      <button class="mr-ico is-shu" id="btnMarks" title="朱入れ一覧"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.2L6 21z"/></svg></button>
+    </div>
+    <div class="mr-status" id="status"></div>
+  </footer>
+</div>
+<script>
+(function () {
+'use strict';
+
+/* ============================================================
+   0. 下ごしらえ
+   ============================================================ */
+var $ = function (id) { return document.getElementById(id); };
+var UA = navigator.userAgent;
+var IS_IOS = /iPad|iPhone|iPod/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+var IS_SAFARI = /Safari/.test(UA) && !/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android/.test(UA);
+var IS_APPLE = IS_IOS || IS_SAFARI;
+
+var state = {
+  doc: null,          /* { name, loadedAt, chapters:[ {title, level, front, forced, blocks:[]} ] } */
+  ci: -1,             /* いま開いている章 */
+  si: 0,              /* いま読んでいる文 */
+  sents: [],          /* 現在章の文 [{text, head:bool, el}] */
+  playing: false,
+  marks: [],          /* [{title, ci, si, text, at}] */
+  voices: [],
+  unlocked: false,
+  epoch: 0            /* cancel と onend の取り違えを防ぐ通し番号 */
+};
+var settings = { voiceURI: '', rate: 1, pitch: 1, auto: true, readHead: true };
+
+function setStatus(msg, warn) {
+  var el = $('status');
+  el.textContent = msg || '';
+  el.className = 'mr-status' + (warn ? ' is-warn' : '');
+}
+
+/* ============================================================
+   1. 保存（IndexedDB。章ごとに鍵を分けるので大きな原稿でも溢れない）
+   ============================================================ */
+var DB_NAME = 'ondoku', DB_STORE = 'kv', dbp = null;
+
+function db() {
+  if (dbp) return dbp;
+  dbp = new Promise(function (res, rej) {
+    if (!window.indexedDB) return rej(new Error('no idb'));
+    var r = indexedDB.open(DB_NAME, 1);
+    r.onupgradeneeded = function () { r.result.createObjectStore(DB_STORE); };
+    r.onsuccess = function () { res(r.result); };
+    r.onerror = function () { rej(r.error); };
+  });
+  return dbp;
+}
+function kv(mode, fn) {
+  return db().then(function (d) {
+    return new Promise(function (res, rej) {
+      var tx = d.transaction(DB_STORE, mode);
+      var req = fn(tx.objectStore(DB_STORE));
+      tx.oncomplete = function () { res(req && req.result); };
+      tx.onerror = function () { rej(tx.error); };
+    });
+  });
+}
+/* IndexedDB が使えない環境（古い WebView 等）では localStorage に落とす */
+function lsKey(k) { return 'ondoku:' + k; }
+function kvGet(k) {
+  return kv('readonly', function (s) { return s.get(k); }).catch(function () {
+    var v = localStorage.getItem(lsKey(k));
+    return v == null ? undefined : JSON.parse(v);
+  });
+}
+function kvSet(k, v) {
+  return kv('readwrite', function (s) { return s.put(v, k); }).catch(function () {
+    try { localStorage.setItem(lsKey(k), JSON.stringify(v)); } catch (e) {
+      setStatus('保存できませんでした（この端末の保存容量を超えています）', true);
+    }
+  });
+}
+function kvDel(k) {
+  return kv('readwrite', function (s) { return s.delete(k); }).catch(function () {
+    localStorage.removeItem(lsKey(k));
+  });
+}
+function kvClearAll() {
+  return kv('readwrite', function (s) { return s.clear(); }).catch(function () {
+    Object.keys(localStorage).forEach(function (k) {
+      if (k.indexOf('ondoku:') === 0) localStorage.removeItem(k);
+    });
+  });
+}
+
+/* 本文は章ごとに、目次は軽い姿だけを保存する（起動のたびに文へ割り直す） */
+function saveDoc(doc) {
+  var meta = {
+    name: doc.name, loadedAt: doc.loadedAt,
+    chapters: doc.chapters.map(function (c) {
+      return { title: c.title, level: c.level, front: c.front, forced: c.forced, n: c.blocks.length };
+    })
+  };
+  var jobs = [kvSet('doc:meta', meta)];
+  doc.chapters.forEach(function (c, i) { jobs.push(kvSet('doc:ch:' + i, c.blocks)); });
+  return Promise.all(jobs).catch(function (e) {
+    setStatus('保存に失敗しました（' + e.message + '）。読み上げ自体は続けられます', true);
+  });
+}
+function loadDoc() {
+  return kvGet('doc:meta').then(function (meta) {
+    if (!meta || !meta.chapters || !meta.chapters.length) return null;
+    return Promise.all(meta.chapters.map(function (_, i) { return kvGet('doc:ch:' + i); }))
+      .then(function (all) {
+        var chapters = meta.chapters.map(function (c, i) {
+          return { title: c.title, level: c.level, front: c.front, forced: c.forced, blocks: all[i] || [] };
+        });
+        return { name: meta.name, loadedAt: meta.loadedAt, chapters: chapters };
+      });
+  }).catch(function () { return null; });
+}
+function clearDocKeys() {
+  return kvGet('doc:meta').then(function (meta) {
+    var n = meta && meta.chapters ? meta.chapters.length : 0, jobs = [kvDel('doc:meta')];
+    for (var i = 0; i < n + 40; i++) jobs.push(kvDel('doc:ch:' + i));
+    return Promise.all(jobs);
+  });
+}
+var saveTimer = null;
+function saveNow() {
+  clearTimeout(saveTimer); saveTimer = null;
+  kvSet('marks', state.marks);
+  kvSet('settings', settings);
+  kvSet('progress', { ci: state.ci, si: state.si });
+}
+function saveSoon() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveNow, 400);
+}
+/* 画面を離れるときは待たずに書き切る（散歩中にアプリを切り替えても続きが残るように） */
+window.addEventListener('pagehide', function () { if (saveTimer) saveNow(); });
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden' && saveTimer) saveNow();
+});
+
+/* ============================================================
+   2. 原稿の取り込み
+   ============================================================ */
+var FRONT_RE = /^(はじめに|まえがき|前書き|序文|序章|序論|序|目次|凡例|参考|参照|引用|注記|注|訳注|おわりに|終わりに|終章|あとがき|後書き|謝辞|索引|奥付|献辞|付録|附録|補遺|参考文献)/;
+var CH_RE = /^(?:第[0-9０-９一二三四五六七八九十百千]+[章節部篇編話回]|序章|終章|プロローグ|エピローグ)/;
+
+function cleanLine(s) {
+  return s
+    .replace(/^﻿/, '')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^\s{0,3}>\s?/, '')
+    .replace(/^\s{0,3}[-*+]\s+/, '')
+    .replace(/^\s{0,3}\d+[.)]\s+/, '')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/(^|[^*])\*([^*]+)\*/g, '$1$2')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/[ \t]+$/, '');
+}
+
+/* .md / .txt を行ごとに読む */
+var FRONT_ALONE = /^(はじめに|まえがき|前書き|序|序章|序文|序論|目次|凡例|おわりに|終わりに|終章|あとがき|後書き|謝辞|索引|奥付|献辞)$/;
+function parseText(raw) {
+  var lines = raw.replace(/\r\n?/g, '\n').split('\n');
+  var blocks = [];
+  /* すでに # 見出しがある原稿では、行の見た目からの見出し推測をひかえる */
+  var hasHash = /^\s{0,3}#{1,6}\s+\S/m.test(raw);
+  for (var i = 0; i < lines.length; i++) {
+    var line = cleanLine(lines[i]);
+    var t = line.trim();
+    if (!t) continue;
+    if (/^([=]{3,}|[-]{3,}|[─—―]{3,})$/.test(t)) {           /* 下線式の見出し・区切り線 */
+      if (blocks.length && blocks[blocks.length - 1].t === 'p' && /^=/.test(t)) {
+        blocks[blocks.length - 1] = { t: 'h', level: 1, text: blocks[blocks.length - 1].text };
+      } else if (blocks.length && blocks[blocks.length - 1].t === 'p' && /^-/.test(t)
+                 && lines[i - 1] && lines[i - 1].trim()) {
+        blocks[blocks.length - 1] = { t: 'h', level: 2, text: blocks[blocks.length - 1].text };
+      }
+      continue;
+    }
+    var m = t.match(/^(#{1,6})\s*(.+)$/);
+    if (m) { blocks.push({ t: 'h', level: m[1].length, text: m[2].trim() }); continue; }
+    /* 「第一章」で始まる短い行も見出しとみなす */
+    if (t.length <= 40 && CH_RE.test(t) && !/[。．！？]$/.test(t)) {
+      blocks.push({ t: 'h', level: /[節項]/.test(t.charAt(t.length - 1)) ? 2 : 1, text: t });
+      continue;
+    }
+    if (!hasHash && t.length <= 12 && FRONT_ALONE.test(t)) {
+      blocks.push({ t: 'h', level: 1, text: t }); continue;
+    }
+    blocks.push({ t: 'p', text: t });
+  }
+  return blocks;
+}
+
+/* .docx を外部ライブラリなしで開く（zip → deflate-raw → document.xml） */
+function unzipEntry(buf, wanted) {
+  var dv = new DataView(buf), u8 = new Uint8Array(buf), i;
+  var eocd = -1;
+  for (i = u8.length - 22; i >= 0 && i > u8.length - 66000; i--) {
+    if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  }
+  if (eocd < 0) return Promise.reject(new Error('zipの構造を読めません'));
+  var count = dv.getUint16(eocd + 10, true), off = dv.getUint32(eocd + 16, true);
+  var dec = new TextDecoder('utf-8');
+  for (i = 0; i < count; i++) {
+    if (dv.getUint32(off, true) !== 0x02014b50) break;
+    var nameLen = dv.getUint16(off + 28, true), extLen = dv.getUint16(off + 30, true),
+        cmtLen = dv.getUint16(off + 32, true), method = dv.getUint16(off + 10, true),
+        cSize = dv.getUint32(off + 20, true), lho = dv.getUint32(off + 42, true);
+    var name = dec.decode(u8.subarray(off + 46, off + 46 + nameLen));
+    if (name === wanted) {
+      var lNameLen = dv.getUint16(lho + 26, true), lExtLen = dv.getUint16(lho + 28, true);
+      var start = lho + 30 + lNameLen + lExtLen;
+      var data = u8.subarray(start, start + cSize);
+      if (method === 0) return Promise.resolve(dec.decode(data));
+      if (typeof DecompressionStream === 'undefined') {
+        return Promise.reject(new Error('この環境では.docxを開けません。.md で書き出して渡してください'));
+      }
+      var ds = new DecompressionStream('deflate-raw');
+      return new Response(new Blob([data]).stream().pipeThrough(ds)).text();
+    }
+    off += 46 + nameLen + extLen + cmtLen;
+  }
+  return Promise.reject(new Error('docxの本文が見つかりません'));
+}
+
+function parseDocx(buf) {
+  return unzipEntry(buf, 'word/document.xml').then(function (xml) {
+    var d = new DOMParser().parseFromString(xml, 'application/xml');
+    var W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main';
+    var ps = d.getElementsByTagNameNS(W, 'p'), blocks = [];
+    for (var i = 0; i < ps.length; i++) {
+      var p = ps[i];
+      var st = '', sEl = p.getElementsByTagNameNS(W, 'pStyle')[0];
+      if (sEl) st = sEl.getAttributeNS(W, 'val') || sEl.getAttribute('w:val') || '';
+      var ts = p.getElementsByTagNameNS(W, 't'), text = '';
+      for (var j = 0; j < ts.length; j++) text += ts[j].textContent || '';
+      text = text.replace(/[ \t\r\n]+/g, ' ').trim();   /* 全角空白は原稿の呼吸なので残す */
+      if (!text) continue;
+      var lv = 0, m = st.match(/^(?:Heading|見出し)\s*([1-6])$/i);
+      if (m) lv = parseInt(m[1], 10);
+      else if (/^(Title|表題|タイトル)$/i.test(st)) lv = 1;
+      else if (/^(Subtitle|副題)$/i.test(st)) lv = 2;
+      if (lv) blocks.push({ t: 'h', level: lv, text: text, title: /^(Title|Subtitle|表題|副題|タイトル)$/i.test(st) || undefined });
+      else blocks.push({ t: 'p', text: text });
+    }
+    return blocks;
+  });
+}
+
+/* もっとも浅い見出しを章とし、それより深い見出しは節として本文に含める */
+function buildChapters(blocks) {
+  var min = 99;
+  blocks.forEach(function (b) { if (b.t === 'h' && b.level < min) min = b.level; });
+  if (min === 99) min = 1;
+  var chapters = [], cur = null;
+  blocks.forEach(function (b) {
+    if (b.t === 'h' && b.level <= min) {
+      cur = { title: b.text, level: b.level, blocks: [],
+              front: !!b.title || FRONT_RE.test(b.text), forced: null };
+      chapters.push(cur);
+    } else {
+      if (!cur) {
+        cur = { title: '冒頭（見出しの前）', level: min, blocks: [], front: true, forced: null };
+        chapters.push(cur);
+      }
+      cur.blocks.push(b);
+    }
+  });
+  return chapters.filter(function (c) { return c.blocks.length || c.title; });
+}
+
+/* 章の下の見出し（節・項）。文の番号まで数えておく。
+   目次を開いたときにその章のぶんだけ数え、あとは控えを使う */
+var secCache = {};
+function clearSecCache() { secCache = {}; }
+
+/* 字数は本文だけ数える。見出しの文字は原稿の分量ではない */
+function bodyChars(ch) {
+  return ch.blocks.reduce(function (a, b) { return a + (b.t === 'h' ? 0 : b.text.length); }, 0);
+}
+function docChars() {
+  return (state.doc ? state.doc.chapters : []).reduce(function (a, c) { return a + bodyChars(c); }, 0);
+}
+
+function sectionsOf(ci) {
+  if (secCache[ci]) return secCache[ci];
+  var ch = state.doc && state.doc.chapters[ci];
+  if (!ch) return [];
+  var secs = [], n = 0, minLv = 99;
+  ch.blocks.forEach(function (b) {
+    if (b.t === 'h') { if (b.level < minLv) minLv = b.level; }
+  });
+  var lead = 0;                                   /* 最初の見出しより前の本文 */
+  ch.blocks.forEach(function (b) {
+    if (b.t === 'h') { secs.push({ text: b.text, level: b.level, depth: b.level - minLv, si: n, chars: 0 }); n += 1; }
+    else {
+      n += splitSents(b.text).length;
+      if (secs.length) secs[secs.length - 1].chars += b.text.length;
+      else lead += b.text.length;
+    }
+  });
+  /* 次の見出しの手前までがその節の範囲 */
+  secs.forEach(function (sc, k) { sc.end = k + 1 < secs.length ? secs[k + 1].si : Infinity; });
+  /* 節の字数は、その下にぶら下がる項もひっくるめた数にする。
+     でないと項を持つ節が実際より痩せて見える */
+  for (var k = secs.length - 1; k >= 0; k--) {
+    var tot = secs[k].chars;
+    for (var j = k + 1; j < secs.length && secs[j].depth > secs[k].depth; j++) tot += secs[j].chars;
+    secs[k].total = tot;
+  }
+  secs.lead = lead;
+  secCache[ci] = secs;
+  return secs;
+}
+
+/* いま読んでいるのがどの節か */
+function currentSection(ci, si) {
+  var secs = sectionsOf(ci), found = -1;
+  for (var k = 0; k < secs.length; k++) if (secs[k].si <= si) found = k;
+  return found;
+}
+
+/* 章のどこからでも読み始める。同じ章なら開き直さない */
+function goTo(ci, si, autoplay) {
+  if (ci === state.ci && state.sents.length) {
+    state.si = Math.min(Math.max(si || 0, 0), state.sents.length - 1);
+    focusSentence(state.si, true);
+    updateSpineNow();
+    saveSoon();
+    if (autoplay) play();
+    else if (state.playing) { state.epoch++; if (SY) SY.cancel(); speakCurrent(); }
+  } else {
+    openChapter(ci, !!autoplay, si || 0);
+  }
+}
+
+/* 章番号：前付けは番号から外れる */
+function numbering() {
+  var n = 0;
+  return (state.doc ? state.doc.chapters : []).map(function (c) {
+    var front = (c.forced === null || c.forced === undefined) ? c.front : c.forced;
+    if (front) return null;
+    n += 1; return n;
+  });
+}
+var KANSU = ['〇','一','二','三','四','五','六','七','八','九'];
+function kanNum(n) {
+  if (n <= 10) return n === 10 ? '十' : KANSU[n];
+  if (n < 20) return '十' + KANSU[n - 10];
+  if (n < 100) return KANSU[Math.floor(n / 10)] + '十' + (n % 10 ? KANSU[n % 10] : '');
+  return String(n);
+}
+
+/* 文に割る（。！？と閉じ括弧まで。極端に長い文だけ読点で区切る） */
+function splitSents(text) {
+  var out = [], buf = '';
+  for (var i = 0; i < text.length; i++) {
+    var c = text[i];
+    buf += c;
+    if ('。．！？!?'.indexOf(c) >= 0) {
+      while (i + 1 < text.length && '」』）】〉》”"\'’。！？'.indexOf(text[i + 1]) >= 0) { buf += text[++i]; }
+      out.push(buf); buf = '';
+    }
+  }
+  if (buf.trim()) out.push(buf);
+  var res = [];
+  out.forEach(function (s) {
+    if (s.length <= 220) { res.push(s); return; }
+    var part = '', k;
+    for (k = 0; k < s.length; k++) {
+      part += s[k];
+      if ((s[k] === '、' || s[k] === '，') && part.length > 120) { res.push(part); part = ''; }
+    }
+    if (part) res.push(part);
+  });
+  return res.filter(function (s) { return s.trim().length; });
+}
+
+/* ============================================================
+   3. 章を開く・描く
+   ============================================================ */
+function esc(t) {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function chapterLabel(i) {
+  var no = numbering()[i];
+  return no === null ? '前付け' : '第' + kanNum(no) + '章';
+}
+
+function openChapter(i, autoplay, atSentence) {
+  if (!state.doc || i < 0 || i >= state.doc.chapters.length) return;
+  var ch = state.doc.chapters[i];
+  state.ci = i;
+  state.sents = [];
+  var sheet = $('sheet');
+  sheet.innerHTML = '';
+  $('startView').hidden = true;
+  sheet.hidden = false;
+  $('spine').hidden = false;
+
+  var head = document.createElement('h2');
+  head.className = 'mr-ch-title';
+  var no = numbering()[i];
+  if (no !== null) {
+    var span = document.createElement('span');
+    span.className = 'mr-ch-no';
+    span.textContent = '第' + kanNum(no) + '章';
+    head.appendChild(span);
+  }
+  head.appendChild(document.createTextNode(ch.title));
+  sheet.appendChild(head);
+  var rule = document.createElement('div'); rule.className = 'mr-ch-rule'; sheet.appendChild(rule);
+
+  /* 長い章では文が千を超えるので、一度に組み立てて一度だけ流し込む */
+  var html = [], holder = document.createElement('div');
+  ch.blocks.forEach(function (b) {
+    var parts = b.t === 'h' ? [b.text] : splitSents(b.text);
+    html.push(b.t === 'h' ? '<p class="mr-h" data-level="' + b.level + '">' : '<p class="mr-p">');
+    parts.forEach(function (txt) {
+      html.push('<span class="mr-s" data-i="' + state.sents.length + '">' + esc(txt) + '</span>');
+      state.sents.push({ text: txt, head: b.t === 'h', level: b.t === 'h' ? b.level : 0, el: null });
+    });
+    html.push('</p>');
+  });
+  holder.innerHTML = html.join('');
+  var spans = holder.querySelectorAll('.mr-s');
+  for (var k = 0; k < spans.length; k++) state.sents[k].el = spans[k];
+  while (holder.firstChild) sheet.appendChild(holder.firstChild);
+
+  $('nowCh').textContent = (no !== null ? '第' + kanNum(no) + '章　' : '') + ch.title;
+  state.si = Math.min(Math.max(atSentence || 0, 0), Math.max(state.sents.length - 1, 0));
+  paintMarks();
+  focusSentence(state.si, true);
+  renderSpine();
+  saveSoon();
+
+  if (autoplay) { play(); }
+  else { setStatus(ch.title + '　' + state.sents.length + '文'); }
+}
+
+function focusSentence(i, jump) {
+  state.sents.forEach(function (s) { s.el.classList.remove('is-now'); });
+  var s = state.sents[i];
+  if (!s) return;
+  s.el.classList.add('is-now');
+  var box = $('scroll'), r = s.el.getBoundingClientRect(), br = box.getBoundingClientRect();
+  if (r.top < br.top + 60 || r.bottom > br.bottom - 60) {
+    box.scrollTop += (r.top - br.top) - box.clientHeight * 0.38;
+  }
+  updateSpineNow();
+}
+
+function markKey(ci, si) { return ci + ':' + si; }
+function isMarked(ci, si) {
+  return state.marks.some(function (m) { return m.ci === ci && m.si === si; });
+}
+function paintMarks() {
+  state.sents.forEach(function (s, i) {
+    s.el.classList.toggle('is-marked', isMarked(state.ci, i));
+  });
+}
+
+function renderSpine() {
+  var spine = $('spine');
+  Array.prototype.slice.call(spine.querySelectorAll('.mr-mark-dot')).forEach(function (d) { d.remove(); });
+  var n = Math.max(state.sents.length - 1, 1);
+  state.marks.filter(function (m) { return m.ci === state.ci; }).forEach(function (m) {
+    var dot = document.createElement('button');
+    dot.className = 'mr-mark-dot';
+    dot.style.top = ratioToPx(m.si / n) + 'px';
+    dot.title = m.text.slice(0, 30);
+    dot.addEventListener('click', function (e) {
+      e.stopPropagation();
+      state.si = m.si; focusSentence(state.si, true);
+      if (state.playing) play(); else setStatus('朱を入れた文へ戻りました');
+    });
+    spine.appendChild(dot);
+  });
+  updateSpineNow();
+}
+function ratioToPx(r) {
+  var h = $('spine').clientHeight - 32;
+  return 16 + Math.max(0, Math.min(1, r)) * h;
+}
+function updateSpineNow() {
+  var n = Math.max(state.sents.length - 1, 1);
+  var top = ratioToPx(state.si / n);
+  $('spineNow').style.top = top + 'px';
+  $('spineFill').style.height = Math.max(0, top - 16) + 'px';
+}
+
+/* ============================================================
+   4. 読み上げ
+   ============================================================ */
+var SY = window.speechSynthesis;
+var lastStart = 0, lastFail = 0, failRun = 0;
+
+function unlockSpeech() {
+  if (state.unlocked || !SY) return;
+  try {
+    var u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0; u.rate = 2; u.lang = 'ja-JP';
+    SY.speak(u);
+    state.unlocked = true;
+  } catch (e) { /* 無視 */ }
+}
+
+function pickVoice() {
+  var vs = state.voices;
+  if (!vs.length) return null;
+  var byUri = vs.filter(function (v) { return v.voiceURI === settings.voiceURI; })[0];
+  if (byUri) return byUri;
+  var ja = vs.filter(function (v) { return /^ja/i.test(v.lang); });
+  return ja[0] || null;
+}
+
+function nextReadable(from, dir) {
+  var i = from;
+  while (i >= 0 && i < state.sents.length) {
+    if (!(state.sents[i].head && !settings.readHead)) return i;
+    i += dir;
+  }
+  return -1;
+}
+
+function speakCurrent() {
+  if (!SY) { setStatus('この端末では読み上げが使えません', true); return; }
+  var i = nextReadable(state.si, 1);
+  if (i < 0) { chapterEnd(); return; }
+  state.si = i;
+  focusSentence(i);
+  updateSpineNow();
+  var s = state.sents[i];
+  var u = new SpeechSynthesisUtterance(s.text);
+  var v = pickVoice();
+  if (v) u.voice = v;
+  u.lang = v ? v.lang : 'ja-JP';
+  u.rate = settings.rate;
+  u.pitch = settings.pitch;
+  var ep = state.epoch;
+  u.onend = function () {
+    if (ep !== state.epoch || !state.playing) return;
+    advance();                       /* iOS のために setTimeout を挟まない */
+  };
+  u.onerror = function (ev) {
+    if (ep !== state.epoch || !state.playing) return;
+    var err = ev && ev.error;
+    if (err === 'interrupted' || err === 'canceled') return;
+    if (err === 'not-allowed') { stop(); setStatus('読み上げが許可されていません。画面をタップしてから再生してください', true); return; }
+    /* 続けて失敗するときは空回りさせずに止める */
+    if (Date.now() - lastFail < 1200) { failRun += 1; } else { failRun = 1; }
+    lastFail = Date.now();
+    if (failRun >= 5) {
+      stop();
+      setStatus('声を出せませんでした。日本語の声が入っているか、声と速さの画面で確かめてください', true);
+      return;
+    }
+    advance();
+  };
+  lastStart = Date.now();
+  if (state.si === 0) failRun = 0;
+  SY.speak(u);
+  saveSoon();
+}
+
+function advance() {
+  var i = nextReadable(state.si + 1, 1);
+  if (i < 0) { chapterEnd(); return; }
+  state.si = i;
+  speakCurrent();
+}
+
+function chapterEnd() {
+  if (settings.auto && state.doc && state.ci + 1 < state.doc.chapters.length) {
+    var next = state.ci + 1;
+    /* 章送りも同じ流れの中で speak まで届かせる（iOS 対策） */
+    openChapter(next, false, 0);
+    if (state.playing) { state.epoch++; speakCurrent(); }
+    setStatus('次の章へ　' + state.doc.chapters[next].title);
+  } else {
+    stop();
+    setStatus('章の終わりです');
+  }
+}
+
+function play() {
+  if (!state.doc) { setStatus('先に原稿を読み込んでください', true); return; }
+  if (state.ci < 0) { openChapter(0, true); return; }
+  unlockSpeech();
+  state.epoch++;
+  if (SY) SY.cancel();
+  state.playing = true;
+  paintPlay();
+  speakCurrent();
+}
+function stop() {
+  state.playing = false;
+  state.epoch++;
+  if (SY) { SY.cancel(); }
+  paintPlay();
+  saveSoon();
+}
+function toggle() { if (state.playing) { stop(); setStatus('止めました'); } else { play(); } }
+
+function paintPlay() {
+  $('playIcon').innerHTML = state.playing
+    ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>'
+    : '<path d="M7 4l13 8-13 8z"/>';
+  $('btnPlay').setAttribute('aria-label', state.playing ? '止める' : '読み上げる');
+}
+
+function jump(delta) {
+  if (!state.sents.length) return;
+  var i = Math.max(0, Math.min(state.sents.length - 1, state.si + delta));
+  state.si = i;
+  focusSentence(i, true);
+  if (state.playing) { state.epoch++; if (SY) SY.cancel(); speakCurrent(); }
+  else { setStatus(''); saveSoon(); }
+}
+
+/* Chrome は15秒ほどで合成を打ち切るため、9秒ごとに継ぎ直す。
+   Safari ではこの手当てが発話を壊すので入れない。 */
+if (!IS_APPLE) {
+  setInterval(function () {
+    if (state.playing && SY && SY.speaking && !SY.paused) { SY.pause(); SY.resume(); }
+  }, 9000);
+}
+/* 発話が黙って落ちたときの見張り */
+setInterval(function () {
+  if (!state.playing || !SY) return;
+  if (!SY.speaking && !SY.pending && Date.now() - lastStart > 2500) { speakCurrent(); }
+}, 3000);
+
+/* 声の一覧は非同期に届く */
+function renderVoices() {
+  var vs = (SY && SY.getVoices()) ? SY.getVoices() : [];
+  state.voices = vs;
+  var ja = vs.filter(function (v) { return /^ja/i.test(v.lang); });
+  var sel = $('voiceSel');
+  sel.innerHTML = '';
+  var list = ja.length ? ja : vs;
+  list.forEach(function (v) {
+    var o = document.createElement('option');
+    o.value = v.voiceURI; o.textContent = v.name + '（' + v.lang + '）';
+    if (v.voiceURI === settings.voiceURI) o.selected = true;
+    sel.appendChild(o);
+  });
+  var note = $('voiceNote');
+  if (!vs.length) {
+    note.textContent = '声がまだ読み込まれていません。数秒おいて開き直すか、いちど再生してみてください。';
+  } else if (!ja.length) {
+    note.textContent = '日本語の声が見つかりません。iPhone は「設定 → アクセシビリティ → 読み上げコンテンツ → 声 → 日本語」から追加できます。Windows は「設定 → 時刻と言語 → 音声認識」から日本語の音声を追加してください。';
+    setStatus('日本語の声が入っていません。声と速さの画面に対処を書きました', true);
+  } else {
+    note.textContent = ja.length + 'つの日本語の声が使えます。';
+  }
+}
+if (SY) {
+  SY.onvoiceschanged = renderVoices;
+  [0, 300, 800, 1800, 3500].forEach(function (t) { setTimeout(renderVoices, t); });
+}
+
+/* ============================================================
+   5. 指示の解釈
+   ============================================================ */
+function toHalf(s) {
+  return s.replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); });
+}
+function parseKan(s) {
+  if (/^[0-9]+$/.test(s)) return parseInt(s, 10);
+  var d = { '〇': 0, '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+  var total = 0, cur = 0, i, c;
+  for (i = 0; i < s.length; i++) {
+    c = s[i];
+    if (d[c] !== undefined) { cur = d[c]; }
+    else if (c === '十') { total += (cur || 1) * 10; cur = 0; }
+    else if (c === '百') { total += (cur || 1) * 100; cur = 0; }
+    else return 0;
+  }
+  return total + cur;
+}
+function chapterByNumber(n) {
+  var nums = numbering();
+  for (var i = 0; i < nums.length; i++) if (nums[i] === n) return i;
+  return -1;
+}
+function chapterByName(q) {
+  if (!state.doc || q.length < 2) return -1;
+  var best = -1, bestLen = 0;
+  state.doc.chapters.forEach(function (c, i) {
+    var t = c.title.replace(/\s/g, '');
+    var qq = q.replace(/\s/g, '');
+    if (!t) return;
+    if (qq.indexOf(t) >= 0 || t.indexOf(qq) >= 0) {
+      var len = Math.min(t.length, qq.length);
+      if (len > bestLen) { bestLen = len; best = i; }
+    }
+  });
+  return best;
+}
+
+function runCommand(raw) {
+  var t = toHalf(String(raw || '').trim());
+  if (!t) return;
+  setStatus('');
+  if (/(止め|停止|ストップ|やめ|静か|黙)/.test(t)) { stop(); setStatus('止めました'); return; }
+  var mrate = t.match(/([0-9]+(?:[.．][0-9]+)?)\s*倍/);
+  if (mrate) { setRate(parseFloat(mrate[1].replace('．', '.'))); return; }
+  if (/(ゆっくり|遅く|おそく)/.test(t)) { stepRate(-1); return; }
+  if (/(速く|はやく|早く|急い)/.test(t)) { stepRate(1); return; }
+  if (/(もう一度|もういちど|繰り返|くりかえ|リピート)/.test(t)) {
+    if (state.playing) { state.epoch++; if (SY) SY.cancel(); }
+    state.playing = true; paintPlay(); unlockSpeech(); speakCurrent();
+    setStatus('もう一度'); return;
+  }
+  if (/(最初から|はじめから|頭から|冒頭から)/.test(t)) {
+    state.si = 0; openChapter(state.ci < 0 ? 0 : state.ci, true, 0); setStatus('章の最初から'); return;
+  }
+  if (/(次|つぎ|先)(の)?(章|話|節)?(へ|に|を)?/.test(t) && /(次|つぎ|先)/.test(t) && !/(次の文|次の一文)/.test(t)) {
+    if (!state.doc) { setStatus('先に原稿を読み込んでください', true); return; }
+    if (state.ci + 1 < state.doc.chapters.length) { openChapter(state.ci + 1, true, 0); }
+    else setStatus('最後の章です', true);
+    return;
+  }
+  if (/(前|まえ|戻)(の)?(章|話|節)?/.test(t) && /(前|まえ|戻)/.test(t)) {
+    if (!state.doc) { setStatus('先に原稿を読み込んでください', true); return; }
+    if (state.ci > 0) { openChapter(state.ci - 1, true, 0); }
+    else setStatus('最初の章です', true);
+    return;
+  }
+  if (/(続き|つづき|再開|そのまま)/.test(t)) { play(); setStatus('続きから'); return; }
+
+  var m = t.match(/第?\s*([0-9]+|[一二三四五六七八九十百〇零]+)\s*(?:章|話)/);
+  if (m) {
+    var n = parseKan(m[1]);
+    var i = chapterByNumber(n);
+    if (i >= 0) { openChapter(i, true, 0); return; }
+    setStatus('第' + kanNum(n) + '章が見つかりません', true); return;
+  }
+
+  var q = t.replace(/(を|に|へ|から)?\s*(読み上げて|読みあげて|読んで|よんで|読み上げ|再生して|再生|開いて|ひらいて|聞かせて|きかせて|して|ください|お願い|おねがい)[。！!？?]*$/g, '').trim();
+  var byName = chapterByName(q || t);
+  if (byName >= 0) { openChapter(byName, true, 0); return; }
+  var bySec = sectionByName(q || t);
+  if (bySec) { goTo(bySec.ci, bySec.si, true); setStatus(bySec.text); return; }
+
+  if (/(読み上げ|読んで|よんで|再生|話して|喋って|しゃべって|音読)/.test(t)) { play(); return; }
+  setStatus('「' + t + '」がわかりませんでした。「第一章を読み上げて」「次の章」「止めて」のように伝えてください', true);
+}
+
+var RATE_MIN = 0.5, RATE_MAX = 3;
+var RATE_STEPS = [0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.4, 3];
+var rateTimer = 0;
+
+function clampRate(r) {
+  r = Math.round((isFinite(r) ? r : 1) * 20) / 20;
+  return Math.max(RATE_MIN, Math.min(RATE_MAX, r));
+}
+
+function setRate(r, quiet) {
+  settings.rate = clampRate(r);
+  $('rateInput').value = String(settings.rate);
+  $('rateVal').textContent = settings.rate.toFixed(2);
+  paintRate();
+  if (!quiet) setStatus('速さ ' + settings.rate.toFixed(2) + ' 倍');
+  saveSoon();
+  respeakForRate();
+}
+
+/* 速さは発話ごとにしか変えられないので、いま読んでいる文を作り直す。
+   ただしつまみを動かしているあいだ作り直し続けると iOS で声が詰まって
+   そのまま黙ってしまう。手が止まってから一度だけ作り直す。 */
+function respeakForRate() {
+  if (!state.playing) return;
+  state.epoch++;
+  if (SY) SY.cancel();
+  clearTimeout(rateTimer);
+  rateTimer = setTimeout(function () {
+    if (!state.playing) return;
+    state.epoch++;
+    speakCurrent();
+  }, 220);
+}
+
+/* 押すたびに一段ずつ速くする。上限まで行ったら最初の段に戻る */
+function stepRate(dir) {
+  var i = -1, k;
+  for (k = 0; k < RATE_STEPS.length; k++) {
+    if (Math.abs(RATE_STEPS[k] - settings.rate) < 0.026) { i = k; break; }
+  }
+  if (i < 0) {
+    /* 段の途中にいるときは、進む向きの隣の段へ寄せる */
+    i = 0;
+    for (k = 0; k < RATE_STEPS.length; k++) {
+      if (dir > 0 ? RATE_STEPS[k] <= settings.rate : RATE_STEPS[k] < settings.rate) i = k;
+    }
+    if (dir > 0) i += 1;
+    setRate(RATE_STEPS[Math.max(0, Math.min(RATE_STEPS.length - 1, i))]);
+    return;
+  }
+  i += dir;
+  if (i >= RATE_STEPS.length) i = 0;
+  if (i < 0) i = RATE_STEPS.length - 1;
+  setRate(RATE_STEPS[i]);
+}
+
+function paintRate() {
+  var b = $('btnRate');
+  if (b) {
+    b.textContent = '×' + (settings.rate % 1 === 0 ? settings.rate.toFixed(1) : String(settings.rate));
+    b.classList.toggle('is-fast', settings.rate > 1.001);
+  }
+  var box = $('rateSteps');
+  if (box) {
+    var kids = box.children;
+    for (var k = 0; k < kids.length; k++) {
+      kids[k].classList.toggle('is-on', Math.abs(parseFloat(kids[k].dataset.rate) - settings.rate) < 0.026);
+    }
+  }
+}
+
+function buildRateSteps() {
+  var box = $('rateSteps');
+  if (!box) return;
+  box.innerHTML = '';
+  RATE_STEPS.forEach(function (r) {
+    var b = document.createElement('button');
+    b.className = 'mr-btn';
+    b.dataset.rate = String(r);
+    b.textContent = '×' + (r % 1 === 0 ? r.toFixed(1) : String(r));
+    b.addEventListener('click', function () { setRate(r); });
+    box.appendChild(b);
+  });
+}
+
+/* ============================================================
+   6. 朱入れ
+   ============================================================ */
+function toggleMark() {
+  if (!state.sents.length) return;
+  var s = state.sents[state.si];
+  var found = -1;
+  state.marks.forEach(function (m, i) { if (m.ci === state.ci && m.si === state.si) found = i; });
+  if (found >= 0) {
+    state.marks.splice(found, 1);
+    setStatus('朱を消しました');
+  } else {
+    state.marks.push({
+      ci: state.ci, si: state.si, text: s.text,
+      title: state.doc.chapters[state.ci].title, label: chapterLabel(state.ci), at: Date.now()
+    });
+    state.marks.sort(function (a, b) { return a.ci - b.ci || a.si - b.si; });
+    setStatus('朱を入れました（' + state.marks.length + '）');
+  }
+  paintMarks(); renderSpine(); saveSoon();
+}
+
+function renderMarks() {
+  var box = $('markList');
+  box.innerHTML = '';
+  if (!state.marks.length) {
+    var e = document.createElement('div');
+    e.className = 'mr-note';
+    e.textContent = 'まだ朱は入っていません。聞いていて引っかかった文で「朱を入れる」か M キーを押してください。';
+    box.appendChild(e); return;
+  }
+  state.marks.forEach(function (m) {
+    var b = document.createElement('button');
+    b.className = 'mr-mark-item';
+    var s = document.createElement('span');
+    s.textContent = (m.label || '') + '　' + (m.title || '') + '　' + (m.si + 1) + '文目';
+    b.appendChild(s);
+    b.appendChild(document.createTextNode(m.text));
+    b.addEventListener('click', function () {
+      closeScreens();
+      if (m.ci !== state.ci) openChapter(m.ci, false, m.si);
+      else { state.si = m.si; focusSentence(m.si, true); }
+      setStatus('朱を入れた文へ戻りました');
+    });
+    box.appendChild(b);
+  });
+}
+
+function exportMarks() {
+  if (!state.marks.length) { setStatus('書き出す朱がありません', true); return; }
+  var d = new Date();
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var stamp = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' '
+            + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  var lines = ['音読装置　朱入れ一覧', '原稿：' + (state.doc ? state.doc.name : ''), '書き出し：' + stamp, ''];
+  var cur = -1;
+  state.marks.forEach(function (m) {
+    if (m.ci !== cur) {
+      cur = m.ci;
+      lines.push('', '── ' + (m.label || '') + '　' + (m.title || '') + ' ──', '');
+    }
+    lines.push('[' + (m.si + 1) + '] ' + m.text);
+  });
+  var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '朱入れ_' + stamp.replace(/[: ]/g, '-') + '.txt';
+  document.body.appendChild(a); a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  setStatus('書き出しました');
+}
+
+/* ============================================================
+   7. 目次
+   ============================================================ */
+var arranging = false;
+var openSecs = {};      /* 目次で節をひらいている章 */
+function renderToc() {
+  var box = $('tocList');
+  box.innerHTML = '';
+  if (!state.doc) {
+    var e = document.createElement('div');
+    e.className = 'mr-note'; e.textContent = 'まだ原稿がありません。';
+    box.appendChild(e); return;
+  }
+  var sum = document.createElement('div');
+  sum.className = 'mr-toc-sum';
+  sum.textContent = state.doc.chapters.length + '章　' + docChars().toLocaleString() + '字';
+  box.appendChild(sum);
+
+  var nums = numbering();
+  state.doc.chapters.forEach(function (c, i) {
+    var row = document.createElement('div');
+    row.className = 'mr-chapter' + (i === state.ci ? ' is-now' : '');
+    var no = document.createElement('div');
+    no.className = 'mr-chapter-no' + (nums[i] === null ? ' is-front' : '');
+    no.textContent = nums[i] === null ? '前付け' : '第' + kanNum(nums[i]) + '章';
+    var name = document.createElement('button');
+    name.className = 'mr-chapter-name';
+    name.style.cssText = 'background:none;border:none;text-align:left;padding:0;';
+    name.textContent = c.title;
+    var chars = bodyChars(c);
+    var meta = document.createElement('div');
+    meta.className = 'mr-chapter-meta';
+    meta.textContent = chars.toLocaleString() + '字';
+    name.addEventListener('click', function () {
+      closeScreens();
+      openChapter(i, true, 0);
+    });
+    row.appendChild(no); row.appendChild(name);
+    var hasSecs = !arranging && c.blocks.some(function (b) { return b.t === 'h'; });
+    if (arranging) {
+      var tools = document.createElement('div');
+      tools.className = 'mr-chapter-tools';
+      var t1 = document.createElement('button');
+      t1.className = 'mr-btn';
+      t1.textContent = nums[i] === null ? '番号を付ける' : '前付けにする';
+      t1.addEventListener('click', function (e) {
+        e.stopPropagation();
+        c.forced = !(nums[i] === null) ? true : false;
+        saveDoc(state.doc); renderToc(); refreshNowLabel();
+      });
+      var t2 = document.createElement('button');
+      t2.className = 'mr-btn is-shu';
+      t2.textContent = '削除';
+      t2.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!confirm('「' + c.title + '」を目次から削除します。よろしいですか。')) return;
+        state.doc.chapters.splice(i, 1);
+        state.marks = state.marks.filter(function (m) { return m.ci !== i; })
+          .map(function (m) { return m.ci > i ? Object.assign({}, m, { ci: m.ci - 1 }) : m; });
+        if (state.ci === i) { state.ci = -1; $('sheet').innerHTML = ''; state.sents = []; }
+        else if (state.ci > i) state.ci -= 1;
+        clearDocKeys().then(function () { return saveDoc(state.doc); });
+        clearSecCache(); openSecs = {};
+        saveSoon(); renderToc();
+      });
+      tools.appendChild(t1); tools.appendChild(t2);
+      row.appendChild(tools);
+    } else {
+      row.appendChild(meta);
+      if (hasSecs) {
+        var tg = document.createElement('button');
+        tg.className = 'mr-sec-toggle' + (openSecs[i] ? ' is-open' : '');
+        tg.title = '節・項を開く';
+        tg.setAttribute('aria-expanded', openSecs[i] ? 'true' : 'false');
+        tg.innerHTML = '<span>\u25b8</span>';
+        tg.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openSecs[i] = !openSecs[i];
+          renderToc();
+        });
+        row.appendChild(tg);
+      }
+    }
+    box.appendChild(row);
+    if (hasSecs && openSecs[i]) box.appendChild(secList(i));
+  });
+}
+
+/* 節・項の並び。押すとその見出しから読み始める */
+function secList(ci) {
+  var wrap = document.createElement('div');
+  var secs = sectionsOf(ci);
+  var nowSec = ci === state.ci ? currentSection(ci, state.si) : -1;
+  var rows = secs.slice();
+  if (secs.lead) rows.unshift({ text: '章のはじめ', depth: 0, si: 0, total: secs.lead, lead: true });
+  rows.forEach(function (sc, k) {
+    var b = document.createElement('button');
+    var idx = secs.lead ? k - 1 : k;
+    b.className = 'mr-sec' + (idx === nowSec ? ' is-now' : '') + (sc.lead ? ' is-lead' : '');
+    b.style.paddingLeft = (16 + sc.depth * 16) + 'px';
+    var tick = document.createElement('div');
+    tick.className = 'mr-sec-tick';
+    tick.textContent = sc.lead ? '\u25e6' : (sc.depth === 0 ? '\u2014' : '\u00b7');
+    var nm = document.createElement('div');
+    nm.className = 'mr-sec-name';
+    nm.textContent = sc.text;
+    var mt = document.createElement('div');
+    mt.className = 'mr-sec-meta';
+    mt.textContent = sc.total ? sc.total.toLocaleString() + '字' : '0字';
+    b.appendChild(tick); b.appendChild(nm); b.appendChild(mt);
+    b.addEventListener('click', function () {
+      closeScreens();
+      goTo(ci, sc.si, true);
+      setStatus(sc.text);
+    });
+    wrap.appendChild(b);
+  });
+  return wrap;
+}
+
+/* 章名で見つからないときは節・項の名前でも探す */
+function sectionByName(q) {
+  if (!state.doc || q.length < 2) return null;
+  var qq = q.replace(/\s/g, ''), best = null, bestLen = 0;
+  state.doc.chapters.forEach(function (c, ci) {
+    if (!c.blocks.some(function (b) { return b.t === 'h'; })) return;
+    sectionsOf(ci).forEach(function (sc) {
+      var t = sc.text.replace(/\s/g, '');
+      if (!t) return;
+      if (qq.indexOf(t) >= 0 || t.indexOf(qq) >= 0) {
+        var len = Math.min(t.length, qq.length);
+        if (len > bestLen) { bestLen = len; best = { ci: ci, si: sc.si, text: sc.text }; }
+      }
+    });
+  });
+  return best;
+}
+function refreshNowLabel() {
+  if (state.ci < 0 || !state.doc) { $('nowCh').textContent = ''; return; }
+  var no = numbering()[state.ci];
+  $('nowCh').textContent = (no !== null ? '第' + kanNum(no) + '章　' : '') + state.doc.chapters[state.ci].title;
+}
+
+/* ============================================================
+   8. 原稿を受け取る
+   ============================================================ */
+function ingest(blocks, name) {
+  var chapters = buildChapters(blocks);
+  /* 本文のない見出し（別案の表題など）は目次に並べない */
+  var withBody = chapters.filter(function (c) { return c.blocks.length; });
+  if (withBody.length) chapters = withBody;
+  if (!chapters.length) { setStatus('本文が見つかりませんでした', true); return; }
+  state.doc = { name: name, loadedAt: Date.now(), chapters: chapters };
+  state.marks = [];
+  state.ci = -1; state.si = 0;
+  clearSecCache(); openSecs = {};
+  $('startView').hidden = true;
+  clearDocKeys()
+    .then(function () { return saveDoc(state.doc); })
+    .then(function () { kvSet('marks', []); });
+  renderToc();
+  openScreen('scrToc');
+  var chars = chapters.reduce(function (a, c) { return a + bodyChars(c); }, 0);
+  setStatus(name + '　' + chapters.length + '章　' + chars.toLocaleString() + '字を読み込みました');
+}
+
+function onFile(file) {
+  if (!file) return;
+  var name = file.name || '原稿';
+  var lower = name.toLowerCase();
+  setStatus(name + ' を読み込んでいます……');
+  if (/\.docx$/.test(lower) || /wordprocessingml/.test(file.type || '')) {
+    file.arrayBuffer().then(parseDocx).then(function (blocks) { ingest(blocks, name); })
+      .catch(function (e) { setStatus('読み込めませんでした：' + e.message, true); });
+    return;
+  }
+  if (/\.(md|markdown|txt|text|mdown|mkd)$/.test(lower) || /^text\//.test(file.type || '') || !/\.[a-z0-9]+$/.test(lower)) {
+    file.text().then(function (txt) { ingest(parseText(txt), name); })
+      .catch(function (e) { setStatus('読み込めませんでした：' + e.message, true); });
+    return;
+  }
+  if (/\.doc$/.test(lower)) {
+    setStatus('古い .doc は読めません。Word で .docx か .md に書き出して渡してください', true); return;
+  }
+  setStatus('この形式は読めません。.md / .txt / .docx を渡してください', true);
+}
+
+/* ============================================================
+   9. 画面の出し入れと配線
+   ============================================================ */
+var SCREENS = ['scrToc', 'scrMarks', 'scrVoice', 'scrPaste'];
+function closeScreens() { SCREENS.forEach(function (id) { $(id).hidden = true; }); }
+function openScreen(id) { closeScreens(); $(id).hidden = false; }
+
+$('btnToc').addEventListener('click', function () {
+  if (!$('scrToc').hidden) { closeScreens(); return; }
+  /* いま読んでいる章の節ははじめからひらいておく */
+  if (state.ci >= 0 && openSecs[state.ci] === undefined) openSecs[state.ci] = true;
+  renderToc(); openScreen('scrToc');
+});
+$('btnTocClose').addEventListener('click', closeScreens);
+$('btnArrange').addEventListener('click', function () {
+  arranging = !arranging;
+  $('btnArrange').classList.toggle('is-on', arranging);
+  $('btnArrange').textContent = arranging ? '整え終える' : '整える';
+  renderToc();
+});
+$('btnMarks').addEventListener('click', function () { renderMarks(); openScreen('scrMarks'); });
+$('btnMarksClose').addEventListener('click', closeScreens);
+$('btnExport').addEventListener('click', exportMarks);
+$('btnVoice').addEventListener('click', function () { renderVoices(); openScreen('scrVoice'); });
+$('btnVoiceClose').addEventListener('click', closeScreens);
+$('btnPasteOpen').addEventListener('click', function () { openScreen('scrPaste'); $('pasteArea').focus(); });
+$('btnPasteOpen2').addEventListener('click', function () { openScreen('scrPaste'); $('pasteArea').focus(); });
+$('btnPasteClose').addEventListener('click', closeScreens);
+$('btnPasteRun').addEventListener('click', function () {
+  var txt = $('pasteArea').value;
+  if (!txt.trim()) { setStatus('本文が空です', true); return; }
+  closeScreens();
+  ingest(parseText(txt), '貼り付けた原稿');
+});
+$('btnClear').addEventListener('click', function () {
+  if (!confirm('この端末に保存した原稿と朱入れを消します。よろしいですか。')) return;
+  stop();
+  kvClearAll().then(function () { location.reload(); });
+});
+
+$('btnPlay').addEventListener('click', toggle);
+$('btnPrevS').addEventListener('click', function () { jump(-1); });
+$('btnNextS').addEventListener('click', function () { jump(1); });
+$('btnPrevCh').addEventListener('click', function () { runCommand('前の章'); });
+$('btnNextCh').addEventListener('click', function () { runCommand('次の章'); });
+$('btnMark').addEventListener('click', toggleMark);
+
+$('rateInput').addEventListener('input', function () { setRate(parseFloat(this.value)); });
+$('btnRate').addEventListener('click', function () { stepRate(1); });
+$('btnRate').addEventListener('contextmenu', function (e) { e.preventDefault(); stepRate(-1); });
+$('pitchInput').addEventListener('input', function () {
+  settings.pitch = parseFloat(this.value);
+  $('pitchVal').textContent = settings.pitch.toFixed(2);
+  saveSoon();
+});
+$('voiceSel').addEventListener('change', function () {
+  settings.voiceURI = this.value; saveSoon();
+  if (state.playing) { state.epoch++; if (SY) SY.cancel(); speakCurrent(); }
+});
+$('btnAuto').addEventListener('click', function () {
+  settings.auto = !settings.auto;
+  this.textContent = '自動送り　' + (settings.auto ? '入' : '切');
+  this.classList.toggle('is-on', settings.auto);
+  saveSoon();
+});
+$('btnReadHead').addEventListener('click', function () {
+  settings.readHead = !settings.readHead;
+  this.textContent = '見出し　' + (settings.readHead ? '読む' : '読まない');
+  this.classList.toggle('is-on', settings.readHead);
+  saveSoon();
+});
+
+/* 文をクリックするとそこから読み直す */
+$('sheet').addEventListener('click', function (e) {
+  var el = e.target.closest ? e.target.closest('.mr-s') : null;
+  if (!el) return;
+  state.si = parseInt(el.getAttribute('data-i'), 10) || 0;
+  focusSentence(state.si);
+  if (state.playing) { state.epoch++; if (SY) SY.cancel(); speakCurrent(); }
+  else { play(); }
+});
+/* 柱をなぞって章の中を移動する */
+$('spine').addEventListener('click', function (e) {
+  if (!state.sents.length) return;
+  if (e.target.classList.contains('mr-mark-dot')) return;
+  var r = this.getBoundingClientRect();
+  var ratio = (e.clientY - r.top - 16) / Math.max(1, this.clientHeight - 32);
+  state.si = Math.max(0, Math.min(state.sents.length - 1, Math.round(ratio * (state.sents.length - 1))));
+  focusSentence(state.si, true);
+  if (state.playing) { state.epoch++; if (SY) SY.cancel(); speakCurrent(); }
+});
+
+/* 指示 */
+$('cmdInput').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') { runCommand(this.value); this.value = ''; this.blur(); }
+});
+
+/* 声で指示する */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var rec = null, listening = false;
+$('btnMic').addEventListener('click', function () {
+  if (!SR) { setStatus('この端末では音声入力が使えません', true); return; }
+  if (listening && rec) { rec.stop(); return; }
+  rec = new SR();
+  rec.lang = 'ja-JP'; rec.interimResults = false; rec.continuous = false;
+  rec.onstart = function () { listening = true; $('btnMic').classList.add('is-shu'); setStatus('聞いています……'); };
+  rec.onerror = function (e) { setStatus('聞き取れませんでした（' + (e.error || '') + '）', true); };
+  rec.onend = function () { listening = false; $('btnMic').classList.remove('is-shu'); };
+  rec.onresult = function (e) {
+    var txt = e.results[0][0].transcript;
+    $('cmdInput').value = txt;
+    setStatus('「' + txt + '」');
+    runCommand(txt);
+  };
+  var wasPlaying = state.playing;
+  if (wasPlaying) stop();
+  try { rec.start(); } catch (err) { setStatus('音声入力を始められませんでした', true); }
+});
+
+/* ファイル選択（accept は付けない。拡張子の判定は onFile 側でおこなう） */
+['fileInput', 'fileInput2'].forEach(function (id) {
+  var el = $(id);
+  if (!el) return;
+  el.addEventListener('change', function () {
+    if (this.files && this.files[0]) onFile(this.files[0]);
+    this.value = '';
+  });
+});
+
+/* ドラッグ&ドロップ（画面のどこに落としてもよい） */
+['dragenter', 'dragover'].forEach(function (ev) {
+  document.addEventListener(ev, function (e) {
+    if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') < 0) return;
+    e.preventDefault();
+    var dz = $('dropZone'); if (dz) dz.classList.add('is-over');
+  });
+});
+['dragleave', 'dragend'].forEach(function (ev) {
+  document.addEventListener(ev, function (e) {
+    if (e.relatedTarget) return;
+    var dz = $('dropZone'); if (dz) dz.classList.remove('is-over');
+  });
+});
+document.addEventListener('drop', function (e) {
+  if (!e.dataTransfer) return;
+  e.preventDefault();
+  var dz = $('dropZone'); if (dz) dz.classList.remove('is-over');
+  var f = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (f) { onFile(f); return; }
+  var txt = e.dataTransfer.getData('text');
+  if (txt && txt.length > 40) ingest(parseText(txt), '落とした本文');
+});
+
+/* 鍵盤 */
+document.addEventListener('keydown', function (e) {
+  var t = e.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); toggle(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); jump(-1); }
+  else if (e.key === 'ArrowRight') { e.preventDefault(); jump(1); }
+  else if (e.key === 'm' || e.key === 'M') { e.preventDefault(); toggleMark(); }
+  else if (e.key === '+' || e.key === '=' || e.key === ']') { e.preventDefault(); stepRate(1); }
+  else if (e.key === '-' || e.key === '[') { e.preventDefault(); stepRate(-1); }
+  else if (e.key === 'Escape') { closeScreens(); }
+});
+
+/* iOS は利用者の操作と同じ流れの中で speak() を一度通しておく必要がある */
+document.addEventListener('pointerdown', function () { unlockSpeech(); }, true);
+document.addEventListener('touchstart', function () { unlockSpeech(); }, true);
+
+window.addEventListener('resize', function () { renderSpine(); });
+window.addEventListener('beforeunload', function () { if (SY) SY.cancel(); });
+
+/* ============================================================
+   10. 起動
+   ============================================================ */
+buildRateSteps();
+paintRate();
+
+Promise.all([kvGet('settings'), kvGet('marks'), kvGet('progress'), loadDoc()])
+  .then(function (r) {
+    var st = r[0], mk = r[1], pg = r[2], doc = r[3];
+    if (st) {
+      settings.voiceURI = st.voiceURI || '';
+      settings.rate = clampRate(st.rate || 1);
+      settings.pitch = st.pitch || 1;
+      settings.auto = st.auto !== false;
+      settings.readHead = st.readHead !== false;
+    }
+    $('rateInput').value = String(settings.rate);
+    $('rateVal').textContent = settings.rate.toFixed(2);
+    paintRate();
+    $('pitchInput').value = String(settings.pitch);
+    $('pitchVal').textContent = settings.pitch.toFixed(2);
+    $('btnAuto').textContent = '自動送り　' + (settings.auto ? '入' : '切');
+    $('btnAuto').classList.toggle('is-on', settings.auto);
+    $('btnReadHead').textContent = '見出し　' + (settings.readHead ? '読む' : '読まない');
+    $('btnReadHead').classList.toggle('is-on', settings.readHead);
+    state.marks = Array.isArray(mk) ? mk : [];
+
+    if (state.doc) { paintPlay(); return; }   /* 起動を待つあいだに読み込まれていたら触らない */
+    if (doc && doc.chapters.length) {
+      state.doc = doc;
+      renderToc();
+      var ci = pg && pg.ci >= 0 && pg.ci < doc.chapters.length ? pg.ci : 0;
+      var si = pg && pg.si ? pg.si : 0;
+      openChapter(ci, false, si);
+      setStatus(doc.name + ' を続きから開きました');
+    } else {
+      setStatus('原稿を読み込むか、本文を貼り付けてください');
+    }
+    paintPlay();
+  })
+  .catch(function (e) {
+    setStatus('保存の読み出しに失敗しました（' + e.message + '）', true);
+    paintPlay();
+  });
+
+/* ============================================================
+   11. いつでも開けるようにする（ホーム画面・電波なし）
+   ============================================================ */
+if ('serviceWorker' in navigator && /^https:|^http:\/\/(localhost|127\.)/.test(location.href)) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () { /* 使えなくても本体は動く */ });
+  });
+}
+
+(function installHint() {
+  var box = $('installHint');
+  if (!box) return;
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (standalone) return;
+  var deferred = null;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault(); deferred = e;
+    box.innerHTML = '<b>アプリとして置く</b><br>この道具をホーム画面（またはアプリ一覧）に置くと、次からは一押しで開けます。';
+    var b = document.createElement('button');
+    b.className = 'mr-btn'; b.textContent = 'ホーム画面に置く';
+    b.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt(); deferred = null; box.hidden = true;
+    });
+    box.appendChild(b);
+    box.hidden = false;
+  });
+  if (IS_IOS) {
+    box.innerHTML = '<b>アプリとして置く</b><br>下の <span style="font-family:system-ui">共有</span> ボタン → '
+      + '「ホーム画面に追加」を選ぶと、次からは一押しで開けます。'
+      + '一度読み込んだ原稿は端末に残るので、電波のないところでも読み上げられます。';
+    box.hidden = false;
+  }
+})();
+
+window.__ondoku = state;   /* 動作確認用 */
+})();
+</script>
+</body>
+</html>
