@@ -1,5 +1,5 @@
 /* 音読装置 ── 電波のないところでも開けるようにする */
-var CACHE = 'ondoku-2026-08-18b';
+var CACHE = 'ondoku-2026-09-03a';
 var ASSETS = ['./', './index.html', './manifest.webmanifest',
               './icon-180.png', './icon-192.png', './icon-512.png'];
 
