@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>耕作放棄地を、自給自足畑に｜Technel</title>
+<style>
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body { overscroll-behavior: none; touch-action: manipulation; }
+
+  :root {
+    --paper: #faf9f5;
+    --ink: #14140f;
+    --ink-soft: #4a4a42;
+    --line: #d9d7cd;
+    --moss: #0ca568;
+    --mint: #1de394;
+    --shu: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #eceae2;
+    color: var(--ink);
+    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- stage ---------- */
+  .deck { position: fixed; inset: 0; overflow: hidden; }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1280px; height: 720px;
+    background: var(--paper);
+    transform-origin: center center;
+    box-shadow: 0 18px 60px rgba(20,20,15,.12);
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 74px 96px 92px;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity .38s ease;
+  }
+  .slide.is-active { opacity: 1; visibility: visible; }
+
+  /* ---------- common type ---------- */
+  .kicker { font-size: 13px; letter-spacing: .3em; color: var(--moss); font-weight: 600; text-transform: uppercase; }
+  .slide h2 { font-size: 40px; font-weight: 700; line-height: 1.5; letter-spacing: .02em; margin-top: 16px; }
+  .slide h2 .thin { font-weight: 400; color: var(--ink-soft); }
+  .lead { font-size: 18px; line-height: 2; color: var(--ink-soft); margin-top: 14px; max-width: 980px; }
+  .body { margin-top: 40px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .body.top { margin-top: 28px; justify-content: flex-start; }
+
+  ul.pts { list-style: none; }
+  ul.pts > li {
+    position: relative;
+    font-size: 22px; line-height: 1.85; letter-spacing: .01em;
+    padding-left: 34px; margin-bottom: 18px; max-width: 1040px;
+  }
+  ul.pts > li::before {
+    content: ""; position: absolute; left: 2px; top: 17px;
+    width: 9px; height: 9px; border-radius: 50%;
+    border: 1.6px solid var(--mint);
+  }
+  ul.pts > li.em::before { background: var(--moss); border-color: var(--moss); }
+  ul.pts > li.em { font-weight: 700; }
+  ul.pts > li small { display: block; font-size: 15.5px; color: var(--ink-soft); line-height: 1.8; margin-top: 4px; font-weight: 400; }
+  ul.pts.compact > li { margin-bottom: 12px; font-size: 19px; line-height: 1.75; }
+  ul.pts.compact > li::before { top: 15px; }
+  ul.pts.compact > li small { font-size: 14.5px; margin-top: 2px; }
+
+  .note {
+    margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 15px; line-height: 1.9; color: var(--ink-soft); max-width: 1088px;
+  }
+  .arrow { color: var(--moss); font-weight: 700; }
+  .term { border-bottom: 1.6px solid var(--mint); padding-bottom: 1px; }
+  .shu { color: var(--shu); }
+  .g { color: var(--moss); }
+
+  /* ---------- title slide ---------- */
+  .slide.title { justify-content: center; align-items: flex-end; text-align: right; padding-right: 110px; }
+  .slide.title h1 { font-size: 58px; font-weight: 700; line-height: 1.55; letter-spacing: .04em; }
+  .slide.title h1 .g { color: var(--moss); }
+  .slide.title .sub { font-size: 21px; color: var(--ink-soft); margin-top: 28px; letter-spacing: .06em; line-height: 2; }
+  .slide.title .meta { font-size: 14px; letter-spacing: .2em; color: var(--ink-soft); margin-top: 44px; line-height: 2.2; }
+  .rings { position: absolute; left: -160px; top: 50%; transform: translateY(-50%); width: 560px; height: 560px; pointer-events: none; }
+  .rings circle { fill: none; stroke: var(--mint); stroke-width: 1.6; }
+  .rings .r1 { stroke-dasharray: 4 7; animation: spin 90s linear infinite; transform-origin: 280px 280px; }
+  .rings .r2 { stroke-dasharray: 5 9; animation: spin 150s linear infinite reverse; transform-origin: 280px 280px; }
+  .rings .r3 { stroke-dasharray: 3 6; animation: spin 220s linear infinite; transform-origin: 280px 280px; }
+  .rings .core { fill: var(--mint); stroke: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .rings circle { animation: none !important; } .slide { transition: none; } }
+
+  /* ---------- part divider ---------- */
+  .slide.part { background: var(--ink); color: var(--paper); justify-content: center; }
+  .slide.part .kicker { color: var(--mint); }
+  .slide.part .pnum { font-size: 128px; font-weight: 700; line-height: 1; letter-spacing: .02em; margin: 22px 0 18px; }
+  .slide.part h2 { font-size: 52px; margin-top: 0; }
+  .slide.part .lead { color: #9a9a8e; font-size: 18px; }
+
+  /* ---------- statement ---------- */
+  .statement { font-size: 38px; font-weight: 700; line-height: 1.8; letter-spacing: .03em; }
+  .statement small { display: block; max-width: 980px; font-size: 17px; font-weight: 400; color: var(--ink-soft); line-height: 2.05; margin-top: 24px; letter-spacing: 0; }
+
+  /* ---------- column grids ---------- */
+  .cols { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .cols.c2 { grid-template-columns: 1fr 1fr; }
+  .cols.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cols.c4 { grid-template-columns: repeat(4, 1fr); }
+  .col { background: var(--paper); padding: 28px 28px 30px; }
+  .col .h { font-size: 12.5px; letter-spacing: .2em; color: var(--moss); font-weight: 600; margin-bottom: 14px; }
+  .col h3 { font-size: 24px; font-weight: 700; line-height: 1.55; margin-bottom: 12px; }
+  .col .price { font-size: 17px; font-weight: 700; color: var(--moss); margin-bottom: 12px; }
+  .col p { font-size: 15.5px; line-height: 1.95; color: var(--ink-soft); }
+  .col p + p { margin-top: 10px; }
+  .cols.c4 .col { padding: 24px 22px 26px; }
+  .cols.c4 .col h3 { font-size: 21px; }
+  .cols.c4 .col p { font-size: 14.5px; line-height: 1.9; }
+  .cols.c2 .col { padding: 22px 28px 24px; }
+
+  /* ---------- table ---------- */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th {
+    text-align: left; font-size: 12.5px; letter-spacing: .16em; color: var(--moss); font-weight: 600;
+    padding: 0 16px 10px; border-bottom: 2px solid var(--ink);
+  }
+  .tbl td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.7; vertical-align: top; }
+  .tbl td:first-child { font-weight: 700; white-space: nowrap; }
+  .tbl td .s { display: block; font-size: 13.5px; color: var(--ink-soft); font-weight: 400; }
+  .tbl.law td { padding: 7px 12px; font-size: 14px; line-height: 1.55; }
+  .tbl.law td .s { font-size: 12px; }
+  .tbl.law th { padding: 0 12px 7px; }
+  .tbl.law td:last-child { width: 96px; }
+  .chip { display: inline-block; font-size: 12px; letter-spacing: .1em; font-weight: 700; border-radius: 999px; padding: 2px 11px; white-space: nowrap; }
+  .chip.ok { color: var(--moss); border: 1.3px solid var(--moss); }
+  .chip.todo { color: var(--shu); border: 1.3px solid var(--shu); }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; grid-template-columns: 1fr 34px 1fr 34px 1fr 34px 1fr; align-items: stretch; }
+  .step { border: 1.4px solid var(--line); padding: 20px 20px 22px; background: var(--paper); }
+  .step .n { font-size: 12px; letter-spacing: .18em; color: var(--ink-soft); }
+  .step h3 { font-size: 22px; font-weight: 700; margin-top: 8px; line-height: 1.5; }
+  .step p { font-size: 14.5px; line-height: 1.85; color: var(--ink-soft); margin-top: 8px; }
+  .step.goal { border: 2px solid var(--moss); background: #f4faf6; }
+  .step-arrow { display: flex; align-items: center; justify-content: center; color: var(--moss); font-size: 22px; font-weight: 700; }
+  .loop { margin-top: 18px; border: 1.4px dashed var(--moss); padding: 14px 22px; font-size: 17px; line-height: 1.8; }
+  .loop strong { color: var(--moss); }
+
+  /* ---------- figure ---------- */
+  .fig { display: flex; justify-content: center; }
+  .fig svg { width: 100%; max-width: 980px; height: auto; }
+  .fig .bx { fill: none; stroke: #b7b5a9; stroke-width: 1.4; }
+  .fig .bx.main { fill: #eaf6ef; stroke: var(--moss); stroke-width: 2.2; }
+  .fig .ln { fill: none; stroke: #8f8d82; stroke-width: 1.5; }
+  .fig .nm { font-size: 15px; font-weight: 700; fill: var(--ink); }
+  .fig .sb { font-size: 12.5px; fill: var(--ink-soft); }
+  .fig .lb { font-size: 12.5px; fill: var(--moss); font-weight: 600; }
+
+  /* ---------- chrome ---------- */
+  .foot {
+    position: absolute; left: 96px; right: 96px; bottom: 34px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .18em; color: var(--ink-soft);
+  }
+  .slide.part .foot { color: rgba(250,249,245,.5); }
+  .bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--mint); transition: width .38s ease; z-index: 5; }
+
+  .ui { position: fixed; right: 20px; bottom: 18px; display: flex; gap: 8px; z-index: 40; transition: opacity .4s; }
+  .ui.idle { opacity: 0; pointer-events: none; }
+  .ui button {
+    font: inherit; font-size: 12px; letter-spacing: .14em;
+    background: var(--paper); color: var(--ink-soft);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; cursor: pointer; transition: background .2s, color .2s;
+  }
+  .ui button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .toc {
+    position: fixed; inset: 0; z-index: 50; background: var(--ink); color: var(--paper);
+    padding: 56px 6vw; overflow-y: auto; display: none;
+  }
+  .toc.open { display: block; }
+  .toc h4 { font-size: 12px; letter-spacing: .3em; color: var(--mint); font-weight: 600; margin-bottom: 26px; }
+  .toc ol { list-style: none; columns: 2; column-gap: 56px; }
+  .toc li { break-inside: avoid; }
+  .toc button {
+    font: inherit; text-align: left; width: 100%;
+    display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: baseline;
+    background: none; border: none; border-bottom: 1px solid #33332c; color: rgba(250,249,245,.72);
+    padding: 11px 0; font-size: 15.5px; cursor: pointer; transition: color .2s;
+  }
+  .toc button:hover, .toc button.here { color: #fff; }
+  .toc button.here .no { color: var(--mint); }
+  .toc .no { font-size: 12px; letter-spacing: .1em; color: #7b7b70; }
+  .toc .pt { font-size: 11px; letter-spacing: .2em; color: var(--mint); display: block; margin-top: 4px; }
+
+  /* ---------- print ---------- */
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    body { overflow: visible; background: #fff; }
+    .deck { position: static; overflow: visible; }
+    .stage { position: static; width: 1280px; height: auto; transform: none !important; box-shadow: none; overflow: visible; }
+    .slide {
+      position: static; opacity: 1 !important; visibility: visible !important;
+      width: 1280px; height: 720px; page-break-after: always; break-after: page;
+    }
+    .ui, .toc, .bar { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+<div class="stage" id="stage">
+
+  <!-- 01 title -->
+  <section class="slide title" data-title="タイトル" data-part="">
+    <svg class="rings" viewBox="0 0 560 560" aria-hidden="true">
+      <circle class="r1" cx="280" cy="280" r="258"/>
+      <circle class="r2" cx="280" cy="280" r="196"/>
+      <circle class="r3" cx="280" cy="280" r="132"/>
+      <circle class="core" cx="280" cy="280" r="5"/>
+    </svg>
+    <div class="kicker">Make Your Own Primitive Life</div>
+    <h1>耕作放棄地を、<br>みんなの<span class="g">自給自足畑</span>に</h1>
+    <p class="sub">人がいなくなっても回り続ける、食の生態系をつくる</p>
+    <p class="meta">Technel合同会社 ／ 七沢智樹<br>事業計画 ／ 2026.10</p>
+  </section>
+
+  <!-- 02 overview -->
+  <section class="slide" data-title="何をつくるのか" data-part="">
+    <div class="kicker">Overview</div>
+    <h2>何をつくるのか</h2>
+    <div class="body">
+      <p class="statement" style="font-size:34px">耕作放棄地を、関わる人々の自給自足畑に変えていく。<br>創業メンバーが抜けても回り続ける<span class="g">仕組み</span>として。</p>
+      <ul class="pts compact" style="margin-top:34px">
+        <li>出発点は山梨の耕作放棄地。人口減少で全国に増え続ける放棄地へ広げていく</li>
+        <li>応えるのは「自分が食べるものは自分でつくりたい」という、人間の根源的な欲求</li>
+        <li>お金・野菜・労働・資源の出入りをすべて見えるようにし、<span class="term">AIが計算</span>し、<span class="term">ブロックチェーンに記録</span>する</li>
+      </ul>
+      <div class="note">目指すのは、人間が現れる前から生態系が自律して回ってきたように、社会のパラダイムが変わっても、人がいる限り続くもの。</div>
+    </div>
+  </section>
+
+  <!-- PART 1 -->
+  <section class="slide part" data-title="PART 1｜なぜ今か" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">01</div>
+    <h2>なぜ今か</h2>
+    <p class="lead">農業は転換点にある。担い手が引退していく溝を、小さな自給畑をたくさんつくって埋める。</p>
+  </section>
+
+  <!-- 1-01 背景 -->
+  <section class="slide" data-title="三つの背景" data-part="1">
+    <div class="kicker">1 — 01｜Background</div>
+    <h2>三つの背景</h2>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">MACRO</div>
+          <h3>食料安全保障</h3>
+          <p>一人ひとりが食べ物をつくる技術と知恵を持つことは、国の食料自給率の向上に直結する。</p>
+        </div>
+        <div class="col">
+          <div class="h">FARMERS</div>
+          <h3>担い手の引退</h3>
+          <p>農家の高齢化と引退で、耕作放棄地は今後も増え続ける。一方で、若い人の大規模な新規参入には限界がある。</p>
+        </div>
+        <div class="col">
+          <div class="h">YAMANASHI</div>
+          <h3>ブドウ跡地の傾斜地</h3>
+          <p>ブドウ畑の跡地は傾斜があり、ブドウ以外の営農では使いにくい。自給自足畑は、小さな畑や傾斜地でも成り立つ。</p>
+        </div>
+      </div>
+      <div class="note">商業農業が手放した土地を、そのまま使える。<span class="arrow">→</span> それがこの仕組みの強み。</div>
+    </div>
+  </section>
+
+  <!-- 1-02 栄養 -->
+  <section class="slide" data-title="栄養は、ほぼ自給できる" data-part="1">
+    <div class="kicker">1 — 02｜Nutrition</div>
+    <h2>栄養は、ほぼ自給できる</h2>
+    <p class="lead">野菜・米・大豆・卵に、獣害駆除のイノシシとシカを組み合わせる。大豆と米があれば、味噌や醤油もつくれる。</p>
+    <div class="body top">
+      <table class="tbl">
+        <thead><tr><th>品目</th><th>1人あたり年間（概算）</th><th>必要な面積・羽数（無肥料〜少肥の概算）</th></tr></thead>
+        <tbody>
+          <tr><td>野菜</td><td>約128kg<span class="s">1日350gの推奨量</span></td><td>畑 約1〜1.3a</td></tr>
+          <tr><td>米</td><td>約50kg</td><td>田んぼ 約2a</td></tr>
+          <tr><td>大豆</td><td>約8kg</td><td>畑 約0.5a</td></tr>
+          <tr><td>卵</td><td>約340個</td><td>鶏 1.5〜2羽</td></tr>
+          <tr><td>肉</td><td>獣害駆除のイノシシ・シカ</td><td>食肉処理業の許可を持つ事業者と提携</td></tr>
+        </tbody>
+      </table>
+      <div class="note">畑だけなら1人約1.5a。今ある畑（傾斜地25a＋急傾斜地10a）は、約20人分の野菜と大豆にあたる。米には別に田んぼが要る。数字は概算。</div>
+    </div>
+  </section>
+
+  <!-- PART 2 -->
+  <section class="slide part" data-title="PART 2｜仕組み" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">02</div>
+    <h2>仕組み</h2>
+    <p class="lead">浅い関わりから始めて、最長5年で自律する。お金と野菜と労働は、トークンでつながる。</p>
+  </section>
+
+  <!-- 2-01 参加の段階 -->
+  <section class="slide" data-title="参加の段階" data-part="2">
+    <div class="kicker">2 — 01｜Plans</div>
+    <h2>参加の段階</h2>
+    <p class="lead">いきなり自分の畑を持っても難しい。浅い関わりから始め、自分の畑で自給できるところまで進む。</p>
+    <div class="body top">
+      <div class="cols c4">
+        <div class="col">
+          <div class="h">01｜MEMBER</div>
+          <h3>会員</h3>
+          <div class="price">月額 3,000円</div>
+          <p>全額をトークンで受け取る。登録された畑の共有区画から、好きに収穫できる。</p>
+          <p>収穫時に写真と重量を記録してコミュニティに上げる。作業は任意。</p>
+        </div>
+        <div class="col">
+          <div class="h">02｜COURSE</div>
+          <h3>講座</h3>
+          <div class="price">月額 5,000円</div>
+          <p>オンラインの話し合いが月2回。現地の実習は毎週あり、その月はいつ来てもよい。</p>
+          <p>追加で払った分は、野菜トークンに変換できる。</p>
+        </div>
+        <div class="col">
+          <div class="h">03｜PLOT</div>
+          <h3>専有区画</h3>
+          <div class="price">指導期間中は未定</div>
+          <p>自分の区画で耕作し、プロ農家が伴走する。</p>
+          <p>初めての人は3〜5年、感覚のある人は1年で自給できる。</p>
+        </div>
+        <div class="col">
+          <div class="h">04｜OPERATOR</div>
+          <h3>運営メンバー</h3>
+          <div class="price">1aあたりの基本諸経費のみ</div>
+          <p>指導を修了した人。自分の畑と田んぼで自給し、仕組みを回す側に加わる。</p>
+          <p>取得費・税金などはみんなで分担する。</p>
+        </div>
+      </div>
+      <div class="note">料金はすべて仮。運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
+    </div>
+  </section>
+
+  <!-- 2-02 自律の道筋 -->
+  <section class="slide" data-title="最長5年で自律する" data-part="2">
+    <div class="kicker">2 — 02｜Path</div>
+    <h2>最長5年で、自律する</h2>
+    <p class="lead">修了した人が増えるほど、プロ農家がいなくても畑が回るようになる。</p>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="n">STEP 1</div><h3>会員</h3><p>共有畑の野菜を受け取りながら、畑に触れる</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">STEP 2</div><h3>講座</h3><p>オンラインと現地の実習で、つくり方を学ぶ</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">STEP 3｜1〜5年</div><h3>専有区画</h3><p>自分の区画で、プロ農家の伴走を受けながら耕作する</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step goal"><div class="n">GOAL</div><h3>運営メンバー</h3><p>自分の畑と田んぼで自給し、仕組みを回す</p></div>
+      </div>
+      <div class="loop"><strong>↺ 次の人へ</strong>　修了した運営メンバーが、共有畑の管理と次の人の指導を引き継ぐ。</div>
+    </div>
+  </section>
+
+  <!-- 2-03 トークン -->
+  <section class="slide" data-title="トークンの流れ" data-part="2">
+    <div class="kicker">2 — 03｜Token</div>
+    <h2>会費と畑仕事がトークンになり、<span class="thin">野菜を受け取ると減る</span></h2>
+    <div class="body">
+      <div class="fig">
+        <svg viewBox="0 0 760 330" role="img" aria-label="トークンの流れ">
+          <defs><marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8f8d82"/></marker></defs>
+          <text class="lb" x="260" y="44" text-anchor="middle">トークンが入る</text>
+          <text class="lb" x="500" y="44" text-anchor="middle">トークンが減る</text>
+          <g>
+            <path class="ln" d="M230 84H255V120H290" marker-end="url(#arw)"/>
+            <path class="ln" d="M230 172H255V136H290" marker-end="url(#arw)"/>
+            <path class="ln" d="M470 120H505V84H530" marker-end="url(#arw)"/>
+            <path class="ln" d="M470 136H505V172H530" marker-end="url(#arw)"/>
+            <path class="ln" d="M380 156V250" marker-start="url(#arw)" marker-end="url(#arw)"/>
+          </g>
+          <rect class="bx" x="30" y="56" width="200" height="56" rx="8"/>
+          <text class="nm" x="130" y="80" text-anchor="middle">会費を払う</text>
+          <text class="sb" x="130" y="98" text-anchor="middle">全額をトークンで配布</text>
+          <rect class="bx" x="30" y="144" width="200" height="56" rx="8"/>
+          <text class="nm" x="130" y="168" text-anchor="middle">畑仕事をする</text>
+          <text class="sb" x="130" y="186" text-anchor="middle">習熟度で重みが変わる</text>
+          <rect class="bx main" x="290" y="100" width="180" height="56" rx="8"/>
+          <text class="nm" x="380" y="124" text-anchor="middle">参加者のウォレット</text>
+          <text class="sb" x="380" y="142" text-anchor="middle">トークン残高</text>
+          <rect class="bx" x="530" y="56" width="200" height="56" rx="8"/>
+          <text class="nm" x="630" y="80" text-anchor="middle">野菜を受け取る</text>
+          <text class="sb" x="630" y="98" text-anchor="middle">写真と重量で記録</text>
+          <rect class="bx" x="530" y="144" width="200" height="56" rx="8"/>
+          <text class="nm" x="630" y="168" text-anchor="middle">配送で受け取る</text>
+          <text class="sb" x="630" y="186" text-anchor="middle">送料と手間賃を差し引く</text>
+          <text class="lb" x="392" y="208">すべての取引を記録</text>
+          <rect class="bx" x="30" y="250" width="700" height="56" rx="8"/>
+          <text class="nm" x="380" y="274" text-anchor="middle">共同会計（全公開・ブロックチェーンに記録）</text>
+          <text class="sb" x="380" y="292" text-anchor="middle">AIが3か月ごとに料金と配分を調整し、全体が赤字にならないようにする</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2-04 会計のルール -->
+  <section class="slide" data-title="会計のルール" data-part="2">
+    <div class="kicker">2 — 04｜Accounting</div>
+    <h2>会計のルール</h2>
+    <div class="body">
+      <ul class="pts compact">
+        <li>会計はすべて公開し、費用は参加者全員で分け合う</li>
+        <li>会費は全額トークンにし、受け取った現金で運営する。野菜はそのお礼<small>先払いの会費で畑を運営し、収穫を分ける CSA（地域支援型農業）と同じ形。成り立つかは、野菜1kgを何トークンにするかで決まる。</small></li>
+        <li>3か月ごとに料金と配分を調整し、1年ごとに全体を最適化する</li>
+        <li class="em">黒字はお金で分配しない<small>翌期の料金を下げるか、新しい畑や設備に再投資する。赤字のときは寄付か追加の負担で埋める。</small></li>
+        <li>使わなかったトークンは現金で返さない<small>年に一度まとめて還元する（たとえばサツマイモをどっさり）か、講座に振り替えられる。使わなければそのまま消える。</small></li>
+        <li>畑仕事で得るトークンは、習熟度で変わる<small>1年間講座を受けた人と初めての人では、同じ時間の作業でも価値が違う。</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2-05 テクノロジー -->
+  <section class="slide" data-title="テクノロジー" data-part="2">
+    <div class="kicker">2 — 05｜Technology</div>
+    <h2>記録と計算を、人の手から切り離す</h2>
+    <p class="lead">人が入れ替わっても、仕組みが回り続けるように。</p>
+    <div class="body top">
+      <div class="cols c2">
+        <div class="col">
+          <div class="h">IMAGE AI</div>
+          <h3>画像認識</h3>
+          <p>収穫物の写真から、何をどれだけ取ったかを記録する。将来は写真だけで重量まで推定したい。</p>
+        </div>
+        <div class="col">
+          <div class="h">ALLOCATION AI</div>
+          <h3>分配の計算</h3>
+          <p>お金・野菜・労働・資源の出入りから、料金とトークンの配分を計算する。生態系のように自律的に調整されることを目指す。</p>
+        </div>
+        <div class="col">
+          <div class="h">BLOCKCHAIN</div>
+          <h3>ブロックチェーン</h3>
+          <p>トークンの発行と移動、会計の記録を、改ざんできない形で残す。各自のウォレットに紐づける。</p>
+        </div>
+        <div class="col">
+          <div class="h">COMMUNITY</div>
+          <h3>コミュニティ</h3>
+          <p>Discord などで、収穫の報告、作業の調整、話し合いを行う。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2-06 農法と体制 -->
+  <section class="slide" data-title="農法と運営体制" data-part="2">
+    <div class="kicker">2 — 06｜Farming</div>
+    <h2>農法と運営体制</h2>
+    <p class="lead">農法はひとつに絞らず、作物と目的で使い分ける。畑はプロの農家が見る。</p>
+    <div class="body top">
+      <ul class="pts compact">
+        <li><strong>自然農法・協生農法</strong>：不耕起と混植。耕作放棄地の立ち上げと、手間をかけない畑の基本</li>
+        <li><strong>有機農法</strong>：夏野菜をしっかり収穫したいところに</li>
+        <li><strong>鶏</strong>：卵でタンパク質を得て、鶏糞を堆肥にする</li>
+        <li><strong>ジビエ</strong>：獣害駆除のイノシシとシカを、食肉処理業の許可を持つ事業者と組んで肉にする</li>
+        <li><strong>プロ農家の伴走</strong>：地元のプロ農家が畑の面倒を見る。修了者が増えれば、農家がいなくても回る</li>
+        <li><strong>暮らしの探求</strong>：食べ方、調理法、調味料のつくり方、暮らし方そのものを、参加者と一緒に探る</li>
+      </ul>
+      <div class="note">賛同する人が増えるほど、登録される畑が増えていく。</div>
+    </div>
+  </section>
+
+  <!-- 2-07 Primitive Life -->
+  <section class="slide" data-title="Make Your Own Primitive Life" data-part="2">
+    <div class="kicker">2 — 07｜Concept</div>
+    <h2>Make Your Own Primitive Life</h2>
+    <p class="lead">この仕組み全体がこのコンセプトのもとで動く。自給自足畑は「食」を担い、その周りにプリミティブテクノロジーの実践ネットワークがある。</p>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">PLANS</div>
+          <h3>月500円〜10万円</h3>
+          <p>関わり方に応じて、複数のプランを用意する。</p>
+        </div>
+        <div class="col">
+          <div class="h">EXAMPLE</div>
+          <h3>月額会員</h3>
+          <p>大人 月額1万円、子ども 月額5,000円。月に1回森に集まって活動し、オンラインでも話し合う。</p>
+        </div>
+        <div class="col">
+          <div class="h">TOKEN</div>
+          <h3>同じウォレットで</h3>
+          <p>各プランにも額に応じた野菜トークンを配る。自給自足畑と同じウォレットで、野菜を受け取れる。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PART 3 -->
+  <section class="slide part" data-title="PART 3｜法対策" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">03</div>
+    <h2>法対策</h2>
+    <p class="lead">トークンと会費の設計は、金融規制に触れやすい。先に線を引いておく。</p>
+  </section>
+
+  <!-- 3-01 法対策 -->
+  <section class="slide" data-title="法律ごとの対策" data-part="3">
+    <div class="kicker">3 — 01｜Legal</div>
+    <h2>法律ごとの対策</h2>
+    <div class="body top" style="margin-top:14px">
+      <table class="tbl law">
+        <thead><tr><th>法律</th><th>問題になりうること</th><th>対策</th><th>状態</th></tr></thead>
+        <tbody>
+          <tr><td>金融商品取引法</td><td>出資した人に利益を分配すると「集団投資スキーム」に当たるおそれ</td><td>黒字はお金で分配しない。受け取る野菜や講座は、払った額を超えない</td><td><span class="chip ok">方針決定</span></td></tr>
+          <tr><td>資金決済法<span class="s">前払式支払手段</span></td><td>前払いで野菜と交換するトークンは前払式支払手段。未使用残高が大きいと届出が要る</td><td>有効期限を6か月以内にすると対象外になる可能性。未使用分は還元・振替・失効</td><td><span class="chip todo">要確認</span></td></tr>
+          <tr><td>資金決済法<span class="s">暗号資産</span></td><td>他人と売買できるトークンは暗号資産になりうる</td><td>譲渡不可・換金不可で設計する</td><td><span class="chip todo">要確認</span></td></tr>
+          <tr><td>労働基準法</td><td>作業へのトークンが「賃金」とみなされると、通貨払いの原則に反する</td><td>作業は雇用ではなく会員の活動として設計する（時間の拘束や指揮命令をしない）</td><td><span class="chip todo">要確認</span></td></tr>
+          <tr><td>農地法</td><td>農地の売買・貸借には農業委員会の許可が要る</td><td>取得に問題なしと確認済み。畑が増えるたびに同じ手続きを踏む</td><td><span class="chip ok">対応済み</span></td></tr>
+          <tr><td>食品衛生法</td><td>人に提供する獣肉は、食肉処理業の許可施設で処理する必要がある</td><td>許可を持つ事業者と組む。提携を文書で取り決める</td><td><span class="chip ok">対応済み</span></td></tr>
+          <tr><td>法人形態</td><td>会費・トークン・農地を誰の名義で持つか</td><td>検討中。労働者協同組合も候補</td><td><span class="chip todo">検討中</span></td></tr>
+        </tbody>
+      </table>
+      <div class="note" style="margin-top:10px;padding-top:8px;font-size:13px;border-top:none">法律の欄は一般的な知識による整理で、条文は確認していない。制度を確定する前に、弁護士か司法書士に確認する。</div>
+    </div>
+  </section>
+
+  <!-- 3-02 残る論点 -->
+  <section class="slide" data-title="次に決めること" data-part="3">
+    <div class="kicker">3 — 02｜Next</div>
+    <h2>次に決めること</h2>
+    <div class="body">
+      <ul class="pts compact">
+        <li><strong>野菜の値付け</strong>：生産費と運営費から、野菜1kgあたりのトークン額を決める</li>
+        <li><strong>講座のトークン変換</strong>：追加で払った額を、どの比率でトークンにするか</li>
+        <li><strong>専有区画の料金</strong>：指導期間中の料金と、1aあたりの基本諸経費の額</li>
+        <li><strong>トークンの有効期限</strong>：期限と、年に一度の還元の時期</li>
+        <li><strong>引き継ぎの形</strong>：修了した運営メンバーが、共有畑の管理と次の人の指導をどう担うか</li>
+        <li><strong>法人形態と専門家確認</strong>：トークンと作業の扱いを、弁護士か司法書士に確認する</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- closing -->
+  <section class="slide" data-title="結び" data-part="3">
+    <div class="kicker">Closing</div>
+    <div class="body">
+      <p class="statement">人間が現れる前から、生態系は自律して回ってきた。<br>自給自足畑も、そうありたい。<small>誰が抜けても、社会のパラダイムが変わっても、人がいる限り続く仕組みを。山梨の耕作放棄地から始めます。</small></p>
+    </div>
+  </section>
+
+</div><!-- /stage -->
+<div class="bar" id="bar"></div>
+</div><!-- /deck -->
+
+<div class="ui">
+  <button id="btnToc" type="button">目次 ( O )</button>
+  <button id="btnPrev" type="button">←</button>
+  <button id="btnNext" type="button">→</button>
+</div>
+
+<nav class="toc" id="toc" aria-label="スライド目次">
+  <h4>Contents</h4>
+  <ol id="tocList"></ol>
+</nav>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var deck = document.getElementById('deck');
+  var bar = document.getElementById('bar');
+  var toc = document.getElementById('toc');
+  var tocList = document.getElementById('tocList');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+  var total = slides.length;
+  var i = 0;
+
+  var PART_NAME = {
+    '1': 'PART 1 ／ なぜ今か',
+    '2': 'PART 2 ／ 仕組み',
+    '3': 'PART 3 ／ 法対策'
+  };
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  slides.forEach(function (s, n) {
+    var part = s.getAttribute('data-part') || '';
+
+    var foot = document.createElement('div');
+    foot.className = 'foot';
+    foot.innerHTML = '<span>' + (PART_NAME[part] || '') + '</span><span>' +
+      pad(n + 1) + ' / ' + pad(total) + '</span>';
+    s.appendChild(foot);
+
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span class="no">' + pad(n + 1) + '</span><span>' +
+      s.getAttribute('data-title') +
+      (part ? '<span class="pt">' + (PART_NAME[part] || '') + '</span>' : '') + '</span>';
+    b.addEventListener('click', function () { go(n); closeToc(); });
+    li.appendChild(b);
+    tocList.appendChild(li);
+  });
+  var tocBtns = Array.prototype.slice.call(tocList.querySelectorAll('button'));
+
+  function go(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); });
+    tocBtns.forEach(function (b, k) { b.classList.toggle('here', k === i); });
+    bar.style.width = ((i + 1) / total * 100) + '%';
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+
+  function fit() {
+    var w = document.documentElement.clientWidth || window.innerWidth;
+    var h = document.documentElement.clientHeight || window.innerHeight;
+    if (h > w && w < 820) {
+      var s = Math.min(h / 1280, w / 720);
+      stage.style.transform = 'translate(-50%, -50%) rotate(90deg) scale(' + s + ')';
+    } else {
+      var s2 = Math.min(w / 1280, h / 720);
+      stage.style.transform = 'translate(-50%, -50%) scale(' + s2 + ')';
+    }
+  }
+
+  function closeToc() { toc.classList.remove('open'); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(total - 1); }
+    else if (e.key === 'o' || e.key === 'O') { toc.classList.toggle('open'); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else { document.documentElement.requestFullscreen(); }
+    }
+    else if (e.key === 'Escape') { closeToc(); }
+  });
+
+  document.getElementById('btnNext').addEventListener('click', function () { go(i + 1); });
+  document.getElementById('btnPrev').addEventListener('click', function () { go(i - 1); });
+  document.getElementById('btnToc').addEventListener('click', function () { toc.classList.toggle('open'); });
+  toc.addEventListener('click', function (e) { if (e.target === toc) closeToc(); });
+
+  var x0 = null;
+  deck.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  deck.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1);
+    x0 = null;
+  }, { passive: true });
+
+  var ui = document.querySelector('.ui');
+  var idleTimer;
+  function wake() {
+    ui.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { ui.classList.add('idle'); }, 2600);
+  }
+  ['mousemove', 'touchstart', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, wake, { passive: true });
+  });
+  wake();
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  window.addEventListener('pageshow', fit);
+  window.addEventListener('load', fit);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.documentElement);
+  fit();
+  setTimeout(fit, 120);
+  setTimeout(fit, 600);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  go(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+
+</body>
+</html>
