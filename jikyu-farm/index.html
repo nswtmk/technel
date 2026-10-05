@@ -113,6 +113,11 @@
   .cols.c2 { grid-template-columns: 1fr 1fr; }
   .cols.c3 { grid-template-columns: 1fr 1fr 1fr; }
   .cols.c4 { grid-template-columns: repeat(4, 1fr); }
+  .cols.c5 { grid-template-columns: repeat(5, 1fr); }
+  .cols.c5 .col { padding: 22px 18px 24px; }
+  .cols.c5 .col h3 { font-size: 20px; margin-bottom: 8px; }
+  .cols.c5 .col .price { font-size: 15px; margin-bottom: 10px; }
+  .cols.c5 .col p { font-size: 13.5px; line-height: 1.85; }
   .col { background: var(--paper); padding: 28px 28px 30px; }
   .col .h { font-size: 12.5px; letter-spacing: .2em; color: var(--moss); font-weight: 600; margin-bottom: 14px; }
   .col h3 { font-size: 24px; font-weight: 700; line-height: 1.55; margin-bottom: 12px; }
@@ -151,6 +156,11 @@
   .step-arrow { display: flex; align-items: center; justify-content: center; color: var(--moss); font-size: 22px; font-weight: 700; }
   .loop { margin-top: 18px; border: 1.4px dashed var(--moss); padding: 14px 22px; font-size: 17px; line-height: 1.8; }
   .loop strong { color: var(--moss); }
+
+  /* ---------- example ---------- */
+  .ex { margin-top: 30px; border: 1.8px solid var(--moss); background: #f4faf6; padding: 18px 26px;
+        text-align: center; font-size: 23px; font-weight: 700; letter-spacing: .02em; }
+  .ex .ar { color: var(--moss); margin: 0 16px; }
 
   /* ---------- figure ---------- */
   .fig { display: flex; justify-content: center; }
@@ -227,13 +237,13 @@
       <circle class="r3" cx="280" cy="280" r="132"/>
       <circle class="core" cx="280" cy="280" r="5"/>
     </svg>
-    <div class="kicker">Make Your Own Primitive Life</div>
+    <div class="kicker">Technel Project</div>
     <h1>耕作放棄地を、<br>みんなの<span class="g">自給自足畑</span>に</h1>
     <p class="sub">人がいなくなっても回り続ける、食の生態系をつくる</p>
     <p class="meta">Technel合同会社 ／ 七沢智樹<br>事業計画 ／ 2026.10</p>
   </section>
 
-  <!-- 02 overview -->
+  <!-- overview -->
   <section class="slide" data-title="何をつくるのか" data-part="">
     <div class="kicker">Overview</div>
     <h2>何をつくるのか</h2>
@@ -303,76 +313,242 @@
   </section>
 
   <!-- PART 2 -->
-  <section class="slide part" data-title="PART 2｜仕組み" data-part="">
+  <section class="slide part" data-title="PART 2｜畑と参加の仕組み" data-part="">
     <div class="kicker">Part</div>
     <div class="pnum">02</div>
-    <h2>仕組み</h2>
-    <p class="lead">浅い関わりから始めて、最長5年で自律する。お金と野菜と労働は、トークンでつながる。</p>
+    <h2>畑と参加の仕組み</h2>
+    <p class="lead">共有区画は誰でも収穫でき、専有区画で自給を学ぶ。浅い関わりから始めて、最長5年で自律する。</p>
   </section>
 
-  <!-- 2-01 参加の段階 -->
-  <section class="slide" data-title="参加の段階" data-part="2">
-    <div class="kicker">2 — 01｜Plans</div>
-    <h2>参加の段階</h2>
-    <p class="lead">いきなり自分の畑を持っても難しい。浅い関わりから始め、自分の畑で自給できるところまで進む。</p>
-    <div class="body top">
-      <div class="cols c4">
+  <!-- 2-01 畑の種類 -->
+  <section class="slide" data-title="畑の種類" data-part="2">
+    <div class="kicker">2 — 01｜Fields</div>
+    <h2>畑の種類</h2>
+    <div class="body">
+      <div class="cols c3">
         <div class="col">
-          <div class="h">01｜MEMBER</div>
-          <h3>会員</h3>
-          <div class="price">月額 3,000円</div>
-          <p>全額をトークンで受け取る。登録された畑の共有区画から、好きに収穫できる。</p>
-          <p>収穫時に写真と重量を記録してコミュニティに上げる。作業は任意。</p>
+          <div class="h">SHARED</div>
+          <h3>共有区画</h3>
+          <p>会員区分によらず、誰でも好きに収穫できる。収穫した分だけトークンを使う。</p>
+          <p>手をかけなくても育つ畑として、自然農法・協生農法を中心に回す。</p>
         </div>
         <div class="col">
-          <div class="h">02｜COURSE</div>
-          <h3>講座</h3>
-          <div class="price">月額 5,000円</div>
-          <p>オンラインの話し合いが月2回。現地の実習は毎週あり、その月はいつ来てもよい。</p>
-          <p>追加で払った分は、野菜トークンに変換できる。</p>
-        </div>
-        <div class="col">
-          <div class="h">03｜PLOT</div>
+          <div class="h">PLOT</div>
           <h3>専有区画</h3>
-          <div class="price">指導期間中は未定</div>
-          <p>自分の区画で耕作し、プロ農家が伴走する。</p>
-          <p>初めての人は3〜5年、感覚のある人は1年で自給できる。</p>
+          <p>自分だけの区画。指導期間中はプロの指導のもとで耕作し、修了したら自分で回す。</p>
+          <p>水やりなどの手入れも、すべて自分で行う。</p>
         </div>
         <div class="col">
-          <div class="h">04｜OPERATOR</div>
-          <h3>運営メンバー</h3>
-          <div class="price">1aあたりの基本諸経費のみ</div>
-          <p>指導を修了した人。自分の畑と田んぼで自給し、仕組みを回す側に加わる。</p>
-          <p>取得費・税金などはみんなで分担する。</p>
+          <div class="h">PURPOSE</div>
+          <h3>目的別の区画</h3>
+          <p>必要に応じて、目的ごとの区画もつくる。</p>
         </div>
       </div>
-      <div class="note">料金はすべて仮。運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
     </div>
   </section>
 
-  <!-- 2-02 自律の道筋 -->
+  <!-- 2-02 参加の段階 -->
+  <section class="slide" data-title="参加の段階" data-part="2">
+    <div class="kicker">2 — 02｜Plans</div>
+    <h2>参加の段階</h2>
+    <div class="body top">
+      <div class="cols c5">
+        <div class="col">
+          <div class="h">SPOT</div>
+          <h3>スポット</h3>
+          <div class="price">その都度払い</div>
+          <p>説明を受けた人が、行ったときに収穫して量り、その場で支払う（PayPay など）。</p>
+          <p>来年からの開始を目指す。</p>
+        </div>
+        <div class="col">
+          <div class="h">MEMBER</div>
+          <h3>会員</h3>
+          <div class="price">月額 3,000円</div>
+          <p>全額をトークンで受け取り、共有区画から好きに収穫できる。</p>
+          <p>市場価格で 6,000円分の野菜が目安。作業は任意。</p>
+        </div>
+        <div class="col">
+          <div class="h">COURSE</div>
+          <h3>講座</h3>
+          <div class="price">月額 5,000円</div>
+          <p>オンラインの話し合いが月2回、現地の実習が毎週。</p>
+          <p>追加で払った分は、トークンに変換できる。</p>
+        </div>
+        <div class="col">
+          <div class="h">PLOT</div>
+          <h3>専有区画</h3>
+          <div class="price">指導期間中は未定</div>
+          <p>プロの指導のもとで、自分の区画を耕作する。</p>
+          <p>多くは3〜4年で自立する。</p>
+        </div>
+        <div class="col">
+          <div class="h">OPERATOR</div>
+          <h3>運営メンバー</h3>
+          <div class="price">管理費のみ</div>
+          <p>指導を修了した人。1aあたりの基本諸経費だけで畑を続けられる。</p>
+          <p>貢献すれば無料、むしろプラスにも。</p>
+        </div>
+      </div>
+      <div class="note">契約は秋冬と春夏の半年ごと。料金はすべて仮で、運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
+    </div>
+  </section>
+
+  <!-- 2-03 自律の道筋 -->
   <section class="slide" data-title="最長5年で自律する" data-part="2">
-    <div class="kicker">2 — 02｜Path</div>
+    <div class="kicker">2 — 03｜Path</div>
     <h2>最長5年で、自律する</h2>
     <p class="lead">修了した人が増えるほど、プロ農家がいなくても畑が回るようになる。</p>
     <div class="body">
       <div class="steps">
-        <div class="step"><div class="n">STEP 1</div><h3>会員</h3><p>共有畑の野菜を受け取りながら、畑に触れる</p></div>
+        <div class="step"><div class="n">STEP 1</div><h3>会員</h3><p>共有区画の野菜を受け取りながら、畑に触れる</p></div>
         <div class="step-arrow">→</div>
         <div class="step"><div class="n">STEP 2</div><h3>講座</h3><p>オンラインと現地の実習で、つくり方を学ぶ</p></div>
         <div class="step-arrow">→</div>
-        <div class="step"><div class="n">STEP 3｜1〜5年</div><h3>専有区画</h3><p>自分の区画で、プロ農家の伴走を受けながら耕作する</p></div>
+        <div class="step"><div class="n">STEP 3｜最長5年</div><h3>専有区画</h3><p>プロの指導のもとで、自分の区画を耕作する。多くは3〜4年で自立する</p></div>
         <div class="step-arrow">→</div>
-        <div class="step goal"><div class="n">GOAL</div><h3>運営メンバー</h3><p>自分の畑と田んぼで自給し、仕組みを回す</p></div>
+        <div class="step goal"><div class="n">GOAL</div><h3>運営メンバー</h3><p>自分の畑で自給し、仕組みを回す</p></div>
       </div>
-      <div class="loop"><strong>↺ 次の人へ</strong>　修了した運営メンバーが、共有畑の管理と次の人の指導を引き継ぐ。</div>
+      <div class="loop"><strong>↺ 次の人へ</strong>　修了した運営メンバーが、共有区画の管理と次の人の指導を引き継ぐ。</div>
     </div>
   </section>
 
-  <!-- 2-03 トークン -->
-  <section class="slide" data-title="トークンの流れ" data-part="2">
-    <div class="kicker">2 — 03｜Token</div>
-    <h2>会費と畑仕事がトークンになり、<span class="thin">野菜を受け取ると減る</span></h2>
+  <!-- 2-04 自走したら -->
+  <section class="slide" data-title="自走できるようになったら" data-part="2">
+    <div class="kicker">2 — 04｜Independence</div>
+    <h2>自走できるようになったら</h2>
+    <div class="body">
+      <ul class="pts">
+        <li>土地の管理費を払うだけで、自分の区画を続けられる</li>
+        <li>貢献すれば管理費はただになり、むしろプラスになることもある</li>
+        <li>運営メンバーとして全体を回すことも、自分の区画を淡々と使い続けることもできる</li>
+        <li class="em">うまくいかなかった野菜は、区画どうしでトークンを使って交換し、補い合う<small>今年はトマトがたくさんできたけれど、ナスはうまくいかなかった。そういうことは毎年起きる。</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2-05 収穫の記録 -->
+  <section class="slide" data-title="収穫を記録する" data-part="2">
+    <div class="kicker">2 — 05｜Harvest</div>
+    <h2>収穫は、はかりとカメラで記録する</h2>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>取る</h3><p>旬のおいしいものから順に取っていく</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">2</div><h3>載せる</h3><p>バットに載せて量る。バットで大きさ、はかりで重さがわかる</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">3</div><h3>計算する</h3><p>AIが野菜ごとの比重から内訳を出す（例：カボチャ2個と人参2本で1kg）</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step goal"><div class="n">4</div><h3>トークンを使う</h3><p>内訳から値段を出し、トークンを差し引く</p></div>
+      </div>
+      <div class="loop"><strong>規格外は 1/3</strong>　割れや傷みのあるものは分けて量り、トークンの消費を3分の1にする。自己申告とAIの画像認識で判定し、あとから画像をもとに補正もできる。</div>
+      <div class="note">おいしそうなものだけを選ばず、バランスよく取ることをみんなで共有する。</div>
+    </div>
+  </section>
+
+  <!-- PART 3 -->
+  <section class="slide part" data-title="PART 3｜お金とトークン" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">03</div>
+    <h2>お金とトークン</h2>
+    <p class="lead">費用を積み上げ、収穫を予測し、市場価格の半分で野菜をトークンに換える。取れた量に合わせて、途中で調整する。</p>
+  </section>
+
+  <!-- 3-01 費用 -->
+  <section class="slide" data-title="費用を積み上げる" data-part="3">
+    <div class="kicker">3 — 01｜Cost</div>
+    <h2>費用を積み上げる</h2>
+    <p class="lead">かかった費用はすべて計上し、会計を公開する。</p>
+    <div class="body top">
+      <table class="tbl">
+        <thead><tr><th>費目</th><th>例</th><th>扱い</th></tr></thead>
+        <tbody>
+          <tr><td>立ち上げ費</td><td>今回の畑で 30万円</td><td>数年（ケースによっては5年）で償却し、月々のコストに載せる</td></tr>
+          <tr><td>土地などのベース</td><td>月 1万円</td><td>毎月の固定費</td></tr>
+          <tr><td>備品・設備の積立</td><td>月 1万円程度</td><td>将来の購入に備えて積み立てる</td></tr>
+          <tr><td>その他の経費</td><td>種、資材など</td><td>実費で計上する</td></tr>
+        </tbody>
+      </table>
+      <div class="note">月々のコストと会費の収入を比べながら、料金と配分を見直していく。</div>
+    </div>
+  </section>
+
+  <!-- 3-02 予測 -->
+  <section class="slide" data-title="収穫を予測する" data-part="3">
+    <div class="kicker">3 — 02｜Forecast</div>
+    <h2>収穫を予測する</h2>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>測る</h3><p>傾斜地をLiDARで測量し、実際の面積を出す</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">2</div><h3>予測する</h3><p>面積から、どれだけ取れるかを割り出す</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">3</div><h3>計画する</h3><p>予測をもとに、その年の栽培計画を立て、種をそろえる</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step goal"><div class="n">4</div><h3>調整する</h3><p>実際の収穫は大きくぶれる。予測は目安として、取れた量に合わせて調整する</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-03 値付け -->
+  <section class="slide" data-title="トークンの値付け" data-part="3">
+    <div class="kicker">3 — 03｜Pricing</div>
+    <h2>1人1aで自給する前提で、値段をつける</h2>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">PREMISE</div>
+          <h3>1人 1a</h3>
+          <p>1人が1年に食べる野菜の量を、1aでまかなう計算にする。</p>
+        </div>
+        <div class="col">
+          <div class="h">PRICE</div>
+          <h3>市場価格の半分</h3>
+          <p>その野菜の値段を、市場価格の半分に設定する。無農薬の野菜で。</p>
+        </div>
+        <div class="col">
+          <div class="h">EXCHANGE</div>
+          <h3>1円＝1トークン</h3>
+          <p>払った分が、そのままトークンで返ってくる。</p>
+        </div>
+      </div>
+      <div class="ex">月 3,000円<span class="ar">→</span>3,000トークン<span class="ar">→</span><span class="g">市場価格で 6,000円分</span>の野菜</div>
+    </div>
+  </section>
+
+  <!-- 3-04 調整 -->
+  <section class="slide" data-title="取れた量に合わせて調整する" data-part="3">
+    <div class="kicker">3 — 04｜Adjustment</div>
+    <h2>たくさん取れたら多く、<span class="thin">取れなければ少なく</span></h2>
+    <div class="body">
+      <ul class="pts compact">
+        <li>収穫は事前にはわからない。予測をもとにトークンを配り、途中で調整する</li>
+        <li>予測より多く取れたら、1トークンで受け取れる野菜が増える。少なければ減る</li>
+        <li>パラメーターは毎週〜毎月調整し、シーズンごとに精算する</li>
+        <li>契約は半年ごと。秋冬野菜と春夏野菜のシーズンで区切る</li>
+        <li class="em">得をするために参加するものではない<small>損か得かは、やってみないとわからない。自給自足したい人、このコミュニティに参加したい人で回す。</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3-05 貢献 -->
+  <section class="slide" data-title="貢献とトークン" data-part="3">
+    <div class="kicker">3 — 05｜Contribution</div>
+    <h2>貢献も、トークンになる</h2>
+    <div class="body">
+      <ul class="pts compact">
+        <li>作業日に作業をすると、その分がトークンになる<small>何を、いつ、どうやるかは決まっていて、ガイドに沿って行う。講座を受けた人ほど、同じ作業の価値が高い。</small></li>
+        <li>ただ、作業はあまり発生しない。手をかけなくても育つ畑だから<small>作業をするのは、主にスタッフと運営メンバー。</small></li>
+        <li>耕作放棄地の開墾など、畑の外の貢献もトークンになりうる</li>
+        <li>講座を受けて貢献し、会費をまかなえる人もいれば、そうでない人もいる</li>
+      </ul>
+      <div class="ex" style="margin-top:22px">月 3,000円＋3,000円分の貢献<span class="ar">→</span>6,000トークン<span class="ar">→</span><span class="g">市場価格で 12,000円分</span></div>
+    </div>
+  </section>
+
+  <!-- 3-06 トークン -->
+  <section class="slide" data-title="トークンの流れ" data-part="3">
+    <div class="kicker">3 — 06｜Token</div>
+    <h2>会費と貢献がトークンになり、<span class="thin">収穫すると減る</span></h2>
     <div class="body">
       <div class="fig">
         <svg viewBox="0 0 760 330" role="img" aria-label="トークンの流れ">
@@ -388,78 +564,77 @@
           </g>
           <rect class="bx" x="30" y="56" width="200" height="56" rx="8"/>
           <text class="nm" x="130" y="80" text-anchor="middle">会費を払う</text>
-          <text class="sb" x="130" y="98" text-anchor="middle">全額をトークンで配布</text>
+          <text class="sb" x="130" y="98" text-anchor="middle">1円＝1トークン</text>
           <rect class="bx" x="30" y="144" width="200" height="56" rx="8"/>
-          <text class="nm" x="130" y="168" text-anchor="middle">畑仕事をする</text>
+          <text class="nm" x="130" y="168" text-anchor="middle">決まった作業をする</text>
           <text class="sb" x="130" y="186" text-anchor="middle">習熟度で重みが変わる</text>
           <rect class="bx main" x="290" y="100" width="180" height="56" rx="8"/>
           <text class="nm" x="380" y="124" text-anchor="middle">参加者のウォレット</text>
           <text class="sb" x="380" y="142" text-anchor="middle">トークン残高</text>
           <rect class="bx" x="530" y="56" width="200" height="56" rx="8"/>
-          <text class="nm" x="630" y="80" text-anchor="middle">野菜を受け取る</text>
-          <text class="sb" x="630" y="98" text-anchor="middle">写真と重量で記録</text>
+          <text class="nm" x="630" y="80" text-anchor="middle">共有区画で収穫する</text>
+          <text class="sb" x="630" y="98" text-anchor="middle">規格外はトークン 1/3</text>
           <rect class="bx" x="530" y="144" width="200" height="56" rx="8"/>
           <text class="nm" x="630" y="168" text-anchor="middle">配送で受け取る</text>
           <text class="sb" x="630" y="186" text-anchor="middle">送料と手間賃を差し引く</text>
           <text class="lb" x="392" y="208">すべての取引を記録</text>
           <rect class="bx" x="30" y="250" width="700" height="56" rx="8"/>
           <text class="nm" x="380" y="274" text-anchor="middle">共同会計（全公開・ブロックチェーンに記録）</text>
-          <text class="sb" x="380" y="292" text-anchor="middle">AIが3か月ごとに料金と配分を調整し、全体が赤字にならないようにする</text>
+          <text class="sb" x="380" y="292" text-anchor="middle">AIが毎週〜毎月、1トークンで受け取れる野菜の量を調整し、半年ごとに精算する</text>
         </svg>
       </div>
     </div>
   </section>
 
-  <!-- 2-04 会計のルール -->
-  <section class="slide" data-title="会計のルール" data-part="2">
-    <div class="kicker">2 — 04｜Accounting</div>
+  <!-- 3-07 会計のルール -->
+  <section class="slide" data-title="会計のルール" data-part="3">
+    <div class="kicker">3 — 07｜Accounting</div>
     <h2>会計のルール</h2>
     <div class="body">
       <ul class="pts compact">
         <li>会計はすべて公開し、費用は参加者全員で分け合う</li>
-        <li>会費は全額トークンにし、受け取った現金で運営する。野菜はそのお礼<small>先払いの会費で畑を運営し、収穫を分ける CSA（地域支援型農業）と同じ形。成り立つかは、野菜1kgを何トークンにするかで決まる。</small></li>
-        <li>3か月ごとに料金と配分を調整し、1年ごとに全体を最適化する</li>
+        <li>会費は全額トークンにし、受け取った現金で運営する。野菜はそのお礼<small>先払いの会費で畑を運営し、収穫を分ける CSA（地域支援型農業）と同じ形。</small></li>
+        <li>毎週〜毎月パラメーターを調整し、半年のシーズンごとに精算する</li>
         <li class="em">黒字はお金で分配しない<small>翌期の料金を下げるか、新しい畑や設備に再投資する。赤字のときは寄付か追加の負担で埋める。</small></li>
         <li>使わなかったトークンは現金で返さない<small>年に一度まとめて還元する（たとえばサツマイモをどっさり）か、講座に振り替えられる。使わなければそのまま消える。</small></li>
-        <li>畑仕事で得るトークンは、習熟度で変わる<small>1年間講座を受けた人と初めての人では、同じ時間の作業でも価値が違う。</small></li>
       </ul>
     </div>
   </section>
 
-  <!-- 2-05 テクノロジー -->
-  <section class="slide" data-title="テクノロジー" data-part="2">
-    <div class="kicker">2 — 05｜Technology</div>
+  <!-- 3-08 テクノロジー -->
+  <section class="slide" data-title="テクノロジー" data-part="3">
+    <div class="kicker">3 — 08｜Technology</div>
     <h2>記録と計算を、人の手から切り離す</h2>
     <p class="lead">人が入れ替わっても、仕組みが回り続けるように。</p>
     <div class="body top">
       <div class="cols c2">
         <div class="col">
+          <div class="h">SURVEY</div>
+          <h3>測量と収穫予測</h3>
+          <p>LiDARで傾斜地の面積を測り、どれだけ取れるかを予測する。</p>
+        </div>
+        <div class="col">
           <div class="h">IMAGE AI</div>
           <h3>画像認識</h3>
-          <p>収穫物の写真から、何をどれだけ取ったかを記録する。将来は写真だけで重量まで推定したい。</p>
+          <p>バットとはかりの記録から、何をどれだけ取ったか、規格外かどうかを判定する。</p>
         </div>
         <div class="col">
           <div class="h">ALLOCATION AI</div>
           <h3>分配の計算</h3>
-          <p>お金・野菜・労働・資源の出入りから、料金とトークンの配分を計算する。生態系のように自律的に調整されることを目指す。</p>
+          <p>収穫・費用・貢献から、1トークンで受け取れる野菜の量を調整する。生態系のように自律的に調整されることを目指す。</p>
         </div>
         <div class="col">
-          <div class="h">BLOCKCHAIN</div>
-          <h3>ブロックチェーン</h3>
-          <p>トークンの発行と移動、会計の記録を、改ざんできない形で残す。各自のウォレットに紐づける。</p>
-        </div>
-        <div class="col">
-          <div class="h">COMMUNITY</div>
-          <h3>コミュニティ</h3>
-          <p>Discord などで、収穫の報告、作業の調整、話し合いを行う。</p>
+          <div class="h">LEDGER &amp; COMMUNITY</div>
+          <h3>記録とコミュニティ</h3>
+          <p>トークンの発行と移動をブロックチェーンに残す。Discord などで報告と話し合い。スポットの支払いは PayPay など。</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2-06 農法と体制 -->
-  <section class="slide" data-title="農法と運営体制" data-part="2">
-    <div class="kicker">2 — 06｜Farming</div>
+  <!-- 3-09 農法と体制 -->
+  <section class="slide" data-title="農法と運営体制" data-part="3">
+    <div class="kicker">3 — 09｜Farming</div>
     <h2>農法と運営体制</h2>
     <p class="lead">農法はひとつに絞らず、作物と目的で使い分ける。畑はプロの農家が見る。</p>
     <div class="body top">
@@ -475,51 +650,25 @@
     </div>
   </section>
 
-  <!-- 2-07 Primitive Life -->
-  <section class="slide" data-title="Make Your Own Primitive Life" data-part="2">
-    <div class="kicker">2 — 07｜Concept</div>
-    <h2>Make Your Own Primitive Life</h2>
-    <p class="lead">この仕組み全体がこのコンセプトのもとで動く。自給自足畑は「食」を担い、その周りにプリミティブテクノロジーの実践ネットワークがある。</p>
-    <div class="body">
-      <div class="cols c3">
-        <div class="col">
-          <div class="h">PLANS</div>
-          <h3>月500円〜10万円</h3>
-          <p>関わり方に応じて、複数のプランを用意する。</p>
-        </div>
-        <div class="col">
-          <div class="h">EXAMPLE</div>
-          <h3>月額会員</h3>
-          <p>大人 月額1万円、子ども 月額5,000円。月に1回森に集まって活動し、オンラインでも話し合う。</p>
-        </div>
-        <div class="col">
-          <div class="h">TOKEN</div>
-          <h3>同じウォレットで</h3>
-          <p>各プランにも額に応じた野菜トークンを配る。自給自足畑と同じウォレットで、野菜を受け取れる。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PART 3 -->
-  <section class="slide part" data-title="PART 3｜法対策" data-part="">
+  <!-- PART 4 -->
+  <section class="slide part" data-title="PART 4｜法対策" data-part="">
     <div class="kicker">Part</div>
-    <div class="pnum">03</div>
+    <div class="pnum">04</div>
     <h2>法対策</h2>
     <p class="lead">トークンと会費の設計は、金融規制に触れやすい。先に線を引いておく。</p>
   </section>
 
-  <!-- 3-01 法対策 -->
-  <section class="slide" data-title="法律ごとの対策" data-part="3">
-    <div class="kicker">3 — 01｜Legal</div>
+  <!-- 4-01 法対策 -->
+  <section class="slide" data-title="法律ごとの対策" data-part="4">
+    <div class="kicker">4 — 01｜Legal</div>
     <h2>法律ごとの対策</h2>
     <div class="body top" style="margin-top:14px">
       <table class="tbl law">
         <thead><tr><th>法律</th><th>問題になりうること</th><th>対策</th><th>状態</th></tr></thead>
         <tbody>
-          <tr><td>金融商品取引法</td><td>出資した人に利益を分配すると「集団投資スキーム」に当たるおそれ</td><td>黒字はお金で分配しない。受け取る野菜や講座は、払った額を超えない</td><td><span class="chip ok">方針決定</span></td></tr>
-          <tr><td>資金決済法<span class="s">前払式支払手段</span></td><td>前払いで野菜と交換するトークンは前払式支払手段。未使用残高が大きいと届出が要る</td><td>有効期限を6か月以内にすると対象外になる可能性。未使用分は還元・振替・失効</td><td><span class="chip todo">要確認</span></td></tr>
-          <tr><td>資金決済法<span class="s">暗号資産</span></td><td>他人と売買できるトークンは暗号資産になりうる</td><td>譲渡不可・換金不可で設計する</td><td><span class="chip todo">要確認</span></td></tr>
+          <tr><td>金融商品取引法</td><td>出資した人に利益を分配すると「集団投資スキーム」に当たるおそれ</td><td>黒字はお金で分配しない。会費は、収穫を分け合うための前払いとして設計する</td><td><span class="chip ok">方針決定</span></td></tr>
+          <tr><td>資金決済法<span class="s">前払式支払手段</span></td><td>前払いで野菜と交換するトークンは前払式支払手段。未使用残高が大きいと届出が要る</td><td>半年ごとの精算で期限を区切る。有効期限が6か月以内なら対象外になる可能性</td><td><span class="chip todo">要確認</span></td></tr>
+          <tr><td>資金決済法<span class="s">暗号資産</span></td><td>他人と売買できるトークンは暗号資産になりうる</td><td>譲渡不可・換金不可で設計する。区画どうしの野菜の交換は、仕組みの中だけで行う</td><td><span class="chip todo">要確認</span></td></tr>
           <tr><td>労働基準法</td><td>作業へのトークンが「賃金」とみなされると、通貨払いの原則に反する</td><td>作業は雇用ではなく会員の活動として設計する（時間の拘束や指揮命令をしない）</td><td><span class="chip todo">要確認</span></td></tr>
           <tr><td>農地法</td><td>農地の売買・貸借には農業委員会の許可が要る</td><td>取得に問題なしと確認済み。畑が増えるたびに同じ手続きを踏む</td><td><span class="chip ok">対応済み</span></td></tr>
           <tr><td>食品衛生法</td><td>人に提供する獣肉は、食肉処理業の許可施設で処理する必要がある</td><td>許可を持つ事業者と組む。提携を文書で取り決める</td><td><span class="chip ok">対応済み</span></td></tr>
@@ -530,24 +679,25 @@
     </div>
   </section>
 
-  <!-- 3-02 残る論点 -->
-  <section class="slide" data-title="次に決めること" data-part="3">
-    <div class="kicker">3 — 02｜Next</div>
+  <!-- 4-02 次に決めること -->
+  <section class="slide" data-title="次に決めること" data-part="4">
+    <div class="kicker">4 — 02｜Next</div>
     <h2>次に決めること</h2>
     <div class="body">
       <ul class="pts compact">
-        <li><strong>野菜の値付け</strong>：生産費と運営費から、野菜1kgあたりのトークン額を決める</li>
-        <li><strong>講座のトークン変換</strong>：追加で払った額を、どの比率でトークンにするか</li>
+        <li><strong>市場価格の基準</strong>：何の価格を「市場価格」とするか（店頭、直売所、有機の相場）</li>
+        <li><strong>立ち上げ費の償却期間</strong>：畑ごとに何年で割るか</li>
+        <li><strong>規格外の判定</strong>：自己申告とAIの画像認識の組み合わせ方</li>
+        <li><strong>スポットメンバー</strong>：来年からの開始に向けた、説明の受け方と支払い方法</li>
         <li><strong>専有区画の料金</strong>：指導期間中の料金と、1aあたりの基本諸経費の額</li>
-        <li><strong>トークンの有効期限</strong>：期限と、年に一度の還元の時期</li>
-        <li><strong>引き継ぎの形</strong>：修了した運営メンバーが、共有畑の管理と次の人の指導をどう担うか</li>
+        <li><strong>引き継ぎの形</strong>：修了した運営メンバーが、共有区画の管理と次の人の指導をどう担うか</li>
         <li><strong>法人形態と専門家確認</strong>：トークンと作業の扱いを、弁護士か司法書士に確認する</li>
       </ul>
     </div>
   </section>
 
   <!-- closing -->
-  <section class="slide" data-title="結び" data-part="3">
+  <section class="slide" data-title="結び" data-part="4">
     <div class="kicker">Closing</div>
     <div class="body">
       <p class="statement">人間が現れる前から、生態系は自律して回ってきた。<br>自給自足畑も、そうありたい。<small>誰が抜けても、社会のパラダイムが変わっても、人がいる限り続く仕組みを。山梨の耕作放棄地から始めます。</small></p>
@@ -582,8 +732,9 @@
 
   var PART_NAME = {
     '1': 'PART 1 ／ なぜ今か',
-    '2': 'PART 2 ／ 仕組み',
-    '3': 'PART 3 ／ 法対策'
+    '2': 'PART 2 ／ 畑と参加の仕組み',
+    '3': 'PART 3 ／ お金とトークン',
+    '4': 'PART 4 ／ 法対策'
   };
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
