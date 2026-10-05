@@ -162,6 +162,17 @@
         text-align: center; font-size: 23px; font-weight: 700; letter-spacing: .02em; }
   .ex .ar { color: var(--moss); margin: 0 16px; }
 
+  /* ---------- bars ---------- */
+  .bars .row { display: grid; grid-template-columns: 300px 1fr 170px; align-items: center; gap: 22px; margin-bottom: 26px; }
+  .bars .lbl { font-size: 19px; font-weight: 700; line-height: 1.5; }
+  .bars .lbl small { display: block; font-size: 13.5px; font-weight: 400; color: var(--ink-soft); }
+  .bars .track { height: 36px; }
+  .bars .fill { height: 100%; background: #cfcdc2; }
+  .bars .fill.us { background: var(--moss); }
+  .bars .val { font-size: 26px; font-weight: 700; text-align: right; white-space: nowrap; }
+  .bars .val small { font-size: 14px; font-weight: 400; color: var(--ink-soft); margin-right: 4px; }
+  .bars .row.us .lbl, .bars .row.us .val { color: var(--moss); }
+
   /* ---------- figure ---------- */
   .fig { display: flex; justify-content: center; }
   .fig svg { width: 100%; max-width: 980px; height: auto; }
@@ -301,14 +312,14 @@
       <table class="tbl">
         <thead><tr><th>品目</th><th>1人あたり年間（概算）</th><th>必要な面積・羽数（無肥料〜少肥の概算）</th></tr></thead>
         <tbody>
-          <tr><td>野菜</td><td>約128kg<span class="s">1日350gの推奨量</span></td><td>畑 約1〜1.3a</td></tr>
+          <tr><td>野菜</td><td>約128kg<span class="s">1日350gの推奨量</span></td><td>畑 約0.5〜1a</td></tr>
           <tr><td>米</td><td>約50kg</td><td>田んぼ 約2a</td></tr>
           <tr><td>大豆</td><td>約8kg</td><td>畑 約0.5a</td></tr>
           <tr><td>卵</td><td>約340個</td><td>鶏 1.5〜2羽</td></tr>
           <tr><td>肉</td><td>獣害駆除のイノシシ・シカ</td><td>食肉処理業の許可を持つ事業者と提携</td></tr>
         </tbody>
       </table>
-      <div class="note">畑だけなら1人約1.5a。今ある畑（傾斜地25a＋急傾斜地10a）は、約20人分の野菜と大豆にあたる。米には別に田んぼが要る。数字は概算。</div>
+      <div class="note">野菜は1㎡あたり年1.3〜2.4kg取れる想定。今ある畑（傾斜地25a＋急傾斜地10a）は、約20〜30人分の野菜と大豆にあたる。米には別に田んぼが要る。数字は概算。</div>
     </div>
   </section>
 
@@ -347,7 +358,7 @@
     </div>
   </section>
 
-  <!-- 2-02 参加の段階 -->
+    <!-- 2-02 参加の段階 -->
   <section class="slide" data-title="参加の段階" data-part="2">
     <div class="kicker">2 — 02｜Plans</div>
     <h2>参加の段階</h2>
@@ -361,54 +372,53 @@
           <p>来年からの開始を目指す。</p>
         </div>
         <div class="col">
-          <div class="h">MEMBER</div>
-          <h3>会員</h3>
-          <div class="price">月額 3,000円</div>
-          <p>全額をトークンで受け取り、共有区画から好きに収穫できる。</p>
-          <p>市場価格で 6,000円分の野菜が目安。作業は任意。</p>
+          <div class="h">VEGETABLES</div>
+          <h3>野菜</h3>
+          <div class="price">月額 4,000円</div>
+          <p>払った分を受け取るだけのプラン。全額をトークンで受け取り、共有区画から収穫する。</p>
+          <p>作業は任意。</p>
         </div>
         <div class="col">
-          <div class="h">COURSE</div>
-          <h3>講座</h3>
-          <div class="price">月額 5,000円</div>
-          <p>オンラインの話し合いが月2回、現地の実習が毎週。</p>
-          <p>追加で払った分は、トークンに変換できる。</p>
+          <div class="h">LECTURE</div>
+          <h3>レクチャー</h3>
+          <div class="price">月額 8,000円<br><span style="font-size:13px">子ども 4,000円</span></div>
+          <p>現地のレクチャーが月4回、オンラインがときどき。</p>
+          <p>レクチャーだけの参加もできる。</p>
         </div>
         <div class="col">
-          <div class="h">PLOT</div>
-          <h3>専有区画</h3>
-          <div class="price">指導期間中は未定</div>
-          <p>プロの指導のもとで、自分の区画を耕作する。</p>
-          <p>多くは3〜4年で自立する。</p>
+          <div class="h">WORK｜修了後</div>
+          <h3>作業メンバー</h3>
+          <div class="price">作業とトークンを交換</div>
+          <p>レクチャーを1年以上受けた人。受け取る野菜と同じくらいになるよう作業する。</p>
         </div>
         <div class="col">
-          <div class="h">OPERATOR</div>
-          <h3>運営メンバー</h3>
-          <div class="price">管理費のみ</div>
-          <p>指導を修了した人。1aあたりの基本諸経費だけで畑を続けられる。</p>
-          <p>貢献すれば無料、むしろプラスにも。</p>
+          <div class="h">OWN FIELD｜修了後</div>
+          <h3>自給畑</h3>
+          <div class="price">自走後は管理費のみ</div>
+          <p>自分の区画（専有区画）に切り替える。翌年も追加でレクチャーを受ける。</p>
+          <p>自走したら1aあたり月1,000円。</p>
         </div>
       </div>
-      <div class="note">契約は秋冬と春夏の半年ごと。料金はすべて仮で、運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
+      <div class="note">契約は秋冬と春夏の半年ごと。料金は仮で、運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
     </div>
   </section>
 
-  <!-- 2-03 自律の道筋 -->
+    <!-- 2-03 自律の道筋 -->
   <section class="slide" data-title="最長5年で自律する" data-part="2">
     <div class="kicker">2 — 03｜Path</div>
     <h2>最長5年で、自律する</h2>
     <p class="lead">修了した人が増えるほど、プロ農家がいなくても畑が回るようになる。</p>
     <div class="body">
       <div class="steps">
-        <div class="step"><div class="n">STEP 1</div><h3>会員</h3><p>共有区画の野菜を受け取りながら、畑に触れる</p></div>
+        <div class="step"><div class="n">STEP 1</div><h3>野菜</h3><p>共有区画の野菜を受け取りながら、畑に触れる</p></div>
         <div class="step-arrow">→</div>
-        <div class="step"><div class="n">STEP 2</div><h3>講座</h3><p>オンラインと現地の実習で、つくり方を学ぶ</p></div>
+        <div class="step"><div class="n">STEP 2｜1年以上</div><h3>レクチャー</h3><p>現地とオンラインで、つくり方を学ぶ</p></div>
         <div class="step-arrow">→</div>
-        <div class="step"><div class="n">STEP 3｜最長5年</div><h3>専有区画</h3><p>プロの指導のもとで、自分の区画を耕作する。多くは3〜4年で自立する</p></div>
+        <div class="step"><div class="n">STEP 3｜最長5年</div><h3>自給畑</h3><p>自分の区画に切り替え、翌年も追加でレクチャーを受ける。多くは3〜4年で自立する</p></div>
         <div class="step-arrow">→</div>
-        <div class="step goal"><div class="n">GOAL</div><h3>運営メンバー</h3><p>自分の畑で自給し、仕組みを回す</p></div>
+        <div class="step goal"><div class="n">GOAL</div><h3>自走</h3><p>管理費だけで自分の畑を続け、仕組みを回す側にも加わる</p></div>
       </div>
-      <div class="loop"><strong>↺ 次の人へ</strong>　修了した運営メンバーが、共有区画の管理と次の人の指導を引き継ぐ。</div>
+      <div class="loop"><strong>↺ 次の人へ</strong>　修了した人は作業メンバーとして共有区画を回し、次の人の指導を引き継ぐ。</div>
     </div>
   </section>
 
@@ -418,7 +428,7 @@
     <h2>自走できるようになったら</h2>
     <div class="body">
       <ul class="pts">
-        <li>土地の管理費を払うだけで、自分の区画を続けられる</li>
+        <li>1aあたり月1,000円の管理費を払うだけで、自分の区画を続けられる</li>
         <li>貢献すれば管理費はただになり、むしろプラスになることもある</li>
         <li>運営メンバーとして全体を回すことも、自分の区画を淡々と使い続けることもできる</li>
         <li class="em">うまくいかなかった野菜は、区画どうしでトークンを使って交換し、補い合う<small>今年はトマトがたくさんできたけれど、ナスはうまくいかなかった。そういうことは毎年起きる。</small></li>
@@ -450,25 +460,25 @@
     <div class="kicker">Part</div>
     <div class="pnum">03</div>
     <h2>お金とトークン</h2>
-    <p class="lead">費用を積み上げ、収穫を予測し、市場価格の半分で野菜をトークンに換える。取れた量に合わせて、途中で調整する。</p>
+    <p class="lead">費用を積み上げ、収穫を予測し、有機の相場の約半分で野菜をトークンに換える。取れた量に合わせて、途中で調整する。</p>
   </section>
 
-  <!-- 3-01 費用 -->
-  <section class="slide" data-title="費用を積み上げる" data-part="3">
+    <!-- 3-01 費用 -->
+  <section class="slide" data-title="畑の費用" data-part="3">
     <div class="kicker">3 — 01｜Cost</div>
-    <h2>費用を積み上げる</h2>
+    <h2>畑の費用は、10aで月7万円</h2>
     <p class="lead">かかった費用はすべて計上し、会計を公開する。</p>
     <div class="body top">
       <table class="tbl">
-        <thead><tr><th>費目</th><th>例</th><th>扱い</th></tr></thead>
+        <thead><tr><th>費目</th><th>月あたり（10a）</th><th>中身</th></tr></thead>
         <tbody>
-          <tr><td>立ち上げ費</td><td>今回の畑で 30万円</td><td>数年（ケースによっては5年）で償却し、月々のコストに載せる</td></tr>
-          <tr><td>土地などのベース</td><td>月 1万円</td><td>毎月の固定費</td></tr>
-          <tr><td>備品・設備の積立</td><td>月 1万円程度</td><td>将来の購入に備えて積み立てる</td></tr>
-          <tr><td>その他の経費</td><td>種、資材など</td><td>実費で計上する</td></tr>
+          <tr><td>土地のベース</td><td>10,000円</td><td>1aあたり1,000円。立ち上げ費の償却を含む</td></tr>
+          <tr><td>種と苗</td><td>10,000円</td><td>買うのはほぼ種と苗だけ。見込みの月5,000円に余裕を見て</td></tr>
+          <tr><td>労働</td><td>50,000円</td><td>10aで月50時間 × 時給1,000円換算。これ以上は増やさない</td></tr>
+          <tr><td>合計</td><td><strong>70,000円</strong></td><td></td></tr>
         </tbody>
       </table>
-      <div class="note">月々のコストと会費の収入を比べながら、料金と配分を見直していく。</div>
+      <div class="note">1年目は、レクチャーを受けている人はまだ作業トークンを受け取れないため、作業はスタッフが行う。</div>
     </div>
   </section>
 
@@ -486,24 +496,52 @@
         <div class="step-arrow">→</div>
         <div class="step goal"><div class="n">4</div><h3>調整する</h3><p>実際の収穫は大きくぶれる。予測は目安として、取れた量に合わせて調整する</p></div>
       </div>
+      <div class="loop"><strong>見込み</strong>　作付けできる10aで、1㎡あたり年2.4kg。10aで年 <strong>2.4トン</strong> の野菜を見込む。</div>
     </div>
   </section>
 
-  <!-- 3-03 値付け -->
+    <!-- 3-03 市場価格 -->
+  <section class="slide" data-title="推奨量の野菜を買うと" data-part="3">
+    <div class="kicker">3 — 03｜Market</div>
+    <h2>推奨量の野菜を買うと、月いくらか</h2>
+    <p class="lead">1日350g（年約128kg）の野菜を、店で買った場合と比べる。</p>
+    <div class="body">
+      <div class="bars">
+        <div class="row">
+          <div class="lbl">慣行の野菜<small>店頭の平均 約420円/kg</small></div>
+          <div class="track"><div class="fill" style="width:59%"></div></div>
+          <div class="val"><small>月</small>約4,500円</div>
+        </div>
+        <div class="row">
+          <div class="lbl">無農薬・有機の野菜<small>慣行の約1.7倍 約710円/kg</small></div>
+          <div class="track"><div class="fill" style="width:100%"></div></div>
+          <div class="val"><small>月</small>約7,600円</div>
+        </div>
+        <div class="row us">
+          <div class="lbl">この畑<small>有機の相場の約半分</small></div>
+          <div class="track"><div class="fill us" style="width:53%"></div></div>
+          <div class="val"><small>月</small>4,000円</div>
+        </div>
+      </div>
+      <div class="note">慣行の価格は総務省「家計調査」（令和3年、2人以上の世帯の1人あたり年58kg・24,267円）から算出。有機の倍率は、農林水産省「生鮮野菜価格動向調査」で標準品の1.5〜3倍とされる幅のうち、中ほどの1.7倍をとった概算（1.5〜3倍なら月約6,700〜13,400円）。</div>
+    </div>
+  </section>
+
+  <!-- 3-04 値付け -->
   <section class="slide" data-title="トークンの値付け" data-part="3">
-    <div class="kicker">3 — 03｜Pricing</div>
-    <h2>1人1aで自給する前提で、値段をつける</h2>
+    <div class="kicker">3 — 04｜Pricing</div>
+    <h2>有機の相場の約半分で、自給できるようにする</h2>
     <div class="body">
       <div class="cols c3">
         <div class="col">
           <div class="h">PREMISE</div>
-          <h3>1人 1a</h3>
-          <p>1人が1年に食べる野菜の量を、1aでまかなう計算にする。</p>
+          <h3>10aを15人で</h3>
+          <p>10aで取れる年2.4トンを、15人で分ける。1人あたり年約160kgで、推奨量を上回る。</p>
         </div>
         <div class="col">
           <div class="h">PRICE</div>
-          <h3>市場価格の半分</h3>
-          <p>その野菜の値段を、市場価格の半分に設定する。無農薬の野菜で。</p>
+          <h3>月 4,000円</h3>
+          <p>推奨量を有機で買う額（月約7,600円）の約半分。無農薬の野菜で。</p>
         </div>
         <div class="col">
           <div class="h">EXCHANGE</div>
@@ -511,13 +549,13 @@
           <p>払った分が、そのままトークンで返ってくる。</p>
         </div>
       </div>
-      <div class="ex">月 3,000円<span class="ar">→</span>3,000トークン<span class="ar">→</span><span class="g">市場価格で 6,000円分</span>の野菜</div>
+      <div class="ex">月 4,000円<span class="ar">→</span>4,000トークン<span class="ar">→</span><span class="g">予測どおりなら月 約13kg</span>の野菜</div>
     </div>
   </section>
 
   <!-- 3-04 調整 -->
   <section class="slide" data-title="取れた量に合わせて調整する" data-part="3">
-    <div class="kicker">3 — 04｜Adjustment</div>
+    <div class="kicker">3 — 05｜Adjustment</div>
     <h2>たくさん取れたら多く、<span class="thin">取れなければ少なく</span></h2>
     <div class="body">
       <ul class="pts compact">
@@ -530,25 +568,55 @@
     </div>
   </section>
 
-  <!-- 3-05 貢献 -->
-  <section class="slide" data-title="貢献とトークン" data-part="3">
-    <div class="kicker">3 — 05｜Contribution</div>
-    <h2>貢献も、トークンになる</h2>
+    <!-- 3-06 作業 -->
+  <section class="slide" data-title="作業とトークン" data-part="3">
+    <div class="kicker">3 — 06｜Work</div>
+    <h2>作業トークンは、切り離して扱う</h2>
     <div class="body">
       <ul class="pts compact">
-        <li>作業日に作業をすると、その分がトークンになる<small>何を、いつ、どうやるかは決まっていて、ガイドに沿って行う。講座を受けた人ほど、同じ作業の価値が高い。</small></li>
-        <li>ただ、作業はあまり発生しない。手をかけなくても育つ畑だから<small>作業をするのは、主にスタッフと運営メンバー。</small></li>
-        <li>耕作放棄地の開墾など、畑の外の貢献もトークンになりうる</li>
-        <li>講座を受けて貢献し、会費をまかなえる人もいれば、そうでない人もいる</li>
+        <li>作業トークンは、野菜のトークンとは別のものとして渡す。何に使うかは別に決める</li>
+        <li>受け取れるのは、レクチャーを1年以上受けた人だけ<small>何を、いつ、どうやるかは決まっていて、ガイドに沿って作業する。</small></li>
+        <li>作業メンバーは、受け取る野菜と作業が同じくらいになるように作業する</li>
+        <li>作業しすぎた分は、別の形のトークンに変換する<small>そもそも作業しすぎが起きないように、全体で調整する。</small></li>
+        <li>作業はあまり発生しない。手をかけなくても育つ畑だから<small>10aで月50時間を上限の目安にする。耕作放棄地の開墾など、畑の外の作業もありうる。</small></li>
       </ul>
-      <div class="ex" style="margin-top:22px">月 3,000円＋3,000円分の貢献<span class="ar">→</span>6,000トークン<span class="ar">→</span><span class="g">市場価格で 12,000円分</span></div>
+      <div class="ex" style="margin-top:20px">作業 1時間<span class="ar">→</span><span class="g">1,000円分</span>の作業トークン（時給1,000円換算）</div>
+    </div>
+  </section>
+
+  <!-- 3-07 収支 -->
+  <section class="slide" data-title="収支の試算" data-part="3">
+    <div class="kicker">3 — 07｜Balance</div>
+    <h2>10a・野菜15人・レクチャー20人で、<span class="thin">月2万円の黒字</span></h2>
+    <div class="body top">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
+        <table class="tbl">
+          <thead><tr><th>収入</th><th>月あたり</th></tr></thead>
+          <tbody>
+            <tr><td>野菜<span class="s">15人 × 4,000円</span></td><td>60,000円</td></tr>
+            <tr><td>レクチャー<span class="s">大人20人 × 8,000円</span></td><td>160,000円</td></tr>
+            <tr><td>合計</td><td><strong>220,000円</strong></td></tr>
+          </tbody>
+        </table>
+        <table class="tbl">
+          <thead><tr><th>費用</th><th>月あたり</th></tr></thead>
+          <tbody>
+            <tr><td>畑の費用<span class="s">土地・種苗・労働</span></td><td>70,000円</td></tr>
+            <tr><td>講師料<span class="s">1日20,000円 × 月4回</span></td><td>80,000円</td></tr>
+            <tr><td>全体の管理費<span class="s">10aあたり</span></td><td>50,000円</td></tr>
+            <tr><td>合計</td><td><strong>200,000円</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ex" style="margin-top:16px;padding:14px 26px">差し引き <span class="g">月 ＋20,000円</span>（年 ＋24万円）</div>
+      <div class="note">損益分岐はレクチャーの大人18人。子どもが1人加わるごとに月4,000円の上乗せ。会場費・交通費・配送の費用は含まない。</div>
     </div>
   </section>
 
   <!-- 3-06 トークン -->
   <section class="slide" data-title="トークンの流れ" data-part="3">
-    <div class="kicker">3 — 06｜Token</div>
-    <h2>会費と貢献がトークンになり、<span class="thin">収穫すると減る</span></h2>
+    <div class="kicker">3 — 08｜Token</div>
+    <h2>会費と作業がトークンになり、<span class="thin">収穫すると減る</span></h2>
     <div class="body">
       <div class="fig">
         <svg viewBox="0 0 760 330" role="img" aria-label="トークンの流れ">
@@ -567,7 +635,7 @@
           <text class="sb" x="130" y="98" text-anchor="middle">1円＝1トークン</text>
           <rect class="bx" x="30" y="144" width="200" height="56" rx="8"/>
           <text class="nm" x="130" y="168" text-anchor="middle">決まった作業をする</text>
-          <text class="sb" x="130" y="186" text-anchor="middle">習熟度で重みが変わる</text>
+          <text class="sb" x="130" y="186" text-anchor="middle">修了者のみ・別のトークン</text>
           <rect class="bx main" x="290" y="100" width="180" height="56" rx="8"/>
           <text class="nm" x="380" y="124" text-anchor="middle">参加者のウォレット</text>
           <text class="sb" x="380" y="142" text-anchor="middle">トークン残高</text>
@@ -588,7 +656,7 @@
 
   <!-- 3-07 会計のルール -->
   <section class="slide" data-title="会計のルール" data-part="3">
-    <div class="kicker">3 — 07｜Accounting</div>
+    <div class="kicker">3 — 09｜Accounting</div>
     <h2>会計のルール</h2>
     <div class="body">
       <ul class="pts compact">
@@ -603,7 +671,7 @@
 
   <!-- 3-08 テクノロジー -->
   <section class="slide" data-title="テクノロジー" data-part="3">
-    <div class="kicker">3 — 08｜Technology</div>
+    <div class="kicker">3 — 10｜Technology</div>
     <h2>記録と計算を、人の手から切り離す</h2>
     <p class="lead">人が入れ替わっても、仕組みが回り続けるように。</p>
     <div class="body top">
@@ -634,7 +702,7 @@
 
   <!-- 3-09 農法と体制 -->
   <section class="slide" data-title="農法と運営体制" data-part="3">
-    <div class="kicker">3 — 09｜Farming</div>
+    <div class="kicker">3 — 11｜Farming</div>
     <h2>農法と運営体制</h2>
     <p class="lead">農法はひとつに絞らず、作物と目的で使い分ける。畑はプロの農家が見る。</p>
     <div class="body top">
@@ -679,18 +747,18 @@
     </div>
   </section>
 
-  <!-- 4-02 次に決めること -->
+    <!-- 4-02 次に決めること -->
   <section class="slide" data-title="次に決めること" data-part="4">
     <div class="kicker">4 — 02｜Next</div>
     <h2>次に決めること</h2>
     <div class="body">
       <ul class="pts compact">
-        <li><strong>市場価格の基準</strong>：何の価格を「市場価格」とするか（店頭、直売所、有機の相場）</li>
-        <li><strong>立ち上げ費の償却期間</strong>：畑ごとに何年で割るか</li>
+        <li><strong>作業トークンの使い道</strong>：野菜のトークンと切り離したうえで、何と交換できるようにするか</li>
+        <li><strong>作業しすぎの調整</strong>：作業の割り振り方と、超えた分を変換する別のトークン</li>
+        <li><strong>自給畑の料金</strong>：翌年の追加レクチャー代と、自走までの料金</li>
         <li><strong>規格外の判定</strong>：自己申告とAIの画像認識の組み合わせ方</li>
         <li><strong>スポットメンバー</strong>：来年からの開始に向けた、説明の受け方と支払い方法</li>
-        <li><strong>専有区画の料金</strong>：指導期間中の料金と、1aあたりの基本諸経費の額</li>
-        <li><strong>引き継ぎの形</strong>：修了した運営メンバーが、共有区画の管理と次の人の指導をどう担うか</li>
+        <li><strong>まだ計上していない費用</strong>：会場費、交通費、配送の費用</li>
         <li><strong>法人形態と専門家確認</strong>：トークンと作業の扱いを、弁護士か司法書士に確認する</li>
       </ul>
     </div>
