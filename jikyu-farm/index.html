@@ -138,6 +138,7 @@
   .tbl td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.7; vertical-align: top; }
   .tbl td:first-child { font-weight: 700; white-space: nowrap; }
   .tbl td .s { display: block; font-size: 13.5px; color: var(--ink-soft); font-weight: 400; }
+  .tbl.tight td { padding: 9px 16px; }
   .tbl.law td { padding: 7px 12px; font-size: 14px; line-height: 1.55; }
   .tbl.law td .s { font-size: 12px; }
   .tbl.law th { padding: 0 12px 7px; }
@@ -399,7 +400,7 @@
           <p>自走したら1aあたり月1,000円。</p>
         </div>
       </div>
-      <div class="note">契約は秋冬と春夏の半年ごと。料金は仮で、運営しながら全体で計算して決める。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
+      <div class="note">契約は秋冬と春夏の半年ごと。月額会費は収支に連動させ、半期ごとに見直す。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
     </div>
   </section>
 
@@ -587,10 +588,10 @@
   <!-- 3-07 収支 -->
   <section class="slide" data-title="収支の試算" data-part="3">
     <div class="kicker">3 — 07｜Balance</div>
-    <h2>10a・野菜15人・レクチャー20人で、<span class="thin">月2万円の黒字</span></h2>
+    <h2>10a・野菜15人・レクチャー20人で、<span class="thin">月2万円のプラス</span></h2>
     <div class="body top">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
-        <table class="tbl">
+        <table class="tbl tight">
           <thead><tr><th>収入</th><th>月あたり</th></tr></thead>
           <tbody>
             <tr><td>野菜<span class="s">15人 × 4,000円</span></td><td>60,000円</td></tr>
@@ -598,7 +599,7 @@
             <tr><td>合計</td><td><strong>220,000円</strong></td></tr>
           </tbody>
         </table>
-        <table class="tbl">
+        <table class="tbl tight">
           <thead><tr><th>費用</th><th>月あたり</th></tr></thead>
           <tbody>
             <tr><td>畑の費用<span class="s">土地・種苗・労働</span></td><td>70,000円</td></tr>
@@ -608,8 +609,8 @@
           </tbody>
         </table>
       </div>
-      <div class="ex" style="margin-top:16px;padding:14px 26px">差し引き <span class="g">月 ＋20,000円</span>（年 ＋24万円）</div>
-      <div class="note">損益分岐はレクチャーの大人18人。子どもが1人加わるごとに月4,000円の上乗せ。会場費・交通費・配送の費用は含まない。</div>
+      <div class="ex" style="margin-top:16px;padding:14px 26px">差し引き 月 ＋20,000円<span class="ar">→</span><span class="g">利益にせず、トークンで調整してゼロにする</span></div>
+      <div class="note">うまく回るほど、野菜の会費やレクチャー代は下がっていく。月額会費は収支に連動させ、半期ごとに見直す。損益分岐はレクチャーの大人18人。会場費・交通費・配送の費用は含まない。</div>
     </div>
   </section>
 
@@ -663,7 +664,7 @@
         <li>会計はすべて公開し、費用は参加者全員で分け合う</li>
         <li>会費は全額トークンにし、受け取った現金で運営する。野菜はそのお礼<small>先払いの会費で畑を運営し、収穫を分ける CSA（地域支援型農業）と同じ形。</small></li>
         <li>毎週〜毎月パラメーターを調整し、半年のシーズンごとに精算する</li>
-        <li class="em">黒字はお金で分配しない<small>翌期の料金を下げるか、新しい畑や設備に再投資する。赤字のときは寄付か追加の負担で埋める。</small></li>
+        <li class="em">プラスは利益にせず、トークンで調整してゼロにする<small>お金では分配しない。うまく回るほど会費やレクチャー代が下がる。月額会費は収支に連動させ、半期ごとに見直す。赤字のときは寄付か追加の負担で埋める。</small></li>
         <li>使わなかったトークンは現金で返さない<small>年に一度まとめて還元する（たとえばサツマイモをどっさり）か、講座に振り替えられる。使わなければそのまま消える。</small></li>
       </ul>
     </div>
@@ -734,7 +735,7 @@
       <table class="tbl law">
         <thead><tr><th>法律</th><th>問題になりうること</th><th>対策</th><th>状態</th></tr></thead>
         <tbody>
-          <tr><td>金融商品取引法</td><td>出資した人に利益を分配すると「集団投資スキーム」に当たるおそれ</td><td>黒字はお金で分配しない。会費は、収穫を分け合うための前払いとして設計する</td><td><span class="chip ok">方針決定</span></td></tr>
+          <tr><td>金融商品取引法</td><td>出資した人に利益を分配すると「集団投資スキーム」に当たるおそれ</td><td>プラスは利益にせず、トークンと次の半期の会費で調整する。会費は、収穫を分け合うための前払いとして設計する</td><td><span class="chip ok">方針決定</span></td></tr>
           <tr><td>資金決済法<span class="s">前払式支払手段</span></td><td>前払いで野菜と交換するトークンは前払式支払手段。未使用残高が大きいと届出が要る</td><td>半年ごとの精算で期限を区切る。有効期限が6か月以内なら対象外になる可能性</td><td><span class="chip todo">要確認</span></td></tr>
           <tr><td>資金決済法<span class="s">暗号資産</span></td><td>他人と売買できるトークンは暗号資産になりうる</td><td>譲渡不可・換金不可で設計する。区画どうしの野菜の交換は、仕組みの中だけで行う</td><td><span class="chip todo">要確認</span></td></tr>
           <tr><td>労働基準法</td><td>作業へのトークンが「賃金」とみなされると、通貨払いの原則に反する</td><td>作業は雇用ではなく会員の活動として設計する（時間の拘束や指揮命令をしない）</td><td><span class="chip todo">要確認</span></td></tr>
