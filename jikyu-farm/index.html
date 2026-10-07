@@ -174,6 +174,15 @@
   .bars .val small { font-size: 14px; font-weight: 400; color: var(--ink-soft); margin-right: 4px; }
   .bars .row.us .lbl, .bars .row.us .val { color: var(--moss); }
 
+  /* ---------- quote / nested ---------- */
+  .vq { border-left: 2.6px solid var(--moss); padding: 6px 0 6px 28px; }
+  .vq p { font-size: 22px; line-height: 1.9; font-weight: 700; }
+  .vq .src { font-size: 13px; letter-spacing: .1em; color: var(--ink-soft); margin-top: 8px; font-weight: 400; }
+  .two { display: grid; grid-template-columns: 420px 1fr; gap: 44px; align-items: center; }
+  .nest text { font-family: inherit; }
+  .nest .t1 { font-size: 19px; font-weight: 700; fill: var(--ink); }
+  .nest .t2 { font-size: 13px; fill: var(--ink-soft); }
+
   /* ---------- figure ---------- */
   .fig { display: flex; justify-content: center; }
   .fig svg { width: 100%; max-width: 980px; height: auto; }
@@ -264,19 +273,133 @@
         <li>仕組みはみんなで考える。お金はみんなから集め、みんなに分配する（ただし、お金では分配しない）</li>
         <li>創業メンバーがいなくても、物理的に離れていても、誰かが支配しなくても回り続ける</li>
       </ul>
-      <div class="note">出発点は山梨の耕作放棄地。人口減少で全国に増え続ける放棄地へ広げていく。</div>
+      <div class="note">出発点は山梨の耕作放棄地。人口減少で全国に増え続ける放棄地へ広げていく。<br><strong>このスライドの数字（料金、規格外のトークン1/3、収穫量など）は、すべて仮に置いたもの。</strong></div>
     </div>
   </section>
 
-  <section class="slide part" data-title="PART 1｜意志と考え方" data-part="">
+  <!-- PART 1 惑星的普遍技術とは -->
+  <section class="slide part" data-title="PART 1｜惑星的普遍技術とは" data-part="">
     <div class="kicker">Part</div>
     <div class="pnum">01</div>
+    <h2>惑星的普遍技術とは</h2>
+    <p class="lead">この共同体の土台にある哲学。技術の基層、原初のサイボーグ、野生のサイバネティクスから、惑星へ。</p>
+  </section>
+
+  <section class="slide" data-title="惑星的普遍技術の定義" data-part="1">
+    <div class="kicker">1 — 01｜Definition</div>
+    <h2>惑星的普遍技術とは</h2>
+    <div class="body">
+      <p class="statement" style="font-size:32px">普遍を僭称した一つの秩序の代わりに、<br><span class="g">複数の技術が惑星規模で応答しあう</span>技術のあり方。<small>それは設計図として与えられるものではない。技術多様性を足場にした身体と循環から、自ずと立ち上がってくるものである。</small></p>
+      <div class="note">七沢智樹『惑星的普遍技術——未開の未来へ』（執筆中）より</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="屋根の普遍から、基層の普遍へ" data-part="1">
+    <div class="kicker">1 — 02｜Universality</div>
+    <h2>屋根の普遍から、<span class="thin">基層の普遍へ</span></h2>
+    <div class="body top">
+      <div class="cols c2">
+        <div class="col">
+          <div class="h">ROOF｜数えられる普遍性</div>
+          <h3>理性で把握できる普遍</h3>
+          <p>法則として書き下せ、どこへ持っていっても同じ答えを返す。西洋近代が選んだ普遍性。一つの技術が惑星を覆い、惑星の資源を食いつくす方向へ進みつづけた。</p>
+        </div>
+        <div class="col">
+          <div class="h">GROUND｜数えられない普遍性</div>
+          <h3>身体と生命の普遍</h3>
+          <p>頭では理解できない。だが、ある。火を熾す手は、どの風土でも火の色を見ている。多様な技術を掘り下げた底で、同じ身体、同じ生命、同じ惑星の物質に出会う。</p>
+        </div>
+      </div>
+      <div class="loop"><strong>屋根を、土台へ戻す</strong>　普遍は、上から被せる屋根ではなく、底で通じている土台にある。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="技術の基層" data-part="1">
+    <div class="kicker">1 — 03｜Substratum</div>
+    <h2>技術の基層｜<span class="thin">技術とは、引き出す働き</span></h2>
+    <div class="body">
+      <div class="two">
+        <svg class="nest" viewBox="0 0 420 380" role="img" aria-label="技術・道具・テクノロジーの三重の入れ子">
+          <circle cx="210" cy="190" r="182" fill="#eef7f1" stroke="var(--moss)" stroke-width="1.6"/>
+          <circle cx="210" cy="222" r="128" fill="#f8fbf8" stroke="var(--moss)" stroke-width="1.4"/>
+          <circle cx="210" cy="258" r="70" fill="var(--paper)" stroke="var(--moss)" stroke-width="1.4"/>
+          <text class="t1" x="210" y="48" text-anchor="middle">技術</text>
+          <text class="t2" x="210" y="68" text-anchor="middle">生命が発揮する営み</text>
+          <text class="t1" x="210" y="130" text-anchor="middle">道具</text>
+          <text class="t2" x="210" y="150" text-anchor="middle">人間が身体機能を外化したもの</text>
+          <text class="t1" x="210" y="252" text-anchor="middle">テクノロジー</text>
+          <text class="t2" x="210" y="272" text-anchor="middle">近代西洋で科学と</text>
+          <text class="t2" x="210" y="290" text-anchor="middle">結びついた道具</text>
+        </svg>
+        <ul class="pts compact">
+          <li>技術とは、まず「生きること」に不可欠な能力そのもの。頭で理解する前に、身体で発揮される</li>
+          <li>技術とは、そこにある可能性を、こちらへ、前へともたらす働き<small>石を打って刃をつくれるのは、石にその性質があるから。何を引き出せるかは、引き出す側だけでは決まらない。</small></li>
+          <li>技術は、宇宙と物質の性質、生命の営み、身体と環境の関係に根ざしている。この根底の条件が「技術の基層」</li>
+        </ul>
+      </div>
+      <div class="note">七沢智樹『惑星的普遍技術——未開の未来へ』（執筆中）より</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="原初のサイボーグ" data-part="1">
+    <div class="kicker">1 — 04｜Primitive Cyborg</div>
+    <h2>原初のサイボーグ</h2>
+    <div class="body">
+      <div class="vq"><p>金属と電子回路に覆われた未来のサイボーグではない。<br>石、木、竹、火、身体、知恵によって環境と結びついた、原初のサイボーグである。</p></div>
+      <ul class="pts compact" style="margin-top:26px">
+        <li>西表島のジャングルで、三、四メートル四方の空間にテントを張り、最低限の道具と薪で数ヶ月の暮らしを愉しむ人に出会った。同じ森を見ても、見えているものが違った</li>
+        <li>人間は道具をつくり、自然との関係をつくり変え、つくり変えた環境によって、自分自身もつくり変えられていく</li>
+        <li>これはロマン主義ではない。「戻る」は選択肢にない<small>近代の意識を持ったまま原初の実践をすると、何が起きるのか。まだ誰も確かめていない「もしも」の実験である。</small></li>
+      </ul>
+      <div class="note">七沢智樹『惑星的普遍技術——未開の未来へ』（執筆中）より</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="野生のサイバネティクス" data-part="1">
+    <div class="kicker">1 — 05｜Wild Cybernetics</div>
+    <h2>野生のサイバネティクス</h2>
+    <p class="lead">サイバネティクスとは応答の原理。働きかけた結果を受け取り、次の働きかけを変える。問題は、その循環に何が組み込まれているかである。</p>
+    <div class="body top">
+      <div class="cols c2">
+        <div class="col">
+          <div class="h">NOW</div>
+          <h3>市場と数値と画面で閉じた循環</h3>
+          <p>売れたか、伸びたか、速くなったか。そこには土地も季節も生き物も入っていない。</p>
+        </div>
+        <div class="col">
+          <div class="h">WILD</div>
+          <h3>自然との応答を組み込んだ循環</h3>
+          <p>寒さを感じ、獲物を逃し、火が消え、潮が変わる。その応答を身体に通すことで異なる身体が育ち、異なる循環が、異なる未来をつくる。</p>
+        </div>
+      </div>
+      <div class="loop"><strong>↺ 野生を、ループに入れる</strong>　作る → 森へ離れ、考えないで考える → 概念で見る → 持ち帰って、また作る。</div>
+      <div class="note">七沢智樹『惑星的普遍技術——未開の未来へ』（執筆中）より</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="生態系の一部のように" data-part="1">
+    <div class="kicker">1 — 06｜Planetary</div>
+    <h2>生態系の一部のように、<span class="thin">働きつづける</span></h2>
+    <div class="body">
+      <ul class="pts compact">
+        <li class="em">惑星的普遍技術とは、まるで生態系の一部のように機能し続けるもの<small>菌糸は誰の命令も受けずに落ち葉を分解し、木の根と養分を取り交わす。止まらないが、暴走もしない。環境に応えて方向を変えつづける。自走から、自律へ。</small></li>
+        <li>一つの巨大なループではない。土地ごと、風土ごとに無数の小さなループが回り、それらが互いに応答しあう</li>
+        <li>惑星を設計するのではない。惑星が自ら回している循環のなかに、技術を、もう一度入れてもらう</li>
+        <li>権力者がいてもよい。だが、その力は循環のなかで働き、循環に返す、生態系の働きとしての働きでなければならない</li>
+      </ul>
+      <div class="loop"><strong>この村は</strong>　その無数の小さなループの一つとして、山梨の耕作放棄地から回りはじめる。</div>
+    </div>
+  </section>
+
+  <section class="slide part" data-title="PART 2｜意志と考え方" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">02</div>
     <h2>意志と考え方</h2>
     <p class="lead">大事なのは、どんな意志を持って参加するか。惑星的普遍技術のコンセプトに共感する人の共同体。</p>
   </section>
 
-  <section class="slide" data-title="参加する人の意志" data-part="1">
-    <div class="kicker">1 — 01｜Will</div>
+  <section class="slide" data-title="参加する人の意志" data-part="2">
+    <div class="kicker">2 — 01｜Will</div>
     <h2>いちばん大事なのは、<span class="thin">参加する人の意志</span></h2>
     <div class="body">
       <p class="statement" style="font-size:30px">七沢智樹の哲学「<span class="g">惑星的普遍技術</span>」のコンセプトに共感し、<br>その方向へ向かいたいかどうか。</p>
@@ -289,8 +412,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="二つの自給自足にはならない" data-part="1">
-    <div class="kicker">1 — 02｜Not This</div>
+  <section class="slide" data-title="二つの自給自足にはならない" data-part="2">
+    <div class="kicker">2 — 02｜Not This</div>
     <h2>二つの「自給自足」には、ならない</h2>
     <div class="body">
       <div class="cols c2">
@@ -309,8 +432,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="乗り越えるための三つのこと" data-part="1">
-    <div class="kicker">1 — 03｜Beyond</div>
+  <section class="slide" data-title="乗り越えるための三つのこと" data-part="2">
+    <div class="kicker">2 — 03｜Beyond</div>
     <h2>乗り越えるための、三つのこと</h2>
     <div class="body">
       <div class="cols c3">
@@ -333,8 +456,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="経済を、生態系にする" data-part="1">
-    <div class="kicker">1 — 04｜Economy as Ecosystem</div>
+  <section class="slide" data-title="経済を、生態系にする" data-part="2">
+    <div class="kicker">2 — 04｜Economy as Ecosystem</div>
     <h2>経済を、生態系にする</h2>
     <p class="lead">この仕組みは、七沢智樹の哲学「惑星的普遍技術」の実践である。</p>
     <div class="body top">
@@ -354,8 +477,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="村の、デジタル版" data-part="1">
-    <div class="kicker">1 — 05｜Digital Village</div>
+  <section class="slide" data-title="村の、デジタル版" data-part="2">
+    <div class="kicker">2 — 05｜Digital Village</div>
     <h2>村の、デジタル版</h2>
     <p class="lead">昔の共同体「ムラ」を、デジタルでつくり直す。デジタルの村、デジタルの里山で、自給自足する。</p>
     <div class="body top">
@@ -379,8 +502,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="プリミティブで、狩猟採集的" data-part="1">
-    <div class="kicker">1 — 06｜Primitive</div>
+  <section class="slide" data-title="プリミティブで、狩猟採集的" data-part="2">
+    <div class="kicker">2 — 06｜Primitive</div>
     <h2>プリミティブで、狩猟採集的</h2>
     <div class="body">
       <ul class="pts">
@@ -392,8 +515,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="農法を編み出し続ける" data-part="1">
-    <div class="kicker">1 — 07｜Method</div>
+  <section class="slide" data-title="農法を編み出し続ける" data-part="2">
+    <div class="kicker">2 — 07｜Method</div>
     <h2>一つの農法ではなく、<span class="thin">農法を編み出し続ける</span></h2>
     <p class="lead">決まった農法を実践するのではない。研究機関と連動し、新しい農法そのものを開発していく。</p>
     <div class="body">
@@ -410,15 +533,15 @@
     </div>
   </section>
 
-  <section class="slide part" data-title="PART 2｜なぜ今か" data-part="">
+  <section class="slide part" data-title="PART 3｜なぜ今か" data-part="">
     <div class="kicker">Part</div>
-    <div class="pnum">02</div>
+    <div class="pnum">03</div>
     <h2>なぜ今か</h2>
     <p class="lead">農業は転換点にある。担い手が引退していく溝を、小さな自給畑をたくさんつくって埋める。</p>
   </section>
 
-  <section class="slide" data-title="三つの背景" data-part="2">
-    <div class="kicker">2 — 01｜Background</div>
+  <section class="slide" data-title="三つの背景" data-part="3">
+    <div class="kicker">3 — 01｜Background</div>
     <h2>三つの背景</h2>
     <div class="body">
       <div class="cols c3">
@@ -442,8 +565,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="栄養は、ほぼ自給できる" data-part="2">
-    <div class="kicker">2 — 02｜Nutrition</div>
+  <section class="slide" data-title="栄養は、ほぼ自給できる" data-part="3">
+    <div class="kicker">3 — 02｜Nutrition</div>
     <h2>栄養は、ほぼ自給できる</h2>
     <p class="lead">野菜・米・大豆・卵に、獣害駆除のイノシシとシカを組み合わせる。大豆と米があれば、味噌や醤油もつくれる。</p>
     <div class="body top">
@@ -461,15 +584,15 @@
     </div>
   </section>
 
-  <section class="slide part" data-title="PART 3｜共同体の仕組み" data-part="">
+  <section class="slide part" data-title="PART 4｜共同体の仕組み" data-part="">
     <div class="kicker">Part</div>
-    <div class="pnum">03</div>
+    <div class="pnum">04</div>
     <h2>共同体の仕組み</h2>
     <p class="lead">参加する人は全員が共同体の一人。違うのは関わり方の濃さだけ。仕組みはみんなで考える。</p>
   </section>
 
-  <section class="slide" data-title="畑の種類" data-part="3">
-    <div class="kicker">3 — 01｜Fields</div>
+  <section class="slide" data-title="畑の種類" data-part="4">
+    <div class="kicker">4 — 01｜Fields</div>
     <h2>畑の種類</h2>
     <div class="body">
       <div class="cols c3">
@@ -494,8 +617,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="仕組みは、みんなで考える" data-part="3">
-    <div class="kicker">3 — 02｜Commons</div>
+  <section class="slide" data-title="仕組みは、みんなで考える" data-part="4">
+    <div class="kicker">4 — 02｜Commons</div>
     <h2>仕組みは、みんなで考える</h2>
     <div class="body">
       <ul class="pts">
@@ -507,8 +630,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="関わり方の濃さ" data-part="3">
-    <div class="kicker">3 — 03｜Plans</div>
+  <section class="slide" data-title="関わり方の濃さ" data-part="4">
+    <div class="kicker">4 — 03｜Plans</div>
     <h2>関わり方の濃さ</h2>
     <div class="body top">
       <div class="cols c5">
@@ -522,14 +645,14 @@
         <div class="col">
           <div class="h">VEGETABLES</div>
           <h3>野菜</h3>
-          <div class="price">月額 4,000円</div>
+          <div class="price">例：月額 4,000円</div>
           <p>野菜を受け取る関わり方。会費の全額をトークンで受け取り、共有区画から収穫する。</p>
           <p>作業は任意。</p>
         </div>
         <div class="col">
           <div class="h">LECTURE</div>
           <h3>レクチャー</h3>
-          <div class="price">月額 8,000円<br><span style="font-size:13px">子ども 4,000円</span></div>
+          <div class="price">例：月額 8,000円</div>
           <p>現地のレクチャーが月4回、オンラインがときどき。</p>
           <p>レクチャーだけの参加もできる。</p>
         </div>
@@ -547,12 +670,12 @@
           <p>自走したら1aあたり月1,000円。</p>
         </div>
       </div>
-      <div class="note">契約は秋冬と春夏の半年ごと。全員が共同体の一人で、違うのは関わり方の濃さだけ。月額会費は会計に連動させ、半期ごとにみんなで見直す。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
+      <div class="note">契約は秋冬と春夏の半年ごと。金額はすべて例。会計に常に連動して変わり、半期ごとにみんなで見直す。配送も可能（送料と箱詰めの手間賃をトークンから差し引く）。</div>
     </div>
   </section>
 
-  <section class="slide" data-title="最長5年で自律する" data-part="3">
-    <div class="kicker">3 — 04｜Path</div>
+  <section class="slide" data-title="最長5年で自律する" data-part="4">
+    <div class="kicker">4 — 04｜Path</div>
     <h2>最長5年で、自律する</h2>
     <p class="lead">修了した人が増えるほど、プロ農家がいなくても畑が回るようになる。</p>
     <div class="body">
@@ -569,8 +692,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="自走できるようになったら" data-part="3">
-    <div class="kicker">3 — 05｜Independence</div>
+  <section class="slide" data-title="自走できるようになったら" data-part="4">
+    <div class="kicker">4 — 05｜Independence</div>
     <h2>自走できるようになったら</h2>
     <div class="body">
       <ul class="pts">
@@ -582,8 +705,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="収穫を記録する" data-part="3">
-    <div class="kicker">3 — 06｜Harvest</div>
+  <section class="slide" data-title="収穫を記録する" data-part="4">
+    <div class="kicker">4 — 06｜Harvest</div>
     <h2>収穫は、はかりとカメラで記録する</h2>
     <div class="body">
       <div class="steps">
@@ -595,20 +718,20 @@
         <div class="step-arrow">→</div>
         <div class="step goal"><div class="n">4</div><h3>トークンを使う</h3><p>内訳から値段を出し、トークンを差し引く</p></div>
       </div>
-      <div class="loop"><strong>規格外は 1/3</strong>　割れや傷みのあるものは分けて量り、トークンの消費を3分の1にする。自己申告とAIの画像認識で判定し、あとから画像をもとに補正もできる。</div>
+      <div class="loop"><strong>規格外は 1/3（仮）</strong>　割れや傷みのあるものは分けて量り、トークンの消費を3分の1にする。自己申告とAIの画像認識で判定し、あとから画像をもとに補正もできる。</div>
       <div class="note">おいしそうなものだけを選ばず、バランスよく取ることをみんなで共有する。</div>
     </div>
   </section>
 
-  <section class="slide part" data-title="PART 4｜お金とトークン" data-part="">
+  <section class="slide part" data-title="PART 5｜お金とトークン" data-part="">
     <div class="kicker">Part</div>
-    <div class="pnum">04</div>
+    <div class="pnum">05</div>
     <h2>お金とトークン</h2>
-    <p class="lead">費用を積み上げ、収穫を予測し、有機の相場の約半分で野菜をトークンに換える。取れた量に合わせて、途中で調整する。</p>
+    <p class="lead">費用を積み上げ、収穫を予測し、有機の相場の約半分で野菜をトークンに換える。取れた量に合わせて、途中で調整する。この章の数字は、すべて仮に置いたもの。</p>
   </section>
 
-  <section class="slide" data-title="畑の費用" data-part="4">
-    <div class="kicker">4 — 01｜Cost</div>
+  <section class="slide" data-title="畑の費用" data-part="5">
+    <div class="kicker">5 — 01｜Cost</div>
     <h2>畑の費用は、10aで月7万円</h2>
     <p class="lead">かかった費用はすべて計上し、会計を公開する。</p>
     <div class="body top">
@@ -625,8 +748,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="収穫を予測する" data-part="4">
-    <div class="kicker">4 — 02｜Forecast</div>
+  <section class="slide" data-title="収穫を予測する" data-part="5">
+    <div class="kicker">5 — 02｜Forecast</div>
     <h2>収穫を予測する</h2>
     <div class="body">
       <div class="steps">
@@ -642,8 +765,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="推奨量の野菜を買うと" data-part="4">
-    <div class="kicker">4 — 03｜Market</div>
+  <section class="slide" data-title="推奨量の野菜を買うと" data-part="5">
+    <div class="kicker">5 — 03｜Market</div>
     <h2>推奨量の野菜を買うと、月いくらか</h2>
     <p class="lead">1日350g（年約128kg）の野菜を、店で買った場合と比べる。</p>
     <div class="body">
@@ -668,8 +791,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="トークンの値付け" data-part="4">
-    <div class="kicker">4 — 04｜Pricing</div>
+  <section class="slide" data-title="トークンの値付け" data-part="5">
+    <div class="kicker">5 — 04｜Pricing</div>
     <h2>有機の相場の約半分で、自給できるようにする</h2>
     <div class="body">
       <div class="cols c3">
@@ -680,7 +803,7 @@
         </div>
         <div class="col">
           <div class="h">PRICE</div>
-          <h3>月 4,000円</h3>
+          <h3>例：月 4,000円</h3>
           <p>推奨量を有機で買う額（月約7,600円）の約半分。無農薬の野菜で。</p>
         </div>
         <div class="col">
@@ -689,12 +812,12 @@
           <p>払った分が、そのままトークンで返ってくる。</p>
         </div>
       </div>
-      <div class="ex">月 4,000円<span class="ar">→</span>4,000トークン<span class="ar">→</span><span class="g">予測どおりなら月 約13kg</span>の野菜</div>
+      <div class="ex">例：月 4,000円<span class="ar">→</span>4,000トークン<span class="ar">→</span><span class="g">予測どおりなら月 約13kg</span>の野菜</div>
     </div>
   </section>
 
-  <section class="slide" data-title="取れた量に合わせて調整する" data-part="4">
-    <div class="kicker">4 — 05｜Adjustment</div>
+  <section class="slide" data-title="取れた量に合わせて調整する" data-part="5">
+    <div class="kicker">5 — 05｜Adjustment</div>
     <h2>たくさん取れたら多く、<span class="thin">取れなければ少なく</span></h2>
     <div class="body">
       <ul class="pts compact">
@@ -707,8 +830,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="作業とトークン" data-part="4">
-    <div class="kicker">4 — 06｜Work</div>
+  <section class="slide" data-title="作業とトークン" data-part="5">
+    <div class="kicker">5 — 06｜Work</div>
     <h2>作業トークンは、切り離して扱う</h2>
     <div class="body">
       <ul class="pts compact">
@@ -722,16 +845,16 @@
     </div>
   </section>
 
-  <section class="slide" data-title="共同体の会計" data-part="4">
-    <div class="kicker">4 — 07｜Balance</div>
-    <h2>10a・野菜15人・レクチャー20人で、<span class="thin">月2万円のプラス</span></h2>
+  <section class="slide" data-title="共同体の会計" data-part="5">
+    <div class="kicker">5 — 07｜Balance</div>
+    <h2>共同体の会計の例｜<span class="thin">10aで月2万円のプラス</span></h2>
     <div class="body top">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
         <table class="tbl tight">
           <thead><tr><th>集まるお金</th><th>月あたり</th></tr></thead>
           <tbody>
             <tr><td>野菜<span class="s">15人 × 4,000円</span></td><td>60,000円</td></tr>
-            <tr><td>レクチャー<span class="s">大人20人 × 8,000円</span></td><td>160,000円</td></tr>
+            <tr><td>レクチャー<span class="s">20人 × 8,000円</span></td><td>160,000円</td></tr>
             <tr><td>合計</td><td><strong>220,000円</strong></td></tr>
           </tbody>
         </table>
@@ -746,12 +869,12 @@
         </table>
       </div>
       <div class="ex" style="margin-top:16px;padding:14px 26px">差し引き 月 ＋20,000円<span class="ar">→</span><span class="g">利益にせず、トークンで全員に戻してゼロにする</span></div>
-      <div class="note">共同体に利益という考え方はない。うまく回るほど、野菜の会費やレクチャー代は下がっていく。月額会費は収支に連動させ、半期ごとに見直す。損益分岐はレクチャーの大人18人。会場費・交通費・配送の費用は含まない。</div>
+      <div class="note">金額はすべて例で、会計に常に連動する。共同体に利益という考え方はなく、うまく回るほど会費は下がる。損益分岐はレクチャー18人。会場費・交通費・配送は含まない。</div>
     </div>
   </section>
 
-  <section class="slide" data-title="トークンの流れ" data-part="4">
-    <div class="kicker">4 — 08｜Token</div>
+  <section class="slide" data-title="トークンの流れ" data-part="5">
+    <div class="kicker">5 — 08｜Token</div>
     <h2>会費と作業がトークンになり、<span class="thin">収穫すると減る</span></h2>
     <div class="body">
       <div class="fig">
@@ -790,8 +913,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="会計のルール" data-part="4">
-    <div class="kicker">4 — 09｜Accounting</div>
+  <section class="slide" data-title="会計のルール" data-part="5">
+    <div class="kicker">5 — 09｜Accounting</div>
     <h2>会計のルール</h2>
     <div class="body">
       <ul class="pts compact">
@@ -804,8 +927,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="テクノロジー" data-part="4">
-    <div class="kicker">4 — 10｜Technology</div>
+  <section class="slide" data-title="テクノロジー" data-part="5">
+    <div class="kicker">5 — 10｜Technology</div>
     <h2>記録と計算を、人の手から切り離す</h2>
     <p class="lead">人が入れ替わっても、仕組みが回り続けるように。</p>
     <div class="body top">
@@ -834,8 +957,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="農法と運営体制" data-part="4">
-    <div class="kicker">4 — 11｜Farming</div>
+  <section class="slide" data-title="農法と運営体制" data-part="5">
+    <div class="kicker">5 — 11｜Farming</div>
     <h2>農法と運営体制</h2>
     <p class="lead">農法はひとつに絞らず、編み出し続ける。まずは次の組み合わせから始める。畑はプロの農家が見る。</p>
     <div class="body top">
@@ -851,15 +974,15 @@
     </div>
   </section>
 
-  <section class="slide part" data-title="PART 5｜法対策" data-part="">
+  <section class="slide part" data-title="PART 6｜法対策" data-part="">
     <div class="kicker">Part</div>
-    <div class="pnum">05</div>
+    <div class="pnum">06</div>
     <h2>法対策</h2>
     <p class="lead">トークンと会費の設計は、金融規制に触れやすい。先に線を引いておく。</p>
   </section>
 
-  <section class="slide" data-title="法律ごとの対策" data-part="5">
-    <div class="kicker">5 — 01｜Legal</div>
+  <section class="slide" data-title="法律ごとの対策" data-part="6">
+    <div class="kicker">6 — 01｜Legal</div>
     <h2>法律ごとの対策</h2>
     <div class="body top" style="margin-top:14px">
       <table class="tbl law">
@@ -878,8 +1001,8 @@
     </div>
   </section>
 
-  <section class="slide" data-title="次に決めること" data-part="5">
-    <div class="kicker">5 — 02｜Next</div>
+  <section class="slide" data-title="次に決めること" data-part="6">
+    <div class="kicker">6 — 02｜Next</div>
     <h2>次に決めること</h2>
     <div class="body">
       <ul class="pts compact">
@@ -894,7 +1017,7 @@
     </div>
   </section>
 
-  <section class="slide" data-title="結び" data-part="5">
+  <section class="slide" data-title="結び" data-part="6">
     <div class="kicker">Closing</div>
     <div class="body">
       <p class="statement">人間が現れる前から、生態系は自律して回ってきた。<br>この村も、そうありたい。<small>同じ方向を向く人が、離れていても、誰に支配されることもなく、一緒に自給自足をつくっていく。山梨の耕作放棄地から始めます。</small></p>
@@ -928,11 +1051,12 @@
   var i = 0;
 
   var PART_NAME = {
-    '1': 'PART 1 ／ 意志と考え方',
-    '2': 'PART 2 ／ なぜ今か',
-    '3': 'PART 3 ／ 共同体の仕組み',
-    '4': 'PART 4 ／ お金とトークン',
-    '5': 'PART 5 ／ 法対策'
+    '1': 'PART 1 ／ 惑星的普遍技術とは',
+    '2': 'PART 2 ／ 意志と考え方',
+    '3': 'PART 3 ／ なぜ今か',
+    '4': 'PART 4 ／ 共同体の仕組み',
+    '5': 'PART 5 ／ お金とトークン',
+    '6': 'PART 6 ／ 法対策'
   };
 
   function pad(n) { return (n < 10 ? '0' : '') + n; }
