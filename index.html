@@ -1,65 +1,310 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!doctype html>
+<html lang="ja" data-theme="night">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Technel</title>
-<style>
-  :root {
-    --paper: #faf9f5;
-    --ink: #14140f;
-    --ink-soft: #4a4a42;
-    --line: #d9d7cd;
-    --moss: #0ca568;
-    --mint: #1de394;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--paper); color: var(--ink);
-    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
-    font-feature-settings: "palt";
-    -webkit-font-smoothing: antialiased;
-    max-width: 760px; margin: 0 auto; padding: 72px 24px;
-  }
-  .kicker { font-size: 12px; letter-spacing: .3em; color: var(--moss); font-weight: 600; text-transform: uppercase; }
-  h1 { font-size: 40px; font-weight: 700; letter-spacing: .04em; margin-top: 14px; }
-  .lead { font-size: 15px; line-height: 2; color: var(--ink-soft); margin-top: 14px; }
-  ul { list-style: none; margin-top: 48px; border-top: 1px solid var(--line); }
-  li a {
-    display: block; padding: 22px 4px; border-bottom: 1px solid var(--line);
-    color: var(--ink); text-decoration: none; transition: background .15s;
-  }
-  li a:hover { background: #f3f2ea; }
-  li .t { font-size: 19px; font-weight: 700; }
-  li .d { font-size: 13.5px; color: var(--ink-soft); margin-top: 6px; line-height: 1.8; }
-  li .d .tag { color: var(--moss); font-weight: 600; }
-  footer { margin-top: 56px; font-size: 12px; letter-spacing: .14em; color: var(--ink-soft); }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>technel.world — 惑星的危機に挑む｜Technel LLC</title>
+<meta name="description" content="テクネル（Technel合同会社）は、技術哲学を足場に、惑星的危機に挑むコレクティブです。問う・離れる・つくる・集う。">
+<meta name="theme-color" content="#0b0b0a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="technel.world — 惑星的危機に挑む">
+<meta property="og:description" content="技術哲学を足場に、惑星的危機に挑む。Technel LLC.">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&family=Shippori+Mincho+B1:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="modulepreload" href="assets/js/globe.js">
+<link rel="modulepreload" href="assets/js/land.js">
+<script>
+  // theme + boot state before first paint (no flash)
+  try {
+    var t = localStorage.getItem('tw-theme'); if (t) document.documentElement.dataset.theme = t;
+    if (sessionStorage.getItem('tw-booted')) document.documentElement.classList.add('is-rebooted');
+  } catch (e) {}
+  document.documentElement.classList.add('js', 'is-booting');
+</script>
+<script type="module" src="assets/js/main.js"></script>
 </head>
 <body>
-  <div class="kicker">Technel</div>
-  <h1>七沢智樹｜資料置き場</h1>
-  <p class="lead">Technel合同会社。技術哲学のレクチャー資料・プロジェクトのアーカイブ。</p>
-  <ul>
-    <li>
-      <a href="jikyu-farm/">
-        <div class="t">耕作放棄地を、みんなの自給自足畑に</div>
-        <div class="d"><span class="tag">PROJECT</span>　事業計画｜2026.10</div>
-      </a>
+<a class="skip" href="#main">本文へスキップ</a>
+
+<!-- ============ BOOT ============ -->
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot__top">
+    <span>TECHNEL / WORLD</span>
+    <span>BOOT SEQUENCE <b>v2.0</b></span>
+    <span class="boot__clock" data-clock>--:--:--</span>
+  </div>
+  <pre class="boot__log" id="bootLog"></pre>
+  <div class="boot__bottom">
+    <div class="boot__label">LOADING&nbsp;PLANET</div>
+    <div class="boot__pct"><span id="bootPct">000</span><small>%</small></div>
+  </div>
+  <div class="boot__bar"><i id="bootBar"></i></div>
+  <button class="boot__skip" type="button" id="bootSkip" tabindex="-1">SKIP <kbd>↵</kbd></button>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="hd" id="hd">
+  <a class="hd__logo" href="#top" aria-label="technel.world トップへ">
+    <svg class="hd__mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="11.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11.4 5.4 20.6 26.6" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="16" r="3" fill="var(--accent)"/></svg>
+    <span>technel<em>.world</em></span>
+  </a>
+  <nav class="hd__nav" aria-label="メイン">
+    <a href="#project"><i>01</i>Project</a>
+    <a href="#collective"><i>02</i>Collective</a>
+    <a href="#company"><i>03</i>Company</a>
+  </nav>
+  <div class="hd__status" aria-label="現在地と時刻">
+    <span class="hd__live"><i></i>LIVE</span>
+    <span class="hd__loc">[Yamanashi, JP]</span>
+    <span class="hd__coord">35.66°N 138.57°E</span>
+    <time class="hd__time" data-clock>--:--:--</time><span class="hd__tz">JST</span>
+  </div>
+  <button class="toggle" type="button" id="themeToggle" role="switch" aria-checked="false" aria-label="表示モード切替（夜／昼）">
+    <span class="toggle__lbl" data-on="night">NIGHT</span>
+    <span class="toggle__track"><span class="toggle__knob"></span></span>
+    <span class="toggle__lbl" data-on="day">DAY</span>
+  </button>
+  <button class="hd__menu" type="button" id="menuBtn" aria-expanded="false" aria-controls="drawer"><span>MENU</span><i></i></button>
+</header>
+
+<div class="drawer" id="drawer" hidden>
+  <nav aria-label="モバイル">
+    <a href="#project"><i>01</i>Project</a>
+    <a href="#collective"><i>02</i>Collective</a>
+    <a href="#company"><i>03</i>Company</a>
+  </nav>
+  <div class="drawer__foot">
+    <span>[Yamanashi, JP] · <time data-clock>--:--:--</time> JST</span>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" aria-labelledby="heroTitle">
+  <div class="hero__stage">
+    <canvas class="hero__globe" id="globe" aria-label="自転する地球。地軸は23.4度傾いている。" role="img"></canvas>
+    <img class="hero__fallback" src="assets/img/earth.webp" alt="" width="1000" height="1000" loading="lazy" decoding="async">
+    <div class="hero__labels" id="markerLabels" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__copy">
+    <p class="hero__kicker"><span>Technel LLC</span><span>Planetary Unit</span></p>
+    <h1 class="hero__title" id="heroTitle">
+      <span class="hero__word" aria-label="technel.world"><span>technel</span><span class="dot">.</span><span>world</span></span>
+    </h1>
+    <p class="hero__ja">惑星的危機に挑む</p>
+    <p class="hero__en">Confronting the planetary crisis — through the philosophy of technology.</p>
+  </div>
+
+  <dl class="hud hud--bl" aria-hidden="true">
+    <div><dt>AXIAL TILT</dt><dd>23.44°</dd></div>
+    <div><dt>ROTATION</dt><dd id="hudRot">000.00°</dd></div>
+    <div><dt>CURSOR</dt><dd id="hudCur">— —</dd></div>
+  </dl>
+  <dl class="hud hud--br" aria-hidden="true">
+    <div><dt>BOUNDARIES</dt><dd><b>7</b> / 9 crossed</dd></div>
+    <div><dt>SOURCE</dt><dd>PIK, 2025</dd></div>
+  </dl>
+  <a class="hero__scroll" href="#statement"><span>Scroll</span><i></i></a>
+</section>
+
+<!-- ============ QUOTE TICKER ============ -->
+<div class="ticker" aria-label="言葉">
+  <div class="ticker__track" id="ticker">
+    <p><q>We shape our tools and thereafter our tools shape us.</q><cite>John M. Culkin</cite></p>
+    <p><q>Technology is neither good nor bad; nor is it neutral.</q><cite>Melvin Kranzberg</cite></p>
+    <p><q>There are no passengers on Spaceship Earth. We are all crew.</q><cite>Marshall McLuhan</cite></p>
+    <p><q>So long as we represent technology as an instrument, we remain held fast in the will to master it.</q><cite>Martin Heidegger</cite></p>
+    <p><q>We are as gods and might as well get good at it.</q><cite>Stewart Brand</cite></p>
+    <p><q>The major problems in the world are the result of the difference between how nature works and the way people think.</q><cite>Gregory Bateson</cite></p>
+  </div>
+</div>
+
+<!-- ============ STATEMENT ============ -->
+<section class="sec statement" id="statement" aria-labelledby="stTitle">
+  <header class="sec__head">
+    <span class="sec__no">00</span>
+    <h2 class="sec__label" id="stTitle">Statement <small>声明</small></h2>
+    <span class="sec__meta">JA / EN</span>
+  </header>
+  <div class="statement__body">
+    <div class="statement__ja" lang="ja">
+      <p class="rv">惑星は、いま臨界にある。</p>
+      <p class="rv">気候も、生態系も、わたしたちの感覚も。<br class="pc">危機の根には、いつも人間と技術の関係がある。</p>
+      <p class="rv">テクネルは、技術をいちど手放し、<br class="pc">手と身体で学び直す。</p>
+      <p class="rv">問い、つくり、場をひらく。<br><strong>技術哲学で、<span class="hl">惑星的危機</span>に挑む。</strong></p>
+    </div>
+    <div class="statement__en" lang="en">
+      <p class="rv">The planet stands at a threshold. Climate, ecosystems, even our own senses — at the root of every crisis lies the relation between humans and technology.</p>
+      <p class="rv">Technel lets go of technology, then relearns it by hand and body. We question, we make, we open fields. <strong>We confront the planetary crisis through the philosophy of technology.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BUSINESS COLUMNS ============ -->
+<section class="sec work" aria-labelledby="workTitle">
+  <header class="sec__head">
+    <span class="sec__no">—</span>
+    <h2 class="sec__label" id="workTitle">What we do <small>事業</small></h2>
+    <span class="sec__meta">tec.01 — tec.04</span>
+  </header>
+  <ol class="cols">
+    <li class="col rv">
+      <span class="col__no">tec.01</span>
+      <h3 class="col__en">Think</h3>
+      <p class="col__ja">問う</p>
+      <p class="col__tx">技術哲学のリサーチとレクチャー。AI・生成技術・インフラを「関係」として捉え直すための概念のレンズを、企業や大学とともに磨く。</p>
+      <p class="col__tags">Research / Lecture / Seminar</p>
     </li>
-    <li>
-      <a href="nttdata-lecture/">
-        <div class="t">技術と人間の関係は、どうしたら見えるようになるのか</div>
-        <div class="d"><span class="tag">LECTURE</span>　NTTデータ「AIと倫理」ゼミ 有識者レクチャー①｜2026.08.26</div>
-      </a>
+    <li class="col rv">
+      <span class="col__no">tec.02</span>
+      <h3 class="col__en">Unplug</h3>
+      <p class="col__ja">離れる</p>
+      <p class="col__tx">山梨や西表島のフィールドで、技術からいちど離れる。道具・身体・自然の関係を、手を動かしながら見直すプログラム。</p>
+      <p class="col__tags">Field / Program / Retreat</p>
     </li>
-    <li>
-      <a href="ondoku/">
-        <div class="t">音読装置</div>
-        <div class="d"><span class="tag">TOOL</span>　原稿を声に出して聞き、引っかかった文に朱を入れる。ホーム画面に置け、電波がなくても開く</div>
-      </a>
+    <li class="col rv">
+      <span class="col__no">tec.03</span>
+      <h3 class="col__en">Make</h3>
+      <p class="col__ja">つくる</p>
+      <p class="col__tx">考えたことを道具にする。音読装置のような小さなツールから、耕作放棄地を畑に変える共同体のシステムまで。</p>
+      <p class="col__tags">Tool / System / Prototype</p>
     </li>
-  </ul>
-  <footer>© Technel LLC</footer>
+    <li class="col rv">
+      <span class="col__no">tec.04</span>
+      <h3 class="col__en">Gather</h3>
+      <p class="col__ja">集う</p>
+      <p class="col__tx">哲学者、エンジニア、農家、デザイナー。専門の異なる人びとが、ひとつの惑星の問題に向き合うコレクティブを編む。</p>
+      <p class="col__tags">Collective / Community</p>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ PROJECT ============ -->
+<section class="sec project" id="project" aria-labelledby="pjTitle">
+  <header class="sec__head">
+    <span class="sec__no">01</span>
+    <h2 class="sec__label" id="pjTitle">Project <small>プロジェクト</small></h2>
+    <span class="sec__meta" id="pjCount">05 items</span>
+  </header>
+  <h2 class="mega rv" aria-hidden="true">Project</h2>
+  <div class="ptable" role="table" aria-label="プロジェクト一覧">
+    <div class="ptable__head" role="row">
+      <span role="columnheader">No.</span>
+      <span role="columnheader">Overview</span>
+      <span role="columnheader">Title</span>
+      <span role="columnheader">Partner</span>
+      <span role="columnheader">Year</span>
+    </div>
+    <div class="ptable__body" id="projectRows" role="rowgroup"></div>
+  </div>
+</section>
+
+<!-- ============ COLLECTIVE ============ -->
+<section class="sec collective" id="collective" aria-labelledby="clTitle">
+  <header class="sec__head">
+    <span class="sec__no">02</span>
+    <h2 class="sec__label" id="clTitle">Collective <small>コレクティブ</small></h2>
+    <span class="sec__meta">06 nodes</span>
+  </header>
+  <h2 class="mega rv" aria-hidden="true">Collective</h2>
+  <p class="collective__lead rv">専門も拠点も異なる人びとが、ひとつの惑星の問題をめぐって集まる。<br class="pc">テクネルは会社であると同時に、ゆるやかなコレクティブである。</p>
+  <ul class="people" id="people"></ul>
+</section>
+
+<!-- ============ COMPANY ============ -->
+<section class="sec company" id="company" aria-labelledby="coTitle">
+  <header class="sec__head">
+    <span class="sec__no">03</span>
+    <h2 class="sec__label" id="coTitle">Company <small>会社概要</small></h2>
+    <span class="sec__meta">Technel LLC</span>
+  </header>
+  <div class="company__grid">
+    <h2 class="mega mega--side rv" aria-hidden="true">Company</h2>
+    <dl class="spec rv">
+      <div><dt>社名</dt><dd>Technel合同会社<span class="en">Technel LLC</span></dd></div>
+      <div><dt>代表</dt><dd>七沢 智樹<span class="en">Tomoki Nanasawa [役職名]</span></dd></div>
+      <div><dt>設立</dt><dd>[設立年月日]</dd></div>
+      <div><dt>所在地</dt><dd>[〒000-0000 所在地]</dd></div>
+      <div><dt>資本金</dt><dd>[資本金]</dd></div>
+      <div><dt>事業内容</dt><dd>
+        <ul>
+          <li>技術哲学に関するリサーチ・レクチャー・研修</li>
+          <li>フィールドでの学び直しプログラムの企画・運営</li>
+          <li>道具・システムの試作と開発</li>
+          <li>[その他の事業]</li>
+        </ul>
+      </dd></div>
+      <div><dt>お問い合わせ</dt><dd><a href="mailto:[contact@technel.world]" class="ul">[contact@technel.world]</a></dd></div>
+    </dl>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ft" id="contact">
+  <div class="ft__loop">
+    <canvas id="footGlobe" aria-hidden="true"></canvas>
+    <div class="ft__veil"></div>
+  </div>
+  <div class="ft__inner">
+    <p class="ft__call">Let’s talk about<br>the <span class="hl">planet.</span></p>
+    <a class="ft__mail" href="mailto:[contact@technel.world]">[contact@technel.world] <i aria-hidden="true">↗</i></a>
+    <div class="ft__grid">
+      <nav aria-label="フッター">
+        <a href="#project">Project</a><a href="#collective">Collective</a><a href="#company">Company</a>
+      </nav>
+      <nav aria-label="外部リンク">
+        <a href="https://note.com/nanasawa" target="_blank" rel="noopener">note ↗</a>
+        <a href="[https://x.com/...]">[X] ↗</a>
+        <a href="[https://instagram.com/...]">[Instagram] ↗</a>
+      </nav>
+      <a class="ft__top" href="#top">Back to top ↑</a>
+    </div>
+    <p class="ft__word" aria-hidden="true">technel<span class="dot">.</span>world</p>
+    <div class="ft__legal">
+      <span>© <span id="year">2026</span> Technel LLC</span>
+      <span>Land data: Natural Earth</span>
+      <span>[Yamanashi, JP] · <time data-clock>--:--:--</time> JST</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ PROJECT MODAL ============ -->
+<dialog class="modal" id="modal" aria-labelledby="mTitle">
+  <div class="modal__inner">
+    <header class="modal__bar">
+      <span class="modal__no" id="mNo">P—01</span>
+      <span class="modal__nav">
+        <button type="button" id="mPrev" aria-label="前のプロジェクト">←</button>
+        <button type="button" id="mNext" aria-label="次のプロジェクト">→</button>
+      </span>
+      <button type="button" class="modal__close" id="mClose" aria-label="閉じる">Close <i>×</i></button>
+    </header>
+    <div class="modal__body">
+      <div class="modal__visual">
+        <canvas id="modalGlobe" aria-hidden="true"></canvas>
+        <span class="modal__geo" id="mGeo"></span>
+        <span class="modal__ph">[Project image]</span>
+      </div>
+      <div class="modal__text">
+        <h2 class="modal__title" id="mTitle"></h2>
+        <p class="modal__sub" id="mSub"></p>
+        <dl class="modal__spec" id="mSpec"></dl>
+        <div class="modal__desc" id="mDesc"></div>
+        <p class="modal__links" id="mLinks"></p>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<noscript><style>.boot{display:none}.rv{opacity:1;transform:none}</style></noscript>
 </body>
 </html>
