@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRIMITIVE WORKS（仮）｜Technel</title>
+<style>
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  body { overscroll-behavior: none; touch-action: manipulation; }
+
+  :root {
+    --paper: #faf9f5;
+    --ink: #14140f;
+    --ink-soft: #4a4a42;
+    --line: #d9d7cd;
+    --moss: #0ca568;
+    --mint: #1de394;
+    --shu: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: #eceae2;
+    color: var(--ink);
+    font-family: "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Arial, sans-serif;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  /* ---------- stage ---------- */
+  .deck { position: fixed; inset: 0; overflow: hidden; }
+  .stage {
+    position: absolute; left: 50%; top: 50%;
+    width: 1280px; height: 720px;
+    background: var(--paper);
+    transform-origin: center center;
+    box-shadow: 0 18px 60px rgba(20,20,15,.12);
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 74px 96px 92px;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transition: opacity .38s ease;
+  }
+  .slide.is-active { opacity: 1; visibility: visible; }
+
+  /* ---------- common type ---------- */
+  .kicker { font-size: 13px; letter-spacing: .3em; color: var(--moss); font-weight: 600; text-transform: uppercase; }
+  .slide h2 { font-size: 40px; font-weight: 700; line-height: 1.5; letter-spacing: .02em; margin-top: 16px; }
+  .slide h2 .thin { font-weight: 400; color: var(--ink-soft); }
+  .lead { font-size: 18px; line-height: 2; color: var(--ink-soft); margin-top: 14px; max-width: 980px; }
+  .body { margin-top: 40px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .body.top { margin-top: 28px; justify-content: flex-start; }
+
+  ul.pts { list-style: none; }
+  ul.pts > li {
+    position: relative;
+    font-size: 22px; line-height: 1.85; letter-spacing: .01em;
+    padding-left: 34px; margin-bottom: 18px; max-width: 1040px;
+  }
+  ul.pts > li::before {
+    content: ""; position: absolute; left: 2px; top: 17px;
+    width: 9px; height: 9px; border-radius: 50%;
+    border: 1.6px solid var(--mint);
+  }
+  ul.pts > li.em::before { background: var(--moss); border-color: var(--moss); }
+  ul.pts > li.em { font-weight: 700; }
+  ul.pts > li small { display: block; font-size: 15.5px; color: var(--ink-soft); line-height: 1.8; margin-top: 4px; font-weight: 400; }
+  ul.pts.compact > li { margin-bottom: 12px; font-size: 19px; line-height: 1.75; }
+  ul.pts.compact > li::before { top: 15px; }
+  ul.pts.compact > li small { font-size: 14.5px; margin-top: 2px; }
+
+  .note {
+    margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 15px; line-height: 1.9; color: var(--ink-soft); max-width: 1088px;
+  }
+  .arrow { color: var(--moss); font-weight: 700; }
+  .term { border-bottom: 1.6px solid var(--mint); padding-bottom: 1px; }
+  .shu { color: var(--shu); }
+  .g { color: var(--moss); }
+
+  /* ---------- title slide ---------- */
+  .slide.title { justify-content: center; align-items: flex-end; text-align: right; padding-right: 110px; }
+  .slide.title h1 { font-size: 58px; font-weight: 700; line-height: 1.55; letter-spacing: .04em; }
+  .slide.title h1 .g { color: var(--moss); }
+  .slide.title .sub { font-size: 21px; color: var(--ink-soft); margin-top: 28px; letter-spacing: .06em; line-height: 2; }
+  .slide.title .meta { font-size: 14px; letter-spacing: .2em; color: var(--ink-soft); margin-top: 44px; line-height: 2.2; }
+  .rings { position: absolute; left: -160px; top: 50%; transform: translateY(-50%); width: 560px; height: 560px; pointer-events: none; }
+  .rings circle { fill: none; stroke: var(--mint); stroke-width: 1.6; }
+  .rings .r1 { stroke-dasharray: 4 7; animation: spin 90s linear infinite; transform-origin: 280px 280px; }
+  .rings .r2 { stroke-dasharray: 5 9; animation: spin 150s linear infinite reverse; transform-origin: 280px 280px; }
+  .rings .r3 { stroke-dasharray: 3 6; animation: spin 220s linear infinite; transform-origin: 280px 280px; }
+  .rings .core { fill: var(--mint); stroke: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .rings circle { animation: none !important; } .slide { transition: none; } }
+
+  /* ---------- part divider ---------- */
+  .slide.part { background: var(--ink); color: var(--paper); justify-content: center; }
+  .slide.part .kicker { color: var(--mint); }
+  .slide.part .pnum { font-size: 128px; font-weight: 700; line-height: 1; letter-spacing: .02em; margin: 22px 0 18px; }
+  .slide.part h2 { font-size: 52px; margin-top: 0; }
+  .slide.part .lead { color: #9a9a8e; font-size: 18px; }
+
+  /* ---------- statement ---------- */
+  .statement { font-size: 38px; font-weight: 700; line-height: 1.8; letter-spacing: .03em; }
+  .statement small { display: block; max-width: 980px; font-size: 17px; font-weight: 400; color: var(--ink-soft); line-height: 2.05; margin-top: 24px; letter-spacing: 0; }
+
+  /* ---------- column grids ---------- */
+  .cols { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .cols.c2 { grid-template-columns: 1fr 1fr; }
+  .cols.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cols.c4 { grid-template-columns: repeat(4, 1fr); }
+  .cols.c3 .col h3 + p:last-child { margin-top: 0; }
+  .cols.c5 { grid-template-columns: repeat(5, 1fr); }
+  .cols.c5 .col { padding: 22px 18px 24px; }
+  .cols.c5 .col h3 { font-size: 20px; margin-bottom: 8px; }
+  .cols.c5 .col .price { font-size: 15px; margin-bottom: 10px; }
+  .cols.c5 .col p { font-size: 13.5px; line-height: 1.85; }
+  .col { background: var(--paper); padding: 28px 28px 30px; }
+  .col .h { font-size: 12.5px; letter-spacing: .2em; color: var(--moss); font-weight: 600; margin-bottom: 14px; }
+  .col h3 { font-size: 24px; font-weight: 700; line-height: 1.55; margin-bottom: 12px; }
+  .col .price { font-size: 17px; font-weight: 700; color: var(--moss); margin-bottom: 12px; }
+  .col p { font-size: 15.5px; line-height: 1.95; color: var(--ink-soft); }
+  .col p + p { margin-top: 10px; }
+  .cols.c4 .col { padding: 24px 22px 26px; }
+  .cols.c4 .col h3 { font-size: 21px; }
+  .cols.c4 .col p { font-size: 14.5px; line-height: 1.9; }
+  .cols.c2 .col { padding: 22px 28px 24px; }
+
+  /* ---------- table ---------- */
+  .tbl { width: 100%; border-collapse: collapse; }
+  .tbl th {
+    text-align: left; font-size: 12.5px; letter-spacing: .16em; color: var(--moss); font-weight: 600;
+    padding: 0 16px 10px; border-bottom: 2px solid var(--ink);
+  }
+  .tbl td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.7; vertical-align: top; }
+  .tbl td:first-child { font-weight: 700; white-space: nowrap; }
+  .tbl td .s { display: block; font-size: 13.5px; color: var(--ink-soft); font-weight: 400; }
+  .tbl.tight td { padding: 9px 16px; }
+  .tbl.law td { padding: 7px 12px; font-size: 14px; line-height: 1.55; }
+  .tbl.law td .s { font-size: 12px; }
+  .tbl.law th { padding: 0 12px 7px; }
+  .tbl.law td:last-child { width: 96px; }
+  .chip { display: inline-block; font-size: 12px; letter-spacing: .1em; font-weight: 700; border-radius: 999px; padding: 2px 11px; white-space: nowrap; }
+  .chip.ok { color: var(--moss); border: 1.3px solid var(--moss); }
+  .chip.todo { color: var(--shu); border: 1.3px solid var(--shu); }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; grid-template-columns: 1fr 34px 1fr 34px 1fr 34px 1fr; align-items: stretch; }
+  .step { border: 1.4px solid var(--line); padding: 20px 20px 22px; background: var(--paper); }
+  .step .n { font-size: 12px; letter-spacing: .18em; color: var(--ink-soft); }
+  .step h3 { font-size: 22px; font-weight: 700; margin-top: 8px; line-height: 1.5; }
+  .step p { font-size: 14.5px; line-height: 1.85; color: var(--ink-soft); margin-top: 8px; }
+  .step.goal { border: 2px solid var(--moss); background: #f4faf6; }
+  .step-arrow { display: flex; align-items: center; justify-content: center; color: var(--moss); font-size: 22px; font-weight: 700; }
+  .loop { margin-top: 18px; border: 1.4px dashed var(--moss); padding: 14px 22px; font-size: 17px; line-height: 1.8; }
+  .loop strong { color: var(--moss); }
+
+  /* ---------- example ---------- */
+  .ex { margin-top: 30px; border: 1.8px solid var(--moss); background: #f4faf6; padding: 18px 26px;
+        text-align: center; font-size: 23px; font-weight: 700; letter-spacing: .02em; }
+  .ex .ar { color: var(--moss); margin: 0 16px; }
+
+  /* ---------- bars ---------- */
+  .bars .row { display: grid; grid-template-columns: 300px 1fr 170px; align-items: center; gap: 22px; margin-bottom: 26px; }
+  .bars .lbl { font-size: 19px; font-weight: 700; line-height: 1.5; }
+  .bars .lbl small { display: block; font-size: 13.5px; font-weight: 400; color: var(--ink-soft); }
+  .bars .track { height: 36px; }
+  .bars .fill { height: 100%; background: #cfcdc2; }
+  .bars .fill.us { background: var(--moss); }
+  .bars .val { font-size: 26px; font-weight: 700; text-align: right; white-space: nowrap; }
+  .bars .val small { font-size: 14px; font-weight: 400; color: var(--ink-soft); margin-right: 4px; }
+  .bars .row.us .lbl, .bars .row.us .val { color: var(--moss); }
+
+  /* ---------- quote / nested ---------- */
+  .vq { border-left: 2.6px solid var(--moss); padding: 6px 0 6px 28px; }
+  .vq p { font-size: 22px; line-height: 1.9; font-weight: 700; }
+  .vq .src { font-size: 13px; letter-spacing: .1em; color: var(--ink-soft); margin-top: 8px; font-weight: 400; }
+  .two { display: grid; grid-template-columns: 420px 1fr; gap: 44px; align-items: center; }
+  .nest text { font-family: inherit; }
+  .nest .t1 { font-size: 19px; font-weight: 700; fill: var(--ink); }
+  .nest .t2 { font-size: 13px; fill: var(--ink-soft); }
+
+  .tentative { position: absolute; top: 70px; right: 96px; font-size: 12.5px; letter-spacing: .12em; font-weight: 700;
+                color: var(--shu); border: 1.3px solid var(--shu); border-radius: 999px; padding: 4px 14px; background: var(--paper); z-index: 2; }
+
+  /* ---------- figure ---------- */
+  .fig { display: flex; justify-content: center; }
+  .fig svg { width: 100%; max-width: 980px; height: auto; }
+  .fig .bx { fill: none; stroke: #b7b5a9; stroke-width: 1.4; }
+  .fig .bx.main { fill: #eaf6ef; stroke: var(--moss); stroke-width: 2.2; }
+  .fig .ln { fill: none; stroke: #8f8d82; stroke-width: 1.5; }
+  .fig .nm { font-size: 15px; font-weight: 700; fill: var(--ink); }
+  .fig .sb { font-size: 12.5px; fill: var(--ink-soft); }
+  .fig .lb { font-size: 12.5px; fill: var(--moss); font-weight: 600; }
+
+  /* ---------- chrome ---------- */
+  .foot {
+    position: absolute; left: 96px; right: 96px; bottom: 34px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12px; letter-spacing: .18em; color: var(--ink-soft);
+  }
+  .slide.part .foot { color: rgba(250,249,245,.5); }
+  .bar { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--mint); transition: width .38s ease; z-index: 5; }
+
+  .ui { position: fixed; right: 20px; bottom: 18px; display: flex; gap: 8px; z-index: 40; transition: opacity .4s; }
+  .ui.idle { opacity: 0; pointer-events: none; }
+  .ui button {
+    font: inherit; font-size: 12px; letter-spacing: .14em;
+    background: var(--paper); color: var(--ink-soft);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; cursor: pointer; transition: background .2s, color .2s;
+  }
+  .ui button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .toc {
+    position: fixed; inset: 0; z-index: 50; background: var(--ink); color: var(--paper);
+    padding: 56px 6vw; overflow-y: auto; display: none;
+  }
+  .toc.open { display: block; }
+  .toc h4 { font-size: 12px; letter-spacing: .3em; color: var(--mint); font-weight: 600; margin-bottom: 26px; }
+  .toc ol { list-style: none; columns: 2; column-gap: 56px; }
+  .toc li { break-inside: avoid; }
+  .toc button {
+    font: inherit; text-align: left; width: 100%;
+    display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: baseline;
+    background: none; border: none; border-bottom: 1px solid #33332c; color: rgba(250,249,245,.72);
+    padding: 11px 0; font-size: 15.5px; cursor: pointer; transition: color .2s;
+  }
+  .toc button:hover, .toc button.here { color: #fff; }
+  .toc button.here .no { color: var(--mint); }
+  .toc .no { font-size: 12px; letter-spacing: .1em; color: #7b7b70; }
+  .toc .pt { font-size: 11px; letter-spacing: .2em; color: var(--mint); display: block; margin-top: 4px; }
+
+  /* ---------- print ---------- */
+  @page { size: 1280px 720px; margin: 0; }
+  @media print {
+    body { overflow: visible; background: #fff; }
+    .deck { position: static; overflow: visible; }
+    .stage { position: static; width: 1280px; height: auto; transform: none !important; box-shadow: none; overflow: visible; }
+    .slide {
+      position: static; opacity: 1 !important; visibility: visible !important;
+      width: 1280px; height: 720px; page-break-after: always; break-after: page;
+    }
+    .ui, .toc, .bar { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+<div class="stage" id="stage">
+
+  <section class="slide title" data-title="タイトル" data-part="">
+    <svg class="rings" viewBox="0 0 560 560" aria-hidden="true">
+      <circle class="r1" cx="280" cy="280" r="258"/>
+      <circle class="r2" cx="280" cy="280" r="196"/>
+      <circle class="r3" cx="280" cy="280" r="132"/>
+      <circle class="core" cx="280" cy="280" r="5"/>
+    </svg>
+    <div class="kicker">Technel Project ／ 2027</div>
+    <h1>PRIMITIVE WORKS<span style="font-size:28px;font-weight:400;color:var(--ink-soft)">（仮）</span><br>これからを生きる、<span class="g">三つのプラン</span></h1>
+    <p class="sub">農耕、技術、狩猟採集。組み合わせて、暮らしのセーフティーネットにする</p>
+    <p class="meta">Technel合同会社 ／ 七沢智樹<br>構想 ／ 2026.10</p>
+  </section>
+
+  <section class="slide part" data-title="PART 1｜なぜ今か" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">01</div>
+    <h2>なぜ今か</h2>
+    <p class="lead">自然の中で生きることを、もう一度つくり直す必要がある。</p>
+  </section>
+
+  <section class="slide" data-title="二つの背景" data-part="1">
+    <div class="kicker">1 — 01｜Background</div>
+    <h2>二つの背景</h2>
+    <div class="body">
+      <div class="cols c2">
+        <div class="col">
+          <div class="h">PLANETARY</div>
+          <h3>惑星規模の危機</h3>
+          <p>気候、資源、生態系。いまの暮らしを支える仕組みそのものが、揺らいでいる。それを乗り越えるためのスキルが要る。</p>
+        </div>
+        <div class="col">
+          <div class="h">COUNTRYSIDE</div>
+          <h3>空いていく田舎</h3>
+          <p>高齢の担い手が引退し、耕作放棄地と空き家が増えつづけている。自然の中で生きる場所は、むしろ開いている。</p>
+        </div>
+      </div>
+      <div class="note">だから、自然の中で生きるということを、いまの私たちの手で、もう一度つくり直す。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="里山礼賛ではない" data-part="1">
+    <div class="kicker">1 — 02｜Not Nostalgia</div>
+    <h2>里山を褒めたたえる話では、<span class="thin">ない</span></h2>
+    <div class="body">
+      <div class="cols c2">
+        <div class="col">
+          <div class="h">これまでの里山</div>
+          <h3>掟に支配された村社会</h3>
+          <p>年貢や封建の仕組みのもとで、暮らしは悪い意味での村社会だった。規範は与えられるもので、自分たちでつくることはできなかった。</p>
+        </div>
+        <div class="col">
+          <div class="h">これからの田舎</div>
+          <h3>自分たちで規範をつくる暮らし</h3>
+          <p>年貢も、上からの掟もない。どう暮らすかを、参加する人たち自身で決められる。それが、これから可能になっていく。</p>
+        </div>
+      </div>
+      <div class="note">ノスタルジーでも、里山礼賛でもない。むしろ、里山という概念への批判から出発する。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="テクノロジーと共に" data-part="1">
+    <div class="kicker">1 — 03｜With Technology</div>
+    <h2>テクノロジーを否定も、<span class="thin">礼賛もしない</span></h2>
+    <div class="body">
+      <p class="statement" style="font-size:34px">テクノロジーを捨てて森へ帰るのでも、<br>テクノロジーにすべてを預けるのでもない。<br><span class="g">テクノロジーと共に、自然の中で生きる。</span></p>
+      <div class="note">このあり方は、これまでの里山の概念にはなかったもの。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="1500年さかのぼる" data-part="1">
+    <div class="kicker">1 — 04｜Primitive</div>
+    <h2>少なくとも1500年、<span class="thin">さかのぼる</span></h2>
+    <p class="lead">プリミティブな農耕も、狩猟も、技術も、里山よりずっと古い。そこまでさかのぼって、いまの身体で理解し直す。</p>
+    <div class="body">
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>学ぶ</h3><p>専門家と、それぞれの分野の知恵を学ぶ</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">2</div><h3>思い出す</h3><p>人類が長く持っていた技術を、思い出す</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><div class="n">3</div><h3>身体で理解する</h3><p>手を動かし、新たに身体で理解する</p></div>
+        <div class="step-arrow">→</div>
+        <div class="step goal"><div class="n">4</div><h3>現代で消化する</h3><p>いまの暮らしのなかに、生きる技術として取り込む</p></div>
+      </div>
+      <div class="note">このあり方を、七沢は「惑星的普遍技術」と呼んでいる。</div>
+    </div>
+  </section>
+
+  <section class="slide part" data-title="PART 2｜三つのプラン" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">02</div>
+    <h2>三つのプラン</h2>
+    <p class="lead">組み合わせることで、これからの時代を生きるためのセーフティーネットになる。</p>
+  </section>
+
+  <section class="slide" data-title="三つのプラン" data-part="2">
+    <div class="kicker">2 — 01｜Plans</div>
+    <h2>A・B・C を組み合わせる</h2>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">PLAN A</div>
+          <h3>農耕・自給自足</h3>
+          <p>耕作放棄地で、自分の野菜を自給する。</p>
+        </div>
+        <div class="col">
+          <div class="h">PLAN B</div>
+          <h3>技術</h3>
+          <p>最低限、生きるための技術を身につける。</p>
+        </div>
+        <div class="col">
+          <div class="h">PLAN C</div>
+          <h3>狩猟採集</h3>
+          <p>獲る、採る。自然から直接、糧を得る。</p>
+        </div>
+      </div>
+      <div class="loop"><strong>セーフティーネット</strong>　どれか一つが崩れても、ほかの二つで暮らしを支えられる。参加したいプランから始められる。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="PLAN A 農耕・自給自足" data-part="2">
+    <div class="kicker">2 — 02｜Plan A</div>
+    <h2>PLAN A｜<span class="thin">農耕・自給自足</span></h2>
+    <div class="body">
+      <ul class="pts">
+        <li>山梨を中心に、耕作放棄地を自給自足畑に変える</li>
+        <li class="em">平均すると週1時間ほどの作業で、野菜を自給する<small>手をかけなくても育つ畑をつくる、新しいやり方を教え、みんなで学んでいく。</small></li>
+        <li>畑は共同体で運営する。会費・収穫・作業をトークンで記録し、AIで調整する</li>
+      </ul>
+      <div class="note">詳しい仕組みは「耕作放棄地を、みんなの自給自足畑に」のスライドを参照。</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="PLAN B 技術" data-part="2">
+    <div class="kicker">2 — 03｜Plan B</div>
+    <h2>PLAN B｜<span class="thin">生きるための技術</span></h2>
+    <p class="lead">山梨の森で、暮らしを支える技術を、実践を通して理解していく。</p>
+    <div class="body top">
+      <div class="cols c3">
+        <div class="col"><div class="h">METAL</div><h3>鍛造</h3><p>鉄を熱し、叩いて、刃物や道具をつくる。</p></div>
+        <div class="col"><div class="h">EARTH</div><h3>土器</h3><p>土をこね、焼いて、器をつくる。</p></div>
+        <div class="col"><div class="h">COLOR</div><h3>染め物</h3><p>植物から色を引き出し、布を染める。</p></div>
+        <div class="col"><div class="h">BAMBOO</div><h3>竹細工</h3><p>竹を割り、編んで、暮らしの道具をつくる。</p></div>
+        <div class="col"><div class="h">WOOD</div><h3>木工</h3><p>あらゆる木工を、手と道具で。</p></div>
+        <div class="col"><div class="h">SHELTER</div><h3>建築</h3><p>雨風をしのぐ場所を、自分たちでつくる。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="PLAN C 狩猟採集" data-part="2">
+    <div class="kicker">2 — 04｜Plan C</div>
+    <h2>PLAN C｜<span class="thin">狩猟採集</span></h2>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">HUNT</div>
+          <h3>狩猟</h3>
+          <p>狩猟の現場と共同したプログラム。</p>
+          <p style="color:var(--shu)">共同先：確認中</p>
+        </div>
+        <div class="col">
+          <div class="h">FISH</div>
+          <h3>漁</h3>
+          <p>海や川へ、魚を獲りに行く。</p>
+        </div>
+        <div class="col">
+          <div class="h">GATHER</div>
+          <h3>ジャングルギャザリング</h3>
+          <p>西表島のジャングルで、道具をほとんど持ち込まずに、その場の素材で暮らす。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide part" data-title="PART 3｜学びのコミュニティ" data-part="">
+    <div class="kicker">Part</div>
+    <div class="pnum">03</div>
+    <h2>学びのコミュニティ</h2>
+    <p class="lead">現地のプログラムと、オンラインのコミュニティ。参加したいところから。</p>
+  </section>
+
+  <section class="slide" data-title="コミュニティの仕組み" data-part="3">
+    <div class="kicker">3 — 01｜Community</div>
+    <h2>学びのコミュニティを、<span class="thin">大きく開く</span></h2>
+    <div class="body">
+      <div class="cols c3">
+        <div class="col">
+          <div class="h">PROGRAMS</div>
+          <h3>現地のプログラム</h3>
+          <p>プランごとにプログラムがあり、参加したいものに参加する。</p>
+        </div>
+        <div class="col">
+          <div class="h">ONLINE</div>
+          <h3>オンラインコミュニティ</h3>
+          <p>染め物や狩猟など、それぞれの分野の専門家の話を聞く。離れていても学べる。</p>
+        </div>
+        <div class="col">
+          <div class="h">TECHNOLOGY</div>
+          <h3>Discord・ブロックチェーン・AI</h3>
+          <p>交流は Discord で。参加と貢献の記録はブロックチェーンに。運営と調整は AI が支える。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="結び" data-part="3">
+    <div class="kicker">Closing</div>
+    <div class="body">
+      <p class="statement">耕し、つくり、獲る。<br>その三つを、もう一度自分たちの手に。<small>里山に戻るのではなく、テクノロジーと共に、まだ誰も生きたことのない田舎の暮らしをつくる。2027年、山梨から始めます。</small></p>
+    </div>
+  </section>
+
+</div><!-- /stage -->
+<div class="bar" id="bar"></div>
+</div><!-- /deck -->
+
+<div class="ui">
+  <button id="btnToc" type="button">目次 ( O )</button>
+  <button id="btnPrev" type="button">←</button>
+  <button id="btnNext" type="button">→</button>
+</div>
+
+<nav class="toc" id="toc" aria-label="スライド目次">
+  <h4>Contents</h4>
+  <ol id="tocList"></ol>
+</nav>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var deck = document.getElementById('deck');
+  var bar = document.getElementById('bar');
+  var toc = document.getElementById('toc');
+  var tocList = document.getElementById('tocList');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+  var total = slides.length;
+  var i = 0;
+
+  var PART_NAME = {
+    '1': 'PART 1 ／ なぜ今か',
+    '2': 'PART 2 ／ 三つのプラン',
+    '3': 'PART 3 ／ 学びのコミュニティ'
+  };
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  slides.forEach(function (s, n) {
+    var part = s.getAttribute('data-part') || '';
+
+    var foot = document.createElement('div');
+    foot.className = 'foot';
+    foot.innerHTML = '<span>' + (PART_NAME[part] || '') + '</span><span>' +
+      pad(n + 1) + ' / ' + pad(total) + '</span>';
+    s.appendChild(foot);
+
+    var li = document.createElement('li');
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span class="no">' + pad(n + 1) + '</span><span>' +
+      s.getAttribute('data-title') +
+      (part ? '<span class="pt">' + (PART_NAME[part] || '') + '</span>' : '') + '</span>';
+    b.addEventListener('click', function () { go(n); closeToc(); });
+    li.appendChild(b);
+    tocList.appendChild(li);
+  });
+  var tocBtns = Array.prototype.slice.call(tocList.querySelectorAll('button'));
+
+  function go(n) {
+    i = Math.max(0, Math.min(total - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('is-active', k === i); });
+    tocBtns.forEach(function (b, k) { b.classList.toggle('here', k === i); });
+    bar.style.width = ((i + 1) / total * 100) + '%';
+    if (location.hash !== '#' + (i + 1)) history.replaceState(null, '', '#' + (i + 1));
+  }
+
+  function fit() {
+    var w = document.documentElement.clientWidth || window.innerWidth;
+    var h = document.documentElement.clientHeight || window.innerHeight;
+    if (h > w && w < 820) {
+      var s = Math.min(h / 1280, w / 720);
+      stage.style.transform = 'translate(-50%, -50%) rotate(90deg) scale(' + s + ')';
+    } else {
+      var s2 = Math.min(w / 1280, h / 720);
+      stage.style.transform = 'translate(-50%, -50%) scale(' + s2 + ')';
+    }
+  }
+
+  function closeToc() { toc.classList.remove('open'); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { go(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { go(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(total - 1); }
+    else if (e.key === 'o' || e.key === 'O') { toc.classList.toggle('open'); }
+    else if (e.key === 'f' || e.key === 'F') {
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else { document.documentElement.requestFullscreen(); }
+    }
+    else if (e.key === 'Escape') { closeToc(); }
+  });
+
+  document.getElementById('btnNext').addEventListener('click', function () { go(i + 1); });
+  document.getElementById('btnPrev').addEventListener('click', function () { go(i - 1); });
+  document.getElementById('btnToc').addEventListener('click', function () { toc.classList.toggle('open'); });
+  toc.addEventListener('click', function (e) { if (e.target === toc) closeToc(); });
+
+  var x0 = null;
+  deck.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  deck.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1);
+    x0 = null;
+  }, { passive: true });
+
+  var ui = document.querySelector('.ui');
+  var idleTimer;
+  function wake() {
+    ui.classList.remove('idle');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { ui.classList.add('idle'); }, 2600);
+  }
+  ['mousemove', 'touchstart', 'keydown'].forEach(function (ev) {
+    document.addEventListener(ev, wake, { passive: true });
+  });
+  wake();
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  window.addEventListener('pageshow', fit);
+  window.addEventListener('load', fit);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(document.documentElement);
+  fit();
+  setTimeout(fit, 120);
+  setTimeout(fit, 600);
+  var start = parseInt((location.hash || '').slice(1), 10);
+  go(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+
+</body>
+</html>
